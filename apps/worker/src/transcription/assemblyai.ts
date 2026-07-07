@@ -9,8 +9,11 @@ import type {
 } from "./types";
 
 const API_BASE = "https://api.assemblyai.com/v2";
-const POLL_INTERVAL_MS = 3_000;
-const POLL_TIMEOUT_MS = 15 * 60_000; // generous for a 10-min max upload
+
+export interface AssemblyAIProviderOptions {
+  pollIntervalMs?: number;
+  pollTimeoutMs?: number;
+}
 
 /**
  * Real AssemblyAI implementation: submit by URL, poll until terminal.
@@ -20,7 +23,17 @@ const POLL_TIMEOUT_MS = 15 * 60_000; // generous for a 10-min max upload
 export class AssemblyAIProvider implements TranscriptionProvider {
   readonly name = "assemblyai";
 
-  constructor(private readonly apiKey: string) {}
+  private readonly pollIntervalMs: number;
+  private readonly pollTimeoutMs: number;
+
+  constructor(
+    private readonly apiKey: string,
+    options: AssemblyAIProviderOptions = {},
+  ) {
+    this.pollIntervalMs = options.pollIntervalMs ?? 3_000;
+    // Generous for a 10-minute max upload.
+    this.pollTimeoutMs = options.pollTimeoutMs ?? 15 * 60_000;
+  }
 
   async transcribe(request: TranscriptionRequest): Promise<TranscriptionResult> {
     const audioUrl = await request.getAudioUrl();
@@ -47,7 +60,7 @@ export class AssemblyAIProvider implements TranscriptionProvider {
   }
 
   private async pollUntilDone(id: string): Promise<AssemblyAiTranscript> {
-    const deadline = Date.now() + POLL_TIMEOUT_MS;
+    const deadline = Date.now() + this.pollTimeoutMs;
 
     while (Date.now() < deadline) {
       const transcript = await this.get<AssemblyAiTranscript>(`/transcript/${id}`);
@@ -56,10 +69,12 @@ export class AssemblyAIProvider implements TranscriptionProvider {
       if (transcript.status === "error") {
         throw new Error(`AssemblyAI transcription failed: ${transcript.error}`);
       }
-      await sleep(POLL_INTERVAL_MS);
+      await sleep(this.pollIntervalMs);
     }
 
-    throw new Error(`AssemblyAI transcript ${id} timed out after ${POLL_TIMEOUT_MS}ms`);
+    throw new Error(
+      `AssemblyAI transcript ${id} timed out after ${this.pollTimeoutMs}ms`,
+    );
   }
 
   private async post<T>(path: string, body: unknown): Promise<T> {

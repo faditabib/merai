@@ -2,7 +2,11 @@
 
 ## Phase 1 — Upload & transcription pipeline (overnight 2026-07-08, mock-verified)
 
-### Fully built and tested (26 tests passing: 14 worker + 12 web)
+### Fully built and tested (31 tests passing: 19 worker + 12 web)
+- **AssemblyAI provider itself is test-covered against a stubbed HTTP layer**
+  (submit payload shape, raw-key auth header, language pin vs. detection,
+  polling through processing, provider-error/HTTP-error/timeout paths) — the
+  live-key path has been executed end-to-end minus the network.
 - **Resumable upload flow**: tus-js-client wrapper (6 MiB Supabase chunks, pause/
   resume/cancel, auto-retry on dropped connections, browser fingerprint resume),
   client-side duration probe + shared validation (10-min / 2 GiB / container
