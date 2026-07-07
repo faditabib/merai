@@ -1,0 +1,22 @@
+{
+  "name": "@merai/worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Merai background job worker (Railway) — transcription, AI analysis, cleanup",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@merai/core": "*",
+    "dotenv": "^16.4.0",
+    "pg": "^8.13.0",
+    "tsx": "^4.19.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "title": "Merai — AI-powered video editing studio",
+    "description": "Upload raw footage and let Merai do the editing: accurate Arabic transcription, silence and filler removal, and publish-ready captions."
+  },
+  "common": {
+    "appName": "Merai",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "signup": "Sign up",
+    "signOut": "Sign out",
+    "language": "Language"
+  },
+  "landing": {
+    "heroTitle": "You create. Merai edits.",
+    "heroSubtitle": "Upload your raw recording and Merai handles the rest: accurate Arabic-first transcription, automatic silence, filler and retake removal, and publish-ready captions for every platform.",
+    "ctaPrimary": "Start for free",
+    "ctaSecondary": "Have an account? Log in",
+    "feature1Title": "Accurate Arabic transcription",
+    "feature1Body": "High-accuracy speech-to-text in Modern Standard Arabic, with tolerance for Levantine, Gulf and Egyptian dialects.",
+    "feature2Title": "Smart automatic editing",
+    "feature2Body": "Silence, filler words and weak takes are removed automatically — the best take wins when you re-record a line.",
+    "feature3Title": "Edit by editing text",
+    "feature3Body": "Change the transcript and the video re-cuts itself — review and approve, no complex timeline required.",
+    "footerNote": "Merai — built for Arabic-speaking creators"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "signupTitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "loginButton": "Log in",
+    "signupButton": "Create account",
+    "pending": "Working…",
+    "checkEmail": "We sent a confirmation link to your email. Open it to activate your account.",
+    "genericError": "Something went wrong. Please try again.",
+    "confirmError": "We couldn't confirm your email. Try logging in or request a new link.",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "greeting": "Hello, {name}",
+    "emptyTitle": "No projects yet",
+    "emptyBody": "Coming soon: upload your first raw video and Merai will handle the edit, from transcript to export.",
+    "newProject": "New project (soon)"
+  }
+}

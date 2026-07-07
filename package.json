@@ -1,0 +1,20 @@
+{
+  "name": "merai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Merai — AI video editing OS for Arabic-speaking content creators",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @merai/web",
+    "dev:worker": "npm run dev -w @merai/worker",
+    "build": "npm run build -w @merai/web",
+    "lint": "npm run lint -w @merai/web",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
