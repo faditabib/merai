@@ -12,7 +12,7 @@
 --    the first path segment, enforced in storage.objects policies.
 -- ============================================================================
 
-create extension if not exists pgcrypto;
+-- gen_random_uuid() is built into Postgres 13+ — no extension needed.
 
 -- ----------------------------------------------------------------------------
 -- Helpers

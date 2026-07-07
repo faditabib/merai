@@ -1,11 +1,5 @@
-import pg from "pg";
 import type { JobRow, JobType } from "@merai/core";
-import { env } from "./env";
-
-export const pool = new pg.Pool({
-  connectionString: env.databaseUrl,
-  max: 5,
-});
+import { getDb } from "./db";
 
 /**
  * Atomically claim the next runnable job via public.claim_next_job
@@ -15,7 +9,7 @@ export async function claimNextJob(
   workerId: string,
   types: readonly JobType[],
 ): Promise<JobRow | null> {
-  const { rows } = await pool.query<JobRow>(
+  const { rows } = await getDb().query<JobRow>(
     "select * from public.claim_next_job($1, $2)",
     [workerId, types],
   );
@@ -25,10 +19,10 @@ export async function claimNextJob(
 }
 
 export async function completeJob(jobId: string): Promise<void> {
-  await pool.query("select public.complete_job($1)", [jobId]);
+  await getDb().query("select public.complete_job($1)", [jobId]);
 }
 
 /** Requeues with exponential backoff until max_attempts, then fails hard. */
 export async function failJob(jobId: string, error: string): Promise<void> {
-  await pool.query("select public.fail_job($1, $2)", [jobId, error]);
+  await getDb().query("select public.fail_job($1, $2)", [jobId, error]);
 }

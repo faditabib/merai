@@ -43,7 +43,57 @@
     "title": "Dashboard",
     "greeting": "Hello, {name}",
     "emptyTitle": "No projects yet",
-    "emptyBody": "Coming soon: upload your first raw video and Merai will handle the edit, from transcript to export.",
-    "newProject": "New project (soon)"
+    "emptyBody": "Upload your first raw video and Merai will handle the edit, from transcript to export.",
+    "newProject": "New project",
+    "statuses": {
+      "draft": "Draft",
+      "uploading": "Uploading",
+      "transcribing": "Transcribing",
+      "analyzing": "Analyzing",
+      "ready": "Ready",
+      "error": "Error"
+    }
+  },
+  "upload": {
+    "title": "New project",
+    "dropTitle": "Drag your video here or click to choose",
+    "dropHint": "Up to 10 minutes per clip — MP4, MOV, WebM or MKV",
+    "probing": "Reading video info…",
+    "starting": "Preparing the upload…",
+    "uploading": "Uploading…",
+    "paused": "Upload paused",
+    "finalizing": "Finishing the upload…",
+    "pause": "Pause",
+    "resume": "Resume",
+    "cancel": "Cancel",
+    "closeWarning": "Don't close this page while uploading",
+    "errors": {
+      "unsupported-type": "Unsupported file format. Please upload MP4, MOV, WebM or MKV video.",
+      "file-too-large": "The file exceeds the size limit (2 GB).",
+      "video-too-long": "The video exceeds the maximum length: 10 minutes per clip.",
+      "unreadable-duration": "Couldn't read the video's duration. Try a different file.",
+      "not-authenticated": "Your session expired. Please log in again.",
+      "create-failed": "Couldn't create the project. Please try again.",
+      "upload-failed": "The upload couldn't finish. Check your connection and resume.",
+      "object-missing": "The upload didn't complete. Please try again.",
+      "update-failed": "Something went wrong. Please try again.",
+      "enqueue-failed": "Couldn't start processing. Please try again.",
+      "not-found": "Project not found."
+    }
+  },
+  "project": {
+    "steps": {
+      "uploading": "Upload",
+      "transcribing": "Transcription",
+      "analyzing": "Analysis",
+      "ready": "Ready"
+    },
+    "processingHint": "Processing is in progress — you can leave this page and come back later.",
+    "errorTitle": "We couldn't process the video",
+    "errorBody": "Something went wrong during processing. Try again, and contact us if the problem persists.",
+    "retry": "Retry processing",
+    "transcriptTitle": "Transcript",
+    "wordCount": "{count} words",
+    "mockBadge": "Sample data — mock provider"
   }
 }

@@ -1,21 +1,13 @@
 import "dotenv/config";
 
-function required(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
-}
-
 /**
- * Only the database connection is required to boot; provider API keys are
- * validated lazily by the handlers that need them so the worker can run
- * before every integration is configured.
+ * All values are optional at import time and validated lazily where used
+ * (getDb() for the database, requireEnv() in handlers for provider keys) so
+ * the module graph is importable in tests without a full environment.
  */
 export const env = {
   /** Direct Postgres connection string (Supabase → Settings → Database). */
-  databaseUrl: required("SUPABASE_DB_URL"),
+  databaseUrl: process.env.SUPABASE_DB_URL ?? null,
   supabaseUrl: process.env.SUPABASE_URL ?? null,
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? null,
   assemblyAiApiKey: process.env.ASSEMBLYAI_API_KEY ?? null,

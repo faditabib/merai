@@ -7,16 +7,20 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@merai/core": "*",
+    "@supabase/supabase-js": "^2.110.1",
     "dotenv": "^16.4.0",
     "pg": "^8.13.0",
     "tsx": "^4.19.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.4",
     "@types/pg": "^8.11.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

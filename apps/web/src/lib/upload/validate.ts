@@ -1,0 +1,48 @@
+import { MAX_RAW_UPLOAD_BYTES, MAX_RAW_UPLOAD_SECONDS } from "@merai/core";
+
+/**
+ * Pure validation shared by the browser (pre-upload UX) and server actions
+ * (authoritative gate). Returns an error code (i18n key under
+ * upload.errors.*) or null when valid.
+ */
+
+export const ALLOWED_VIDEO_MIME_TYPES = [
+  "video/mp4",
+  "video/quicktime",
+  "video/webm",
+  "video/x-matroska",
+] as const;
+
+export type UploadValidationError =
+  | "unsupported-type"
+  | "file-too-large"
+  | "video-too-long"
+  | "unreadable-duration";
+
+export function validateVideoFile(input: {
+  mimeType: string;
+  sizeBytes: number;
+  durationSeconds: number | null;
+}): UploadValidationError | null {
+  if (
+    !(ALLOWED_VIDEO_MIME_TYPES as readonly string[]).includes(input.mimeType)
+  ) {
+    return "unsupported-type";
+  }
+  if (input.sizeBytes <= 0 || input.sizeBytes > MAX_RAW_UPLOAD_BYTES) {
+    return "file-too-large";
+  }
+  if (input.durationSeconds == null || !Number.isFinite(input.durationSeconds)) {
+    return "unreadable-duration";
+  }
+  if (input.durationSeconds <= 0 || input.durationSeconds > MAX_RAW_UPLOAD_SECONDS) {
+    return "video-too-long";
+  }
+  return null;
+}
+
+/** Sanitized file extension for the storage object name. */
+export function safeExtension(filename: string): string {
+  const match = /\.([a-z0-9]{2,5})$/i.exec(filename);
+  return match ? match[1]!.toLowerCase() : "mp4";
+}
