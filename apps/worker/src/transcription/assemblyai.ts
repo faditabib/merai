@@ -40,7 +40,9 @@ export class AssemblyAIProvider implements TranscriptionProvider {
 
     const submitted = await this.post<AssemblyAiTranscript>("/transcript", {
       audio_url: audioUrl,
-      speech_model: "universal",
+      // Preference list per current API (speech_model was deprecated live,
+      // 2026-07-08): newest pro model first, universal-2 as fallback.
+      speech_models: ["universal-3-5-pro", "universal-2"],
       punctuate: true,
       format_text: true,
       // Keep hesitation sounds (um/uh/اه) in the transcript — Phase 2's

@@ -1,5 +1,36 @@
 # Merai — Progress Log
 
+## Phase 1 — LIVE end-to-end verification (2026-07-08) ✅
+
+Full pipeline verified against the live Supabase project + real AssemblyAI,
+driven through the actual browser UI (login → upload → processing → transcript):
+
+- Speech clip (TTS-generated English, 197 KB): tus resumable upload to live
+  Storage succeeded first try (Bearer JWT + new-format publishable key — no
+  vendor quirks hit); job enqueued, claimed within 2s, **AssemblyAI transcribed
+  31 words in ~10s**; transcript + word timestamps landed in `transcripts`;
+  project reached `ready`; UI showed the transcript with word count, no mock
+  badge.
+- Tone-only clip: pipeline completed with 0 words (correct), provider-measured
+  duration (6s) stored, **0.1000 raw minutes metered** — exposed a missing
+  empty-transcript UI state, now fixed (ar+en).
+- Retry machinery proven live: first attempt failed on a real API change (see
+  below), backoff requeued it, attempt 2 succeeded — project never left a
+  broken state.
+
+**Live findings & fixes:**
+1. AssemblyAI deprecated `speech_model`; now `speech_models:
+   ["universal-3-5-pro", "universal-2"]` (fix from the API's own error
+   message; provider, fixtures and tests updated).
+2. Worker tests could leak real credentials from `apps/worker/.env` via dotenv
+   and silently hit the live API — vitest now pins a hermetic env
+   (`TRANSCRIPTION_PROVIDER=mock`, blank keys).
+
+Test user for manual poking: `e2e-live@merai.test` (throwaway; password in the
+session scratchpad, recreate anytime with the admin API).
+
+---
+
 ## Phase 1 — Upload & transcription pipeline (overnight 2026-07-08, mock-verified)
 
 ### Fully built and tested (31 tests passing: 19 worker + 12 web)

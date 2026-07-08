@@ -59,7 +59,7 @@ export function buildFixture(options: {
     format_text: true,
     disfluencies: true,
     language_detection: false,
-    speech_model: "universal",
+    speech_models: ["universal-3-5-pro", "universal-2"],
     utterances: null,
     webhook_url: null,
   };

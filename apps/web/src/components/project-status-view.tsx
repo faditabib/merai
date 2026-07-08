@@ -126,6 +126,12 @@ export function ProjectStatusView({
         </div>
       )}
 
+      {project.status === "ready" && transcript && !transcript.text && (
+        <p className="rounded-2xl border border-border bg-card p-6 text-sm text-muted">
+          {t("emptyTranscript")}
+        </p>
+      )}
+
       {project.status === "ready" && transcript?.text && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-3">

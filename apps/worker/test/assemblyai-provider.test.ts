@@ -57,7 +57,7 @@ describe("AssemblyAIProvider", () => {
     const body = JSON.parse(String(submitInit?.body));
     expect(body).toMatchObject({
       audio_url: "https://signed.example/media.mp4?token=abc",
-      speech_model: "universal",
+      speech_models: ["universal-3-5-pro", "universal-2"],
       disfluencies: true,
       language_detection: true,
     });
