@@ -22,11 +22,29 @@
   EDL: 3 kept segments, حشو: 1 (آه struck through in UI), صمت: 2, kept
   duration 13s of 16s. custom_spelling confirmed live: ميراي now correct.
 
-### To activate Haiku analysis (tomorrow-you)
-Add `ANTHROPIC_API_KEY` to apps/worker/.env — nothing else. The Haiku path is
-fully built and stub-tested (prompt shape, forced tool call, schema/error
-paths); it has not yet made a live API call. `ANALYSIS_ENGINE=heuristic|haiku`
-forces either engine.
+### Haiku engine LIVE-VERIFIED (2026-07-08, key added)
+Factory picked HaikuAnalysisEngine automatically (apps/worker/src/analysis/
+index.ts:24). Test clip: Arabic stumbled take (اه filler + explicit "خليني
+أعيد من الأول") → 1.5s silence → clean retake → continuation. Haiku, first
+attempt, ~5s: correctly classified the filler, the false start INCLUDING the
+restart announcement, and the retake group — kept take 2 with sound reasoning
+("second take completes the thought; first is incomplete"). Final EDL kept
+exactly the clean take + continuation (13.0s of 24.3s source) and cut
+trailing silence. Overlapping AI ranges (false start ∩ retake) were merged
+cleanly by the builder's reason precedence.
+
+**Cost (measured live):** 1,805 input + 389 output tokens = **$0.0037** for a
+24s video at Haiku 4.5 pricing ($1/$5 per MTok). Projected ≤ ~$0.04 for a
+10-minute cap video — negligible next to STT.
+**Retries don't re-bill (verified live):** requeued the completed job;
+attempt 2 logged "EDL v1 already exists — converging" with zero API calls.
+
+**Observations for later prompt tuning (not changed on n=1):**
+- Haiku reported the abandoned take both as a retake member AND (partially)
+  as a false start — outcome correct via builder precedence, but a prompt
+  rule against cross-category overlapping ranges would make output cleaner.
+- AssemblyAI misheard مونتاج as منتج consistently in BOTH takes — confirming
+  that consistent STT errors don't break retake matching.
 
 ### Deferred
 - `generate_edl` job stays a stub — reserved for user-triggered regeneration
