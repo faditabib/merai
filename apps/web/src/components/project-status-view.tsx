@@ -9,6 +9,7 @@ import {
   type TranscriptWord,
 } from "@merai/core";
 import { retryProcessing } from "@/app/actions/projects";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const POLL_INTERVAL_MS = 2_500;
@@ -181,6 +182,14 @@ export function ProjectStatusView({
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-lg font-semibold">{t("transcriptTitle")}</h2>
+            {edl && (
+              <Link
+                href={`/dashboard/projects/${project.id}/edit`}
+                className="rounded-xl bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+              >
+                {t("openEditor")}
+              </Link>
+            )}
             {transcript.words && (
               <span className="text-sm text-muted">
                 {t("wordCount", { count: transcript.words.length })}

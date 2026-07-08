@@ -1,3 +1,5 @@
+import type { TranscriptWord } from "./transcript";
+
 /**
  * Caption style presets. Internally these are generic style tokens — real
  * creators' names are visual references only and must never appear in
@@ -14,6 +16,77 @@
 export const CAPTION_BREAK_GAP_MS = 500;
 export const CAPTION_MAX_LINE_CHARS = 42;
 export const CAPTION_MAX_LINE_DURATION_MS = 5_000;
+
+/** Sentence-final punctuation (Arabic + Latin) — secondary break hint only. */
+const SENTENCE_END = /[.!?؟…]$/;
+
+export interface CaptionLine {
+  words: TranscriptWord[];
+  text: string;
+  startMs: number;
+  endMs: number;
+}
+
+/**
+ * Group words into caption lines. Primary signal is timing: break on
+ * inter-word gaps > CAPTION_BREAK_GAP_MS; also cap line length and duration.
+ * Punctuation, when present, is a secondary break hint (live Arabic STT
+ * returns none — verified 2026-07-08).
+ */
+export function buildCaptionLines(words: TranscriptWord[]): CaptionLine[] {
+  const lines: CaptionLine[] = [];
+  let current: TranscriptWord[] = [];
+
+  const flush = () => {
+    if (current.length === 0) return;
+    lines.push({
+      words: current,
+      text: current.map((w) => w.text).join(" "),
+      startMs: current[0]!.startMs,
+      endMs: current[current.length - 1]!.endMs,
+    });
+    current = [];
+  };
+
+  for (const word of words) {
+    if (current.length > 0) {
+      const previous = current[current.length - 1]!;
+      const gap = word.startMs - previous.endMs;
+      const lineChars =
+        current.reduce((n, w) => n + w.text.length + 1, 0) + word.text.length;
+      const lineDuration = word.endMs - current[0]!.startMs;
+
+      if (
+        gap > CAPTION_BREAK_GAP_MS ||
+        lineChars > CAPTION_MAX_LINE_CHARS ||
+        lineDuration > CAPTION_MAX_LINE_DURATION_MS ||
+        SENTENCE_END.test(previous.text)
+      ) {
+        flush();
+      }
+    }
+    current.push(word);
+  }
+  flush();
+  return lines;
+}
+
+/** Index of the caption line active at a source position, or -1. */
+export function activeCaptionIndex(
+  lines: CaptionLine[],
+  sourceMs: number,
+): number {
+  return lines.findIndex(
+    (line) => sourceMs >= line.startMs && sourceMs <= line.endMs,
+  );
+}
+
+/** Index of the word being spoken within a line (karaoke highlight), or -1. */
+export function activeWordIndex(line: CaptionLine, sourceMs: number): number {
+  return line.words.findIndex(
+    (word) => sourceMs >= word.startMs && sourceMs <= word.endMs,
+  );
+}
 
 export const CAPTION_STYLE_TOKENS = [
   "bold-yellow-centered", // high-impact, all-caps-feel, center of frame

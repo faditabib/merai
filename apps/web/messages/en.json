@@ -102,7 +102,42 @@
       "removedSilence": "Silence: {count}",
       "removedBadTakes": "Repeated takes: {count}",
       "removedFalseStarts": "False starts: {count}",
-      "legend": "Struck-through words will be cut from the final video — this is the AI's first draft; review and editing arrive in the next phase."
+      "legend": "Struck-through words will be cut from the final video — open the editor to review and adjust every cut."
+    },
+    "openEditor": "Open editor"
+  },
+  "editor": {
+    "versionLabel": "Version {version}",
+    "undo": "Undo",
+    "redo": "Redo",
+    "save": "Save",
+    "saving": "Saving…",
+    "saveError": "Couldn't save your changes. Please try again.",
+    "play": "Play",
+    "pause": "Pause",
+    "previewEdit": "Preview edit (skip removed)",
+    "videoLoading": "Loading video…",
+    "videoError": "Couldn't load the video.",
+    "captionStyle": "Caption style:",
+    "captionPresets": {
+      "bold-yellow-centered": "Bold yellow — centered",
+      "minimal-white-bottom": "Minimal white — bottom",
+      "karaoke-highlight": "Word-by-word highlight"
+    },
+    "transcriptTitle": "Edit by text",
+    "transcriptHint": "Click a word to seek, Shift+click to select a range, then delete it. Click struck-through words to see why they were cut or to restore them.",
+    "deleteSelected": "Delete selected ({count})",
+    "restore": "Restore",
+    "timelineTitle": "Timeline",
+    "timelineHint": "Drag edges to trim, drag a block to reorder; red markers are removed content",
+    "splitAtPlayhead": "Split at playhead",
+    "deleteSegment": "Delete segment",
+    "reasons": {
+      "filler": "Filler",
+      "silence": "Silence",
+      "bad-take": "Repeated take — a better take was kept",
+      "false-start": "False start",
+      "user": "Removed by you"
     }
   }
 }

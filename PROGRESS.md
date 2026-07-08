@@ -1,5 +1,91 @@
 # Merai — Progress Log
 
+## Phase 3 — Review & text-based editing UI (BUILT, live-verified 2026-07-09)
+
+### Done (48 tests passing: 16 core + 20 worker* + 12 web; *includes prior suites)
+- **@merai/core edl-ops** (pure, 11 new tests): removeWords (ripple, midpoint
+  boundaries), restoreRemoved (source-order reinsert + merge), trim (clamped,
+  word-recompute), split-at-playhead, reorder, ripple-delete-segment, and
+  source↔output time mapping. **@merai/core captions**: timing-gap line
+  segmentation + active line/word lookups (5 new tests).
+- **Editor** at /dashboard/projects/[id]/edit: signed-URL player with
+  EDL-aware preview (skips removed regions), caption overlay driven by kept
+  words only, 3 preset picker, transcript editor (click=seek, shift-click
+  range select, Delete=ripple), undo/redo (snapshot stacks), keyboard
+  shortcuts, unsaved-changes guard, save → immutable edl_version
+  (source='user') — the AI draft (v1) is never modified.
+- **Transparency feature (accepted design ask): every cut is explainable** —
+  clicking a struck word or a red timeline ghost opens a popover with the
+  localized removal reason + the AI's verbatim note and one-click restore.
+- **Timeline**: LTR-pinned strip, proportional kept blocks, drag-trim handles,
+  drag-reorder, split-at-playhead, per-block delete, removed ghosts.
+
+### Live verification (real retake project, real browser)
+- Popover on the cut take showed "لقطة مكررة — اختيرت لقطة أفضل" + Haiku's
+  note; restore returned all 9 words (1→2 blocks), undo reverted it.
+- Word deletion via selection rippled correctly; caption overlay immediately
+  dropped the deleted word (captions reflect the edit, live).
+- Split at playhead 2→3 blocks; word click seeked video to 13.64s (correct).
+- Save produced **edl_versions v2 (source='user')** in the live DB with the
+  karaoke style + user cut persisted; v1 (ai) untouched.
+
+### Unknowns from the plan — outcomes
+- Preview-skip works; seek is keyframe-fuzzy as expected (≈100ms) — fine for
+  review, export (Phase 4) is authoritative.
+- RTL transcript with LTR timeline reads naturally; no mixed-direction issues
+  surfaced with this content. Re-check with mixed Arabic/English text later.
+- DOM timeline is smooth at this scale; canvas not needed for MVP lengths.
+
+### Deferred
+- Drag-trim/reorder exercised via pointer events, not human-hand tested —
+  worth a manual feel-pass.
+- No automated tests for the editor React components (core ops fully
+  covered); component tests when the editor stabilizes post-feedback.
+- Mixed RTL/LTR transcript selection UX — revisit with real bilingual clips.
+
+### Original plan (kept for reference)
+
+Goal: the user reviews the AI's first-draft EDL, tweaks it via transcript or
+timeline, previews captions, and saves — producing `edl_versions` v2+
+(source='user'). Builds directly on the live-verified EDL system.
+
+Committed design points:
+
+1. **One source of truth: the EDL.** The editor holds a working `EdlV1` and
+   every operation is a pure `EdlV1 → EdlV1` transform in `@merai/core`
+   (`edl-ops`): remove-words (ripple via text selection), restore-removal,
+   trim, split-at-playhead, reorder, ripple-delete-segment, plus
+   source↔output time mapping. Word edits translate to segment transforms
+   using word timings — no parallel words-vs-segments state to desync.
+   Undo/redo = snapshot stack (EDLs are small). Save appends an immutable
+   version (source='user'), preserving the AI draft (v1) forever.
+2. **Timeline is LTR, permanently** (Phase 0 decision, now binding): time 0
+   at the left even in the RTL UI; panel chrome stays RTL. Play/pause icons
+   not mirrored.
+3. **AI-reasoning transparency (accepted design option):** every removed
+   segment carries `reason` + the AI's note — clicking a cut (transcript or
+   timeline) opens a popover showing why it was removed, with one-click
+   restore. Localized reason labels; the AI note shown as-is.
+4. **Captions:** timing-gap segmentation (`buildCaptionLines` in core, per
+   the Phase 2 decision — punctuation only as a secondary hint), 3 style
+   presets from CAPTION_STYLE_SPECS rendered as a live overlay on the video;
+   selected token saved into the EDL.
+5. **EDL-aware preview:** the player skips removed regions (timeupdate →
+   jump to next kept segment). Known limit: browser seeking is
+   keyframe-fuzzy, so preview cuts are approximate (~±100ms); the ffmpeg
+   export (Phase 4) is the authoritative render. Flagged in the UI copy? No —
+   accepted silently for MVP, revisit if users notice.
+6. **Media access:** signed URL for the raw video created client-side with
+   the user's JWT (storage RLS enforces ownership) — no new server surface.
+
+Live-verification-only unknowns (will flag results in the report):
+- Seek latency/accuracy of preview-skip on real browser video.
+- Transcript selection UX across RTL text with mixed LTR words.
+- Timeline drag interactions (trim/reorder) feel — DOM-based first, canvas
+  only if performance demands it.
+
+---
+
 ## Phase 2 — AI analysis layer (BUILT, live-verified 2026-07-08)
 
 ### Done (44 tests passing: 32 worker + 12 web)
