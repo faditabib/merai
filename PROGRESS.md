@@ -1,6 +1,40 @@
 # Merai — Progress Log
 
-## Phase 2 — AI analysis layer (PLAN, committed before building)
+## Phase 2 — AI analysis layer (BUILT, live-verified 2026-07-08)
+
+### Done (44 tests passing: 32 worker + 12 web)
+- **Analysis engines** behind `AnalysisEngine` (same pattern as transcription):
+  `HaikuAnalysisEngine` — claude-haiku-4-5, ONE call per video, temperature 0,
+  forced tool-use JSON (schema-validated), result persisted on the transcript
+  so retries/regeneration never re-bill; `HeuristicAnalysisEngine` — keyless
+  fallback removing only unambiguous hesitations. Factory is env-driven:
+  **setting ANTHROPIC_API_KEY activates Haiku, zero code changes.**
+- **EDL builder** (pure, defensive): silence detection from word gaps
+  (interior > 800ms, lead/trail), 120ms padding with midpoint overlap
+  resolution, filler/false-start/retake removals with reason precedence,
+  invalid AI word-ranges skipped with warnings; output schema-validated.
+- **Pipeline**: transcribe → enqueue analyze (deduped) → status `analyzing` →
+  EDL v1 (source='ai') → `ready`. Migration 3 adds transcripts.analysis.
+- **UI**: edit-summary chips (kept duration + removals by reason) and
+  struck-through removed words in the transcript, ar+en.
+- **Live run** (heuristic engine, real AssemblyAI): 16s Arabic clip with an
+  isolated اه and a spliced 2s silence → 23 words, `analyzing` stage visible,
+  EDL: 3 kept segments, حشو: 1 (آه struck through in UI), صمت: 2, kept
+  duration 13s of 16s. custom_spelling confirmed live: ميراي now correct.
+
+### To activate Haiku analysis (tomorrow-you)
+Add `ANTHROPIC_API_KEY` to apps/worker/.env — nothing else. The Haiku path is
+fully built and stub-tested (prompt shape, forced tool call, schema/error
+paths); it has not yet made a live API call. `ANALYSIS_ENGINE=heuristic|haiku`
+forces either engine.
+
+### Deferred
+- `generate_edl` job stays a stub — reserved for user-triggered regeneration
+  (Phase 3), which will reuse the persisted analysis without re-billing.
+- Haiku prompt tuning against real creator footage (retake grouping quality)
+  — needs the live key + messy real recordings.
+
+### Original plan (kept for reference)
 
 Goal: after transcription, auto-generate a first-draft EDL with silence,
 fillers, false starts and weak takes removed (project status gains the

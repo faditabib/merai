@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { EdlV1 } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -38,6 +39,14 @@ export default async function ProjectPage({
     .eq("project_id", project.id)
     .maybeSingle();
 
+  const { data: edlRow } = await supabase
+    .from("edl_versions")
+    .select("edl")
+    .eq("project_id", project.id)
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <div className="flex min-h-screen flex-col">
       <AppHeader />
@@ -46,6 +55,7 @@ export default async function ProjectPage({
         <ProjectStatusView
           initialProject={project as ProjectSnapshot}
           initialTranscript={(transcript as TranscriptSnapshot | null) ?? null}
+          initialEdl={(edlRow?.edl as EdlV1 | null) ?? null}
         />
       </main>
     </div>

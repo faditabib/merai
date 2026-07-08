@@ -1,8 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { TranscriptWord } from "@merai/core";
+import {
+  edlOutputDurationMs,
+  type EdlV1,
+  type RemovalReason,
+  type TranscriptWord,
+} from "@merai/core";
 import { retryProcessing } from "@/app/actions/projects";
 import { createClient } from "@/lib/supabase/client";
 
@@ -24,38 +29,61 @@ export interface TranscriptSnapshot {
   error: string | null;
 }
 
+const REMOVAL_STAT_KEYS: Partial<Record<RemovalReason, string>> = {
+  filler: "removedFillers",
+  silence: "removedSilence",
+  "bad-take": "removedBadTakes",
+  "false-start": "removedFalseStarts",
+};
+
 /**
  * Live pipeline view: polls the project row until it reaches a terminal
- * state (ready/error), then loads and renders the transcript.
+ * state (ready/error), then loads the transcript and the AI's first-draft
+ * EDL. Removed words render struck-through — the "edit preview" until the
+ * Phase 3 editor lands.
  * Polling over Realtime is a deliberate simplicity choice — see DECISIONS.md.
  */
 export function ProjectStatusView({
   initialProject,
   initialTranscript,
+  initialEdl,
 }: {
   initialProject: ProjectSnapshot;
   initialTranscript: TranscriptSnapshot | null;
+  initialEdl: EdlV1 | null;
 }) {
   const t = useTranslations("project");
   const [project, setProject] = useState(initialProject);
   const [transcript, setTranscript] = useState(initialTranscript);
+  const [edl, setEdl] = useState(initialEdl);
   const [retrying, setRetrying] = useState(false);
 
   const terminal = project.status === "ready" || project.status === "error";
 
-  const loadTranscript = useCallback(async (projectId: string) => {
-    const { data } = await createClient()
-      .from("transcripts")
-      .select("status, text, words, language_code, provider, error")
-      .eq("project_id", projectId)
-      .maybeSingle();
-    if (data) setTranscript(data as TranscriptSnapshot);
+  const loadResults = useCallback(async (projectId: string) => {
+    const supabase = createClient();
+    const [{ data: transcriptRow }, { data: edlRow }] = await Promise.all([
+      supabase
+        .from("transcripts")
+        .select("status, text, words, language_code, provider, error")
+        .eq("project_id", projectId)
+        .maybeSingle(),
+      supabase
+        .from("edl_versions")
+        .select("edl")
+        .eq("project_id", projectId)
+        .order("version", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
+    if (transcriptRow) setTranscript(transcriptRow as TranscriptSnapshot);
+    if (edlRow?.edl) setEdl(edlRow.edl as EdlV1);
   }, []);
 
   useEffect(() => {
     if (terminal) {
-      if (project.status === "ready" && !transcript?.text) {
-        void loadTranscript(project.id);
+      if (project.status === "ready" && (!transcript?.text || !edl)) {
+        void loadResults(project.id);
       }
       return;
     }
@@ -68,7 +96,7 @@ export function ProjectStatusView({
       if (data) setProject(data as ProjectSnapshot);
     }, POLL_INTERVAL_MS);
     return () => clearInterval(timer);
-  }, [terminal, project.id, project.status, transcript?.text, loadTranscript]);
+  }, [terminal, project.id, project.status, transcript?.text, edl, loadResults]);
 
   async function onRetry() {
     setRetrying(true);
@@ -76,9 +104,26 @@ export function ProjectStatusView({
     if (result.ok) {
       setProject((p) => ({ ...p, status: "transcribing" }));
       setTranscript(null);
+      setEdl(null);
     }
     setRetrying(false);
   }
+
+  const removedWordIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const segment of edl?.removed ?? []) {
+      for (const id of segment.wordIds ?? []) ids.add(id);
+    }
+    return ids;
+  }, [edl]);
+
+  const removalCounts = useMemo(() => {
+    const counts = new Map<RemovalReason, number>();
+    for (const segment of edl?.removed ?? []) {
+      counts.set(segment.reason, (counts.get(segment.reason) ?? 0) + 1);
+    }
+    return counts;
+  }, [edl]);
 
   const currentStep = STEPS.indexOf(project.status as (typeof STEPS)[number]);
   const isRtlTranscript = (transcript?.language_code ?? "ar").startsWith("ar");
@@ -147,12 +192,51 @@ export function ProjectStatusView({
               </span>
             )}
           </div>
+
+          {edl && (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="rounded-full bg-accent/15 px-3 py-1 font-medium text-accent">
+                {t("edit.keptDuration", {
+                  seconds: Math.round(edlOutputDurationMs(edl) / 1000),
+                })}
+              </span>
+              {[...removalCounts.entries()].map(([reason, count]) => {
+                const key = REMOVAL_STAT_KEYS[reason];
+                if (!key) return null;
+                return (
+                  <span
+                    key={reason}
+                    className="rounded-full bg-border/40 px-3 py-1 text-muted"
+                  >
+                    {t(`edit.${key}`, { count })}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+
           <article
             dir={isRtlTranscript ? "rtl" : "ltr"}
             className="rounded-2xl border border-border bg-card p-6 leading-loose"
           >
-            {transcript.text}
+            {transcript.words && edl
+              ? transcript.words.map((word) => (
+                  <span key={word.id}>
+                    <span
+                      className={
+                        removedWordIds.has(word.id)
+                          ? "text-muted line-through opacity-60"
+                          : undefined
+                      }
+                    >
+                      {word.text}
+                    </span>{" "}
+                  </span>
+                ))
+              : transcript.text}
           </article>
+
+          {edl && <p className="text-xs text-muted">{t("edit.legend")}</p>}
         </section>
       )}
     </div>

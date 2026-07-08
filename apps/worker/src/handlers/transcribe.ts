@@ -50,18 +50,14 @@ export async function transcribeWithProvider(
   const upload = uploads[0];
   if (!upload) throw new Error(`upload ${payload.uploadId} not found`);
 
-  // Already done on a previous attempt? Converge and exit.
-  const { rows: existing } = await db.query<{ status: string }>(
-    "select status from public.transcripts where upload_id = $1",
+  // Already done on a previous attempt? Hand off to analysis and exit.
+  const { rows: existing } = await db.query<{ id: string; status: string }>(
+    "select id, status from public.transcripts where upload_id = $1",
     [upload.id],
   );
   if (existing[0]?.status === "completed") {
-    log.info(`transcribe: upload ${upload.id} already transcribed — converging status`);
-    await db.query(
-      `update public.projects set status = 'ready'
-       where id = $1 and status in ('transcribing', 'analyzing')`,
-      [upload.project_id],
-    );
+    log.info(`transcribe: upload ${upload.id} already transcribed — converging`);
+    await enqueueAnalyze(upload, existing[0].id);
     return;
   }
 
@@ -72,13 +68,15 @@ export async function transcribeWithProvider(
   const project = projects[0];
   if (!project) throw new Error(`project ${upload.project_id} not found`);
 
-  await db.query(
+  const { rows: upserted } = await db.query<{ id: string }>(
     `insert into public.transcripts (upload_id, project_id, owner_id, provider, status)
      values ($1, $2, $3, $4, 'processing')
      on conflict (upload_id)
-     do update set status = 'processing', provider = excluded.provider, error = null`,
+     do update set status = 'processing', provider = excluded.provider, error = null
+     returning id`,
     [upload.id, upload.project_id, upload.owner_id, provider.name],
   );
+  const transcriptId = upserted[0]!.id;
 
   const result = await provider.transcribe({
     uploadId: upload.id,
@@ -151,12 +149,39 @@ export async function transcribeWithProvider(
     );
   }
 
-  // Phase 2 will enqueue 'analyze' here and set status 'analyzing' instead.
-  await db.query("update public.projects set status = 'ready' where id = $1", [
-    upload.project_id,
-  ]);
+  // Hand off to the analysis stage (Phase 2): analyzing → ready.
+  await enqueueAnalyze(upload, transcriptId);
 
   log.info(
-    `transcribe: upload ${upload.id} completed (${result.words.length} words, lang=${result.languageCode ?? "?"}, provider=${provider.name})`,
+    `transcribe: upload ${upload.id} completed (${result.words.length} words, lang=${result.languageCode ?? "?"}, provider=${provider.name}) — analysis enqueued`,
+  );
+}
+
+/** Enqueue the analyze job (deduped per upload) and move the project into
+ *  'analyzing'. The analyze handler converges to 'ready'. */
+async function enqueueAnalyze(
+  upload: Pick<UploadRow, "id" | "project_id" | "owner_id">,
+  transcriptId: string,
+): Promise<void> {
+  const db = getDb();
+  await db.query(
+    `insert into public.jobs (type, payload, dedupe_key, owner_id, project_id)
+     values ('analyze', $1::jsonb, $2, $3, $4)
+     on conflict (dedupe_key) do nothing`,
+    [
+      JSON.stringify({
+        transcriptId,
+        projectId: upload.project_id,
+        ownerId: upload.owner_id,
+      }),
+      `analyze:${upload.id}`,
+      upload.owner_id,
+      upload.project_id,
+    ],
+  );
+  await db.query(
+    `update public.projects set status = 'analyzing'
+     where id = $1 and status = 'transcribing'`,
+    [upload.project_id],
   );
 }

@@ -12,6 +12,8 @@ export default defineConfig({
     env: {
       TRANSCRIPTION_PROVIDER: "mock",
       ASSEMBLYAI_API_KEY: "",
+      ANTHROPIC_API_KEY: "",
+      ANALYSIS_ENGINE: "",
       SUPABASE_DB_URL: "",
       SUPABASE_URL: "",
       SUPABASE_SERVICE_ROLE_KEY: "",

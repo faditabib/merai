@@ -95,6 +95,14 @@
     "transcriptTitle": "Transcript",
     "emptyTranscript": "We didn't detect any speech in this video. Make sure the clip contains clear audio.",
     "wordCount": "{count} words",
-    "mockBadge": "Sample data — mock provider"
+    "mockBadge": "Sample data — mock provider",
+    "edit": {
+      "keptDuration": "Duration after edit: {seconds}s",
+      "removedFillers": "Fillers: {count}",
+      "removedSilence": "Silence: {count}",
+      "removedBadTakes": "Repeated takes: {count}",
+      "removedFalseStarts": "False starts: {count}",
+      "legend": "Struck-through words will be cut from the final video — this is the AI's first draft; review and editing arrive in the next phase."
+    }
   }
 }

@@ -95,6 +95,14 @@
     "transcriptTitle": "التفريغ النصي",
     "emptyTranscript": "لم نرصد أي كلام في هذا الفيديو. تأكد من أن المقطع يحتوي على صوت واضح.",
     "wordCount": "{count} كلمة",
-    "mockBadge": "بيانات تجريبية — مزوّد وهمي"
+    "mockBadge": "بيانات تجريبية — مزوّد وهمي",
+    "edit": {
+      "keptDuration": "المدة بعد المونتاج: {seconds} ثانية",
+      "removedFillers": "حشو: {count}",
+      "removedSilence": "صمت: {count}",
+      "removedBadTakes": "لقطات مكررة: {count}",
+      "removedFalseStarts": "بدايات ملغاة: {count}",
+      "legend": "الكلمات المشطوبة سيحذفها مِيراي من الفيديو النهائي — هذه مسودة أولية من الذكاء الاصطناعي، والمراجعة والتعديل قادمان في المرحلة التالية."
+    }
   }
 }

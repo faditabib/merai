@@ -4,6 +4,17 @@
  * product-facing copy (PRD §5). UI labels come from the i18n message files.
  */
 
+/**
+ * Caption segmentation is TIMING-GAP based, not punctuation based: live
+ * Arabic transcription returns no punctuation (verified 2026-07-08), so line
+ * breaks come from inter-word gaps and length caps. Punctuation, when
+ * present (e.g. English), is only a secondary break hint. The Phase 3/4
+ * renderer consumes these constants.
+ */
+export const CAPTION_BREAK_GAP_MS = 500;
+export const CAPTION_MAX_LINE_CHARS = 42;
+export const CAPTION_MAX_LINE_DURATION_MS = 5_000;
+
 export const CAPTION_STYLE_TOKENS = [
   "bold-yellow-centered", // high-impact, all-caps-feel, center of frame
   "minimal-white-bottom", // clean lower-third, subtle background

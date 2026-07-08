@@ -13,6 +13,20 @@ import { z } from "zod";
  * exists so both can coexist during migration.
  */
 
+/**
+ * Timing rules for automatic edit generation (Phase 2 plan, informed by live
+ * Arabic testing):
+ *  - Interior word gaps longer than SILENCE_MIN_GAP_MS are removable silence.
+ *  - SEGMENT_PAD_MS of breathing room is preserved around kept speech so
+ *    cuts don't clip word onsets/tails.
+ *  - Words below LOW_CONFIDENCE_THRESHOLD are filler/error CANDIDATES for AI
+ *    review (live test: a hesitation merged into the next word at conf 0.36)
+ *    — never auto-removed by confidence alone.
+ */
+export const SILENCE_MIN_GAP_MS = 800;
+export const SEGMENT_PAD_MS = 120;
+export const LOW_CONFIDENCE_THRESHOLD = 0.6;
+
 export const aspectRatioSchema = z.enum(["9:16", "1:1", "16:9"]);
 export type AspectRatio = z.infer<typeof aspectRatioSchema>;
 

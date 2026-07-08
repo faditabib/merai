@@ -58,3 +58,37 @@ export const UNAMBIGUOUS_FILLERS = new Set<string>([
   "erm",
   "hmm",
 ]);
+
+/**
+ * Normalize a transcript token for lexicon comparison: lowercase Latin,
+ * strip punctuation, remove Arabic diacritics/tatweel, unify hamza-alef
+ * forms (أإآ → ا). STT output varies in hamza spelling, so lexicon matching
+ * without this misses real fillers.
+ */
+export function normalizeToken(token: string): string {
+  return token
+    .toLowerCase()
+    .replace(/[ً-ْٰـ]/g, "") // harakat, dagger alef, tatweel
+    .replace(/[أإآ]/g, "ا")
+    .replace(/[.,!?؟،؛:"'()\[\]…]/g, "")
+    .trim();
+}
+
+const NORMALIZED_UNAMBIGUOUS = new Set(
+  [...UNAMBIGUOUS_FILLERS].map((t) => normalizeToken(t)),
+);
+const NORMALIZED_CANDIDATES = new Set(
+  [...ARABIC_FILLER_CANDIDATES, ...ENGLISH_FILLER_CANDIDATES].map((t) =>
+    normalizeToken(t),
+  ),
+);
+
+/** Safe to remove without AI review (pure hesitation sound). */
+export function isUnambiguousFiller(token: string): boolean {
+  return NORMALIZED_UNAMBIGUOUS.has(normalizeToken(token));
+}
+
+/** Possibly a filler — must be confirmed in context (AI), never auto-removed. */
+export function isFillerCandidate(token: string): boolean {
+  return NORMALIZED_CANDIDATES.has(normalizeToken(token));
+}
