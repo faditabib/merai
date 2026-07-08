@@ -1,5 +1,39 @@
 # Merai — Progress Log
 
+## Phase 2 — AI analysis layer (PLAN, committed before building)
+
+Goal: after transcription, auto-generate a first-draft EDL with silence,
+fillers, false starts and weak takes removed (project status gains the
+`analyzing` step: transcribing → analyzing → ready).
+
+Committed design points, including both gaps found in the live Arabic test:
+
+1. **Filler detection is NOT token matching.** Candidates come from three
+   sources: (a) lexicon matches (@merai/core fillers, Arabic-normalized),
+   (b) **low-confidence words (< 0.6) — required because live testing showed a
+   hesitation (اه) can merge into the next word (أهرفع @ conf 0.361)**,
+   (c) unambiguous hesitation sounds. Candidates + context go to Claude Haiku
+   for classification; only unambiguous fillers may be removed without AI.
+2. **Caption segmentation is timing-gap based, not punctuation based** —
+   live Arabic output arrived with NO punctuation despite punctuate:true.
+   Caption lines break on inter-word gaps (with char-length caps); punctuation
+   is a secondary signal used only when present. (Constants land in
+   @merai/core now; the renderer consumes them in Phase 3/4.)
+3. Silence detection needs no AI: interior word-timing gaps > threshold,
+   with padding preserved around speech edges.
+4. Best-take/false-start detection: Haiku compares repeated/aborted phrase
+   groups; "strongest take" = complete + fewest fillers + confidence.
+5. **Cost rules**: Haiku ONLY (claude-haiku-4-5), one analysis call per video,
+   forced tool-use JSON output (no free-form parsing retries), analysis stored
+   on the transcript row so EDL regeneration never re-bills the model.
+6. Keyless dev fallback mirrors Phase 1: a heuristic engine (unambiguous
+   fillers + silence only) runs when ANTHROPIC_API_KEY is absent; tests are
+   hermetic and never call the live API.
+7. Brand-name accuracy: verify AssemblyAI word_boost live for Arabic before
+   adopting it in the provider (evidence first — see speech_models incident).
+
+---
+
 ## Phase 1 — LIVE end-to-end verification (2026-07-08) ✅
 
 Full pipeline verified against the live Supabase project + real AssemblyAI,

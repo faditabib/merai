@@ -61,6 +61,10 @@ describe("AssemblyAIProvider", () => {
       disfluencies: true,
       language_detection: true,
     });
+    // Brand-term correction map (custom_spelling verified live for Arabic).
+    expect(body.custom_spelling).toEqual(
+      expect.arrayContaining([expect.objectContaining({ to: "ميراي" })]),
+    );
     expect(body.language_code).toBeUndefined();
 
     // Poll calls hit the transcript resource until completed.

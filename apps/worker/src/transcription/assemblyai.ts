@@ -10,6 +10,18 @@ import type {
 
 const API_BASE = "https://api.assemblyai.com/v2";
 
+/**
+ * Deterministic output corrections for product terms. Probed live 2026-07-08:
+ * word_boost is a no-op for Arabic (accepted, zero effect), custom_spelling
+ * works and fixed ميري → ميراي at the word level. Trade-off: these tokens are
+ * force-mapped even when the speaker meant something else (e.g. ميري as a
+ * name) — acceptable for product-context recordings; see DECISIONS.md.
+ */
+const CUSTOM_SPELLING = [
+  { from: ["ميري", "ميراى"], to: "ميراي" },
+  { from: ["Mireille", "Miray", "Mirai"], to: "Merai" },
+];
+
 export interface AssemblyAIProviderOptions {
   pollIntervalMs?: number;
   pollTimeoutMs?: number;
@@ -48,6 +60,7 @@ export class AssemblyAIProvider implements TranscriptionProvider {
       // Keep hesitation sounds (um/uh/اه) in the transcript — Phase 2's
       // filler removal depends on them being present.
       disfluencies: true,
+      custom_spelling: CUSTOM_SPELLING,
       ...(request.languageHint === "auto"
         ? { language_detection: true }
         : { language_code: request.languageHint }),
