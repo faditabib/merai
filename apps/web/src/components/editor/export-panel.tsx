@@ -13,7 +13,11 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { renderCaptionImages } from "@/lib/export/caption-images";
 import { buildExportPlan } from "@/lib/export/plan";
-import { renderExport } from "@/lib/export/renderer";
+import {
+  cancelActiveExport,
+  ExportCancelledError,
+  renderExport,
+} from "@/lib/export/renderer";
 
 const RAW_BUCKET = "raw-uploads";
 const EXPORTS_BUCKET = "exports";
@@ -171,14 +175,22 @@ export function ExportPanel(props: ExportPanelProps) {
       setStage("done");
       void refreshList();
     } catch (err) {
-      console.error("export failed", err);
+      const wasCancelled = err instanceof ExportCancelledError;
+      if (!wasCancelled) console.error("export failed", err);
       if (exportId) {
         await supabase
           .from("exports")
-          .update({ status: "failed", error: err instanceof Error ? err.message : "unknown" })
+          .update({
+            status: "failed",
+            error: wasCancelled
+              ? "cancelled"
+              : err instanceof Error
+                ? err.message
+                : "unknown",
+          })
           .eq("id", exportId);
       }
-      setStage("error");
+      setStage(wasCancelled ? "idle" : "error");
       void refreshList();
     }
   }
@@ -227,13 +239,20 @@ export function ExportPanel(props: ExportPanelProps) {
 
       {busy && (
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between gap-3 text-sm">
             <span>
               {stage === "rendering"
                 ? t("stages.rendering", { percent: Math.round(progress * 100) })
                 : t(`stages.${stage}`)}
             </span>
-            <span className="text-xs text-red-500">{t("closeWarning")}</span>
+            <span className="ms-auto text-xs text-red-500">{t("closeWarning")}</span>
+            <button
+              type="button"
+              onClick={() => cancelActiveExport()}
+              className="rounded-lg border border-border px-3 py-1 text-xs text-muted hover:border-red-500 hover:text-red-500"
+            >
+              {t("cancel")}
+            </button>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-border">
             <div

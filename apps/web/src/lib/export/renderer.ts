@@ -9,7 +9,34 @@ import type { ExportPlan } from "./plan";
 
 export type ExportStage = "loading" | "downloading" | "rendering";
 
+export class ExportCancelledError extends Error {
+  constructor() {
+    super("export cancelled");
+    this.name = "ExportCancelledError";
+  }
+}
+
 let instance: FFmpeg | null = null;
+let activeAbort: AbortController | null = null;
+let cancelled = false;
+
+/**
+ * Abort the in-flight export: interrupts the source download and terminates
+ * the wasm core (the only way to stop a running exec). The core reloads on
+ * the next export.
+ */
+export function cancelActiveExport(): void {
+  cancelled = true;
+  activeAbort?.abort();
+  if (instance) {
+    try {
+      instance.terminate();
+    } catch {
+      /* already dead */
+    }
+    instance = null;
+  }
+}
 
 async function getFFmpeg(): Promise<FFmpeg> {
   if (instance?.loaded) return instance;
@@ -29,13 +56,27 @@ export async function renderExport(options: {
   onStage: (stage: ExportStage) => void;
   onProgress: (ratio: number) => void;
 }): Promise<Uint8Array> {
+  cancelled = false;
+  activeAbort = new AbortController();
+  const throwIfCancelled = () => {
+    if (cancelled) throw new ExportCancelledError();
+  };
+
   options.onStage("loading");
   const ffmpeg = await getFFmpeg();
+  throwIfCancelled();
 
   options.onStage("downloading");
-  const response = await fetch(options.videoUrl);
-  if (!response.ok) throw new Error(`source fetch failed: ${response.status}`);
-  const source = new Uint8Array(await response.arrayBuffer());
+  let source: Uint8Array;
+  try {
+    const response = await fetch(options.videoUrl, { signal: activeAbort.signal });
+    if (!response.ok) throw new Error(`source fetch failed: ${response.status}`);
+    source = new Uint8Array(await response.arrayBuffer());
+  } catch (err) {
+    if (cancelled) throw new ExportCancelledError();
+    throw err;
+  }
+  throwIfCancelled();
 
   const files = ["input.mp4", "out.mp4", ...options.captionImages.map((f) => f.name)];
   try {
@@ -51,9 +92,17 @@ export async function renderExport(options: {
     let exitCode: number;
     try {
       exitCode = await ffmpeg.exec(options.plan.args);
+    } catch (err) {
+      if (cancelled) throw new ExportCancelledError();
+      throw err;
     } finally {
-      ffmpeg.off("progress", onProgress);
+      try {
+        ffmpeg.off("progress", onProgress);
+      } catch {
+        /* core terminated */
+      }
     }
+    if (cancelled) throw new ExportCancelledError();
     if (exitCode !== 0) throw new Error(`ffmpeg exited with code ${exitCode}`);
 
     const output = await ffmpeg.readFile("out.mp4");
@@ -62,12 +111,15 @@ export async function renderExport(options: {
     }
     return output as Uint8Array;
   } finally {
-    // Free wasm FS memory regardless of outcome.
-    for (const file of files) {
-      try {
-        await ffmpeg.deleteFile(file);
-      } catch {
-        /* not written */
+    activeAbort = null;
+    // Free wasm FS memory regardless of outcome (no-ops if core terminated).
+    if (!cancelled) {
+      for (const file of files) {
+        try {
+          await ffmpeg.deleteFile(file);
+        } catch {
+          /* not written */
+        }
       }
     }
   }

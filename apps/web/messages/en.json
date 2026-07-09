@@ -158,6 +158,7 @@
       "uploading": "Uploading the final file…"
     },
     "done": "Export complete — your video is ready to publish!",
+    "cancel": "Cancel export",
     "download": "Download",
     "error": "Export failed. Please try again.",
     "closeWarning": "Don't close this page while rendering",
