@@ -1,5 +1,90 @@
 # Merai — Progress Log
 
+## Phase 4 — Export pipeline, ffmpeg.wasm (BUILT, live-verified 2026-07-09)
+
+### Done (55 tests: 16 core + 20 worker + 19 web)
+- **Pure export planner** (7 tests): EDL → filter_complex (trim/atrim+concat
+  per kept segment, frame-accurate), scale+crop per aspect ratio, caption
+  overlay enable-windows computed in OUTPUT time, x264/aac/faststart args.
+- **Canvas caption rasterizer**: one transparent full-frame PNG per line —
+  the browser does Arabic shaping, ffmpeg never touches text.
+- **Renderer**: self-hosted single-thread core (copied to public/ffmpeg at
+  build), staged progress (load→download→render with % from ffmpeg→upload),
+  wasm FS cleanup, instance reuse across exports.
+- **Export panel in the editor**: aspect picker (persists into the EDL),
+  auto-save-if-dirty before export, exports-row lifecycle
+  (rendering→uploaded/failed), progress bar + tab-close guard, immediate
+  blob download + previous-exports list with signed-URL re-download.
+
+### Live verification (real browser, real storage)
+Exported the user-edited retake project (EDL v2) end-to-end in the preview
+browser: render completed, exports row → 'uploaded' (0.5MB). Downloaded the
+file from the exports bucket and inspected it objectively:
+- **ffprobe**: h264 + aac, 720×1280 (9:16), duration 12.434s — exactly
+  matching the DB row and the edited output duration.
+- **Extracted frame**: burned Arabic caption fully SHAPED and CONNECTED
+  (RTL correct), and the word deleted in Phase 3 (أشرح) is absent — the
+  user's edit flowed from editor → saved version → export.
+
+### Unknowns from the plan — outcomes
+- 16s clip rendered in well under 4 min on the single-thread core;
+  **10-minute clips still need a stress test** (memory + time) before launch.
+- Canvas font loading worked via document.fonts (no fallback glyphs seen).
+- wasm x264/aac behaved identically to native for this clip.
+
+### Deferred
+- Karaoke word-level highlight in exports (line-level burn for now).
+- Export cancel button; render-time estimate; 1080p (blocked on the
+  single-thread decision).
+- 10-minute stress test for wasm memory ceilings (2GB source cap risk).
+
+### Original plan (kept for reference)
+
+Goal: render the final MP4 **client-side** (deliberate cost decision, PRD §6)
+from the saved EDL + caption style + aspect ratio; upload to the private
+`exports` bucket for re-download; good progress UX.
+
+Committed design points:
+
+1. **Single-threaded ffmpeg core, self-hosted.** The multithreaded core needs
+   SharedArrayBuffer → COOP/COEP headers, and COEP would block the
+   cross-origin Supabase media URLs the editor already depends on. Slower
+   render is the price; MVP accepts it. Core files copied from @ffmpeg/core
+   into public/ffmpeg at build (no CDN dependency).
+2. **Arabic captions are rendered by the BROWSER, not ffmpeg.** ffmpeg
+   drawtext without fribidi/harfbuzz renders Arabic disconnected and
+   reversed, and libass availability in the wasm core is uncertain. Instead:
+   each caption line is drawn onto a transparent full-frame PNG via Canvas2D
+   (native Arabic shaping, the same IBM Plex font), and ffmpeg overlays each
+   PNG with enable='between(t,…)' windows computed in OUTPUT time. Correct
+   shaping is guaranteed because no text ever enters ffmpeg.
+3. **Karaoke style burns as line-level in MVP** — word-level burn-in would
+   need a PNG per word state (thousands for 10 min). Word-level highlight
+   stays preview-only; flagged as polish.
+4. **Frame-accurate cuts in one pass:** filter_complex trim/atrim +
+   concat per kept segment (re-encode, no keyframe fuzz — this is the
+   authoritative render the preview approximates).
+5. **Output resolution 720-class** (9:16→720×1280, 1:1→720×720,
+   16:9→1280×720), libx264 veryfast + aac: wasm encode speed over pixels;
+   margin-friendly. Revisit 1080p when wasm perf allows.
+6. **Export flow:** auto-save the working EDL if dirty → insert exports row
+   (status 'rendering', edl_version_id) → download source via signed URL →
+   render with live progress → upload to exports/{owner}/{id}.mp4 → mark
+   'uploaded'. Failures mark 'failed'. Tab-close warning during render
+   (no email fallback in MVP). Previous exports listed with signed-URL
+   re-download (90-day retention).
+7. **Pure export planning** (segments → filter graph, caption windows,
+   resolution math) lives in a testable module; only the renderer touches
+   ffmpeg.
+
+Live-verification-only unknowns:
+- ffmpeg.wasm load + render time/memory in the real browser (16s clip now;
+  10-min clips need a later stress test).
+- Canvas font readiness (document.fonts) before caption rasterization.
+- Whether aac/libx264 encode settings behave identically in the wasm build.
+
+---
+
 ## Phase 3 — Review & text-based editing UI (BUILT, live-verified 2026-07-09)
 
 ### Done (48 tests passing: 16 core + 20 worker* + 12 web; *includes prior suites)

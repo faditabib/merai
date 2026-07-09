@@ -40,7 +40,7 @@ export default async function EditorPage({
         .maybeSingle(),
       supabase
         .from("edl_versions")
-        .select("edl, version")
+        .select("id, edl, version")
         .eq("project_id", id)
         .order("version", { ascending: false })
         .limit(1)
@@ -69,6 +69,7 @@ export default async function EditorPage({
         languageCode={transcript!.language_code as string | null}
         initialEdl={edlRow!.edl as EdlV1}
         initialVersion={edlRow!.version as number}
+        initialEdlVersionId={edlRow!.id as string}
         storagePath={upload!.storage_path as string}
         sourceDurationMs={Math.round(Number(upload!.duration_seconds ?? 0) * 1000)}
       />

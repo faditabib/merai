@@ -20,6 +20,7 @@ import {
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
 import { CaptionOverlay } from "./caption-overlay";
+import { ExportPanel } from "./export-panel";
 import { Timeline } from "./timeline";
 import { TranscriptPanel } from "./transcript-panel";
 
@@ -33,6 +34,7 @@ export interface EditorViewProps {
   languageCode: string | null;
   initialEdl: EdlV1;
   initialVersion: number;
+  initialEdlVersionId: string;
   storagePath: string;
   sourceDurationMs: number;
 }
@@ -51,6 +53,7 @@ export function EditorView(props: EditorViewProps) {
   const [undoStack, setUndoStack] = useState<EdlV1[]>([]);
   const [redoStack, setRedoStack] = useState<EdlV1[]>([]);
   const [version, setVersion] = useState(props.initialVersion);
+  const [savedVersionId, setSavedVersionId] = useState(props.initialEdlVersionId);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -152,25 +155,37 @@ export function EditorView(props: EditorViewProps) {
     setSelectedWordIds([]);
   }, [apply, edl, props.words, selectedWordIds]);
 
-  const save = useCallback(async () => {
+  const save = useCallback(async (): Promise<string | null> => {
     setSaving(true);
     setSaveError(false);
     const nextVersion = version + 1;
-    const { error } = await supabase.from("edl_versions").insert({
-      project_id: props.projectId,
-      owner_id: props.ownerId,
-      version: nextVersion,
-      source: "user",
-      edl,
-    });
-    if (error) {
-      setSaveError(true);
-    } else {
-      setVersion(nextVersion);
-      setDirty(false);
-    }
+    const { data, error } = await supabase
+      .from("edl_versions")
+      .insert({
+        project_id: props.projectId,
+        owner_id: props.ownerId,
+        version: nextVersion,
+        source: "user",
+        edl,
+      })
+      .select("id")
+      .single();
     setSaving(false);
+    if (error || !data) {
+      setSaveError(true);
+      return null;
+    }
+    setVersion(nextVersion);
+    setSavedVersionId(data.id as string);
+    setDirty(false);
+    return data.id as string;
   }, [edl, props.ownerId, props.projectId, supabase, version]);
+
+  /** Export needs a persisted version — saves only when there are changes. */
+  const ensureSavedVersion = useCallback(async (): Promise<string | null> => {
+    if (!dirty) return savedVersionId;
+    return save();
+  }, [dirty, save, savedVersionId]);
 
   // Keyboard: Delete removes selection, ctrl+z/ctrl+shift+z undo/redo, space play.
   useEffect(() => {
@@ -353,6 +368,17 @@ export function EditorView(props: EditorViewProps) {
         }
         onRippleDelete={(segmentId) => apply(rippleDeleteSegment(edl, segmentId))}
         onRestore={(removedId) => apply(restoreRemoved(edl, removedId))}
+      />
+
+      <ExportPanel
+        projectId={props.projectId}
+        ownerId={props.ownerId}
+        storagePath={props.storagePath}
+        languageCode={props.languageCode}
+        edl={edl}
+        words={props.words}
+        onChangeAspect={(ratio) => apply({ ...edl, aspectRatio: ratio })}
+        ensureSavedVersion={ensureSavedVersion}
       />
     </main>
   );

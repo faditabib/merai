@@ -139,5 +139,35 @@
       "false-start": "False start",
       "user": "Removed by you"
     }
+  },
+  "export": {
+    "title": "Export",
+    "aspect": "Aspect:",
+    "aspectNames": {
+      "9x16": "vertical",
+      "1x1": "square",
+      "16x9": "horizontal"
+    },
+    "start": "Export video",
+    "stages": {
+      "saving": "Saving version…",
+      "loading": "Loading render engine…",
+      "downloading": "Downloading source video…",
+      "captions": "Preparing captions…",
+      "rendering": "Rendering… {percent}%",
+      "uploading": "Uploading the final file…"
+    },
+    "done": "Export complete — your video is ready to publish!",
+    "download": "Download",
+    "error": "Export failed. Please try again.",
+    "closeWarning": "Don't close this page while rendering",
+    "previous": "Previous exports",
+    "statuses": {
+      "pending": "Pending",
+      "rendering": "Rendering",
+      "uploaded": "Ready",
+      "failed": "Failed",
+      "expired": "Expired"
+    }
   }
 }

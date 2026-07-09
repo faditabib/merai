@@ -62,5 +62,14 @@ Live Arabic test (15s MSA/Levantine TTS with يعني/اه/طب fillers): Assemb
 ## 2026-07-08 — Brand terms: AssemblyAI custom_spelling adopted, word_boost rejected
 Both probed live against the stored Arabic clip before adopting anything (lesson from the speech_models deprecation): `word_boost: ["ميراي"]` was accepted but changed nothing (ميري, identical confidence); `custom_spelling` fixed the token at word level (منصة ميراي). Provider now sends a small product-term correction map (ميري/ميراى → ميراي, Mireille/Miray/Mirai → Merai). Known trade-off: force-mapping can overcorrect genuine uses of those tokens (ميري as a person's name); acceptable while recordings are product-adjacent. **Revisit when:** user-defined custom vocabulary becomes a feature.
 
+## 2026-07-09 — Export: single-threaded ffmpeg.wasm core, self-hosted
+The multithreaded core needs SharedArrayBuffer → COOP/COEP response headers, and COEP would block the cross-origin Supabase signed-URL media the editor plays. Single-thread renders slower but keeps the page unisolated. Core (32MB wasm) is copied from @ffmpeg/core into public/ffmpeg at build — no CDN dependency. **Revisit when:** render times hurt on 10-min clips (options: COEP credentialless, or a render-server escape hatch — which would fight the margin model).
+
+## 2026-07-09 — Exported captions are rasterized by the browser, never by ffmpeg
+ffmpeg drawtext without fribidi/harfbuzz renders Arabic disconnected and reversed, and libass availability in the wasm build is uncertain. Each caption line is drawn onto a transparent full-frame PNG via Canvas2D (native Arabic shaping, same font as the UI) and overlaid with enable='between(t,…)' windows in output time. Verified live: extracted frame shows correctly shaped, connected RTL Arabic. Trade-off: karaoke word-level highlight burns as line-level in MVP (a PNG per word state is impractical); word-level remains preview-only — flagged as polish.
+
+## 2026-07-09 — Export resolution: 720-class (9:16→720×1280, 1:1→720×720, 16:9→1280×720)
+wasm encode speed and memory over pixels; x264 veryfast + crf 23 + aac 128k. A 16s clip rendered in well under 4 minutes single-threaded. **Revisit when:** creators ask for 1080p (needs the multithreaded-core question answered first).
+
 ## 2026-07-08 — Storage layout: owner-uuid-prefixed paths in private buckets
 `raw-uploads/{owner_id}/{upload_id}/original.<ext>` and `exports/{owner_id}/{export_id}.mp4`. Storage RLS grants access only when the first path folder equals `auth.uid()` — no public buckets, all delivery via signed URLs.
