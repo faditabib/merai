@@ -1,5 +1,22 @@
 import type { CaptionStyleSpec } from "@merai/core";
-import type { CaptionOverlayPlan } from "./plan";
+import { BLANK_IMAGE, type CaptionOverlayPlan } from "./plan";
+
+/** Fully transparent full-frame PNG — the gap filler in the caption sequence. */
+export async function renderBlankImage(
+  width: number,
+  height: number,
+): Promise<{ name: string; data: Uint8Array }> {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const blob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("blank rasterization failed"))),
+      "image/png",
+    ),
+  );
+  return { name: BLANK_IMAGE, data: new Uint8Array(await blob.arrayBuffer()) };
+}
 
 /**
  * Rasterize caption lines to transparent full-frame PNGs using Canvas2D.

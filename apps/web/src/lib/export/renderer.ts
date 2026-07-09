@@ -78,11 +78,22 @@ export async function renderExport(options: {
   }
   throwIfCancelled();
 
-  const files = ["input.mp4", "out.mp4", ...options.captionImages.map((f) => f.name)];
+  const files = [
+    "input.mp4",
+    "out.mp4",
+    "captions.txt",
+    ...options.captionImages.map((f) => f.name),
+  ];
   try {
     await ffmpeg.writeFile("input.mp4", source);
     for (const image of options.captionImages) {
       await ffmpeg.writeFile(image.name, image.data);
+    }
+    if (options.plan.concatScript) {
+      await ffmpeg.writeFile(
+        "captions.txt",
+        new TextEncoder().encode(options.plan.concatScript),
+      );
     }
 
     options.onStage("rendering");

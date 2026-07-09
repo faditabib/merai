@@ -11,7 +11,7 @@ import {
   type TranscriptWord,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
-import { renderCaptionImages } from "@/lib/export/caption-images";
+import { renderBlankImage, renderCaptionImages } from "@/lib/export/caption-images";
 import { buildExportPlan } from "@/lib/export/plan";
 import {
   cancelActiveExport,
@@ -138,6 +138,9 @@ export function ExportPanel(props: ExportPanelProps) {
         plan.height,
         (props.languageCode ?? "ar").startsWith("ar"),
       );
+      if (plan.captions.length > 0) {
+        captionImages.push(await renderBlankImage(plan.width, plan.height));
+      }
 
       const objectName = props.storagePath.slice(RAW_BUCKET.length + 1);
       const { data: signed, error: signError } = await supabase.storage

@@ -22,6 +22,16 @@ export function getDb(): Db {
       throw new Error("SUPABASE_DB_URL is not set (see apps/worker/.env.example)");
     }
     const pool = new pg.Pool({ connectionString: env.databaseUrl, max: 5 });
+    // Idle clients dropped by the pooler emit 'error' at the pool level —
+    // without a handler that is an unhandled event and crashes the process
+    // (observed live 2026-07-09 after an overnight idle). Log and continue;
+    // pg discards the dead client and dials a fresh one on next use.
+    pool.on("error", (err) => {
+      // Lazy import avoided: console keeps db.ts dependency-free.
+      console.error(
+        `${new Date().toISOString()} [ERROR] idle db client error (recovered): ${err.message}`,
+      );
+    });
     const wrapped: Db = {
       async query<R>(text: string, params?: unknown[]) {
         const result = await pool.query(text, params as never[]);
