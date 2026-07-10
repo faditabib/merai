@@ -1,5 +1,30 @@
 # Merai — Progress Log
 
+## Railway worker deploy + production render test (2026-07-11)
+
+Worker deployed: project **merai-worker**, service **worker** (Dockerfile
+build via railway.json, env vars set from apps/worker/.env — 5 vars).
+Deploy built and started first try; queue polling live against Supabase.
+
+### Production render test (9.6-min stress clip, 13 segments, on Railway)
+- **Wall time: 147.7s queue-claim → job-done** (encode sum 110.4s; the
+  462.9s mega-segment took 86.4s). ≈ 3.9× faster than realtime — a 10-min
+  video renders in ~2.5 min on a shared Railway vCPU (desktop: 55s;
+  browser wasm was 1,030s).
+- **Memory: 954MB container peak** (cgroup v2 `memory.peak`, includes the
+  ffmpeg children — instrumentation added to LocalFfmpegEngine). Well
+  within Railway's limits; sets the worker's sizing floor.
+- **Failures: zero.** The 55.8MB output exceeded the storage 50MB cap and
+  the part-split fallback handled it on the SAME attempt (2 parts, no
+  retry, no failed job) — first production exercise of the Phase A
+  fallback. Both parts verified: signed-URL downloads HTTP 200, byte sum
+  exactly equals size_bytes (58,459,479).
+
+Remaining owner actions: Vercel SSO protection toggle (or merai.studio
+domain), Supabase Pro (removes the part-split path for ≤1080p exports).
+
+---
+
 ## Phase A — Production hardening + first deploys (2026-07-10)
 
 ### Done (78 tests: 24 core + 42 worker + 12 web)

@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -12,6 +13,20 @@ import {
 } from "./types";
 
 const execFileAsync = promisify(execFile);
+
+/**
+ * Container memory in MB from the cgroup v2 accounting (includes ffmpeg
+ * children, unlike process.memoryUsage). Returns null off-Linux/containers.
+ */
+function cgroupMemoryMb(file: "memory.peak" | "memory.current"): number | null {
+  try {
+    const raw = readFileSync(`/sys/fs/cgroup/${file}`, "utf8").trim();
+    const bytes = Number(raw);
+    return Number.isFinite(bytes) ? Math.round(bytes / 1024 / 1024) : null;
+  } catch {
+    return null;
+  }
+}
 
 /** Generous per-command ceiling; a full 10-min segment renders in seconds
  *  natively but leave headroom for slow shared vCPUs. */
@@ -79,6 +94,10 @@ export class LocalFfmpegEngine implements RenderEngine {
 
       const output = await readFile(join(dir, "out.mp4"));
       if (output.length === 0) throw new Error("empty render output");
+      const peakMb = cgroupMemoryMb("memory.peak") ?? cgroupMemoryMb("memory.current");
+      if (peakMb !== null) {
+        log.info(`render: container memory peak ${peakMb}MB (cgroup)`);
+      }
       return new Uint8Array(output);
     } finally {
       await rm(dir, { recursive: true, force: true });
