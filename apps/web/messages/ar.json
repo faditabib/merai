@@ -159,6 +159,8 @@
     "cancelling": "جارٍ الإلغاء…",
     "cancelledNote": "أُلغي التصدير.",
     "download": "تنزيل",
+    "assembling": "يجري تجهيز الملف…",
+    "downloadFailed": "فشل التنزيل — حاول مرة أخرى.",
     "error": "فشل التصدير. حاول مرة أخرى.",
     "previous": "تصديرات سابقة",
     "statuses": {

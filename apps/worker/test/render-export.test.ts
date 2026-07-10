@@ -1,7 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { EdlV1 } from "@merai/core";
 import { setDb } from "../src/db";
+import { PermanentJobError } from "../src/errors";
 import {
+  EXPORT_PART_BYTES,
+  OutputTooLargeError,
   renderExportWithEngine,
   type RenderExportDeps,
 } from "../src/handlers/render-export";
@@ -163,6 +166,76 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
       [ids.exportId],
     );
     expect(rows[0]!.status).toBe("cancelled");
+  });
+
+  it("falls back to .partN objects when the output is over the per-file cap", async () => {
+    const ids = await seedExport();
+    const size = EXPORT_PART_BYTES + 1024; // 2 parts: one full, one 1KiB
+    const engine: RenderEngine = {
+      name: "stub",
+      async render() {
+        return new Uint8Array(size);
+      },
+    };
+    const uploads: Array<{ path: string; length: number }> = [];
+    const deps: RenderExportDeps = {
+      signSourceUrl: async () => "https://signed.example/input.mp4",
+      uploadOutput: async (path, bytes) => {
+        if (!/\.part\d+$/.test(path)) {
+          throw new OutputTooLargeError("output upload failed: The object exceeded the maximum allowed size");
+        }
+        uploads.push({ path, length: bytes.length });
+      },
+    };
+
+    await renderExportWithEngine(jobFor(ids), engine, deps);
+
+    expect(uploads).toEqual([
+      { path: `${ids.ownerId}/${ids.exportId}.mp4.part0`, length: EXPORT_PART_BYTES },
+      { path: `${ids.ownerId}/${ids.exportId}.mp4.part1`, length: 1024 },
+    ]);
+    const { rows } = await db.query<{
+      status: string;
+      parts: number;
+      storage_path: string;
+      size_bytes: string;
+    }>("select * from public.exports where id = $1", [ids.exportId]);
+    expect(rows[0]).toMatchObject({
+      status: "uploaded",
+      parts: 2,
+      storage_path: `exports/${ids.ownerId}/${ids.exportId}.mp4`,
+    });
+    expect(Number(rows[0]!.size_bytes)).toBe(size);
+  });
+
+  it("classifies a cap below the part size as a permanent failure", async () => {
+    const ids = await seedExport();
+    const engine: RenderEngine = {
+      name: "stub",
+      async render() {
+        return new Uint8Array([1, 2, 3, 4]); // already smaller than one part
+      },
+    };
+    const deps: RenderExportDeps = {
+      signSourceUrl: async () => "https://signed.example/input.mp4",
+      uploadOutput: async () => {
+        throw new OutputTooLargeError("output upload failed: The object exceeded the maximum allowed size");
+      },
+    };
+    await expect(renderExportWithEngine(jobFor(ids), engine, deps)).rejects.toBeInstanceOf(
+      PermanentJobError,
+    );
+  });
+
+  it("classifies a missing exports row as a permanent failure", async () => {
+    const ids = await seedExport();
+    await expect(
+      renderExportWithEngine(
+        jobFor({ ...ids, exportId: "00000000-0000-4000-8000-00000000dead" }),
+        { name: "stub", render: async () => new Uint8Array([1]) },
+        stubDeps(),
+      ),
+    ).rejects.toBeInstanceOf(PermanentJobError);
   });
 
   it("propagates engine failures for queue retry (row stays rendering)", async () => {

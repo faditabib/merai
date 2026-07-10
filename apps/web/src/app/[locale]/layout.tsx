@@ -13,9 +13,13 @@ const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-plex-arabic",
 });
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// Locale pages render dynamically: SSG locale routes (srcRoute /[locale]/…)
+// currently break @vercel/next's route→lambda mapping on deploy ("Unable to
+// find lambda for route: /ar/login"), returning 404s in production. The
+// pages are trivial (landing/auth) and the dashboard is already
+// force-dynamic, so on-demand rendering costs nothing meaningful.
+// Revisit when the builder handles Next 16 SSG locale routes.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

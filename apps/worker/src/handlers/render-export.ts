@@ -7,6 +7,7 @@ import {
   type JobRow,
 } from "@merai/core";
 import { getDb } from "../db";
+import { PermanentJobError } from "../errors";
 import { log } from "../logger";
 import { createSignedMediaUrl, getServiceClient } from "../storage";
 import {
@@ -17,6 +18,16 @@ import {
 import { createRenderEngine, RenderAbortedError, type RenderEngine } from "../render/index";
 
 const EXPORTS_BUCKET = "exports";
+
+/**
+ * Part size for the over-cap download fallback: safely under the Supabase
+ * free-tier 50MB per-file limit so parts always store even before the plan
+ * upgrade.
+ */
+export const EXPORT_PART_BYTES = 45 * 1024 * 1024;
+
+/** Storage rejected the object for size — retrying the same upload cannot succeed. */
+export class OutputTooLargeError extends Error {}
 
 interface ExportRow {
   id: string;
@@ -44,7 +55,15 @@ const defaultDeps: RenderExportDeps = {
         contentType: "video/mp4",
         upsert: true,
       });
-    if (error) throw new Error(`output upload failed: ${error.message}`);
+    if (error) {
+      // Live-observed message for the per-file cap: "The object exceeded the
+      // maximum allowed size". Classified so the handler can fall back to
+      // parts instead of burning retries on a deterministic rejection.
+      if (/exceeded the maximum allowed size/i.test(error.message)) {
+        throw new OutputTooLargeError(`output upload failed: ${error.message}`);
+      }
+      throw new Error(`output upload failed: ${error.message}`);
+    }
   },
 };
 
@@ -79,7 +98,7 @@ export async function renderExportWithEngine(
     [payload.exportId],
   );
   const exportRow = exportRows[0];
-  if (!exportRow) throw new Error(`export ${payload.exportId} not found`);
+  if (!exportRow) throw new PermanentJobError(`export ${payload.exportId} not found`);
 
   if (exportRow.status === "uploaded") {
     log.info(`render: export ${exportRow.id} already uploaded — skipping`);
@@ -101,7 +120,8 @@ export async function renderExportWithEngine(
     "select edl from public.edl_versions where id = $1",
     [exportRow.edl_version_id],
   );
-  if (!edlRows[0]) throw new Error(`edl version ${exportRow.edl_version_id} not found`);
+  if (!edlRows[0])
+    throw new PermanentJobError(`edl version ${exportRow.edl_version_id} not found`);
   // The exports row records what the user requested at export time.
   const edl: EdlV1 = {
     ...edlRows[0].edl,
@@ -120,7 +140,8 @@ export async function renderExportWithEngine(
      where project_id = $1 order by created_at desc limit 1`,
     [exportRow.project_id],
   );
-  if (!uploadRows[0]) throw new Error(`no upload for project ${exportRow.project_id}`);
+  if (!uploadRows[0])
+    throw new PermanentJobError(`no upload for project ${exportRow.project_id}`);
 
   await db.query(
     "update public.exports set status = 'rendering', progress = 0 where id = $1",
@@ -167,21 +188,55 @@ export async function renderExportWithEngine(
   }
 
   const objectPath = `${exportRow.owner_id}/${exportRow.id}.mp4`;
-  await deps.uploadOutput(objectPath, bytes);
+  let parts = 1;
+  try {
+    await deps.uploadOutput(objectPath, bytes);
+  } catch (err) {
+    if (!(err instanceof OutputTooLargeError)) throw err;
+    if (bytes.length <= EXPORT_PART_BYTES) {
+      // Splitting can't produce anything smaller than the rejected object —
+      // the bucket's cap is below the fallback's part size.
+      throw new PermanentJobError(err.message, { cause: err });
+    }
+    // Download fallback: the render succeeded — store the file as .partN
+    // objects under the per-file cap; the browser reassembles on download.
+    parts = Math.ceil(bytes.length / EXPORT_PART_BYTES);
+    log.warn(
+      `render: export ${exportRow.id} output ${(bytes.length / 1024 / 1024).toFixed(1)}MB is over the storage per-file cap — storing as ${parts} parts`,
+    );
+    try {
+      for (let i = 0; i < parts; i++) {
+        // slice (not subarray): the copy owns an exactly-sized buffer, which
+        // uploadOutput turns into a Blob via .buffer.
+        await deps.uploadOutput(
+          `${objectPath}.part${i}`,
+          bytes.slice(i * EXPORT_PART_BYTES, Math.min((i + 1) * EXPORT_PART_BYTES, bytes.length)),
+        );
+      }
+    } catch (partErr) {
+      if (partErr instanceof OutputTooLargeError) {
+        // Even a 45MB part is rejected — the bucket cap is set lower than
+        // the fallback assumes. No retry can fix that.
+        throw new PermanentJobError(partErr.message, { cause: partErr });
+      }
+      throw partErr;
+    }
+  }
 
   await db.query(
     `update public.exports
      set status = 'uploaded', progress = 1,
-         storage_path = $2, size_bytes = $3, duration_seconds = $4, error = null
+         storage_path = $2, size_bytes = $3, duration_seconds = $4, parts = $5, error = null
      where id = $1`,
     [
       exportRow.id,
       `${EXPORTS_BUCKET}/${objectPath}`,
       bytes.length,
       plan.outputDurationMs / 1000,
+      parts,
     ],
   );
   log.info(
-    `render: export ${exportRow.id} uploaded (${(bytes.length / 1024 / 1024).toFixed(1)}MB, ${(plan.outputDurationMs / 1000).toFixed(1)}s, engine=${engine.name})`,
+    `render: export ${exportRow.id} uploaded (${(bytes.length / 1024 / 1024).toFixed(1)}MB, ${(plan.outputDurationMs / 1000).toFixed(1)}s, parts=${parts}, engine=${engine.name})`,
   );
 }

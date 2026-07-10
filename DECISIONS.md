@@ -1,5 +1,16 @@
 # Merai — Architectural Decisions
 
+## 2026-07-10 — Phase A hardening: permanent errors, over-cap download fallback, alerting, first deploys
+Four decisions from the pre-first-users hardening pass:
+
+**1. Deterministic job failures skip retries.** `PermanentJobError` (worker) short-circuits the queue: the runner hard-fails the job on attempt 1 (`failJobPermanently`), surfaces it to the exports/projects row, and fires an alert. Classified so far: missing exports/EDL/upload rows and storage size-cap rejections. **Why:** a deterministic failure re-rendered a 10-minute video 3× before failing (~3 min of wasted CPU per failure). **Revisit when:** a new failure class shows up mislabeled as permanent.
+
+**2. Over-cap exports fall back to part-split storage, reassembled in the browser.** When the storage per-file cap rejects an output, the worker stores `{export}.mp4.partN` objects (45MB each, under the free-tier 50MB cap) and records `exports.parts` (migration 6); the panel downloads all parts and hands the user ONE assembled file via a Blob. **Why:** the render succeeded — the user should get their video, not an error, even before the Supabase Pro upgrade. Sub-cap exports are byte-identical to before (parts=1). **Revisit when:** Supabase Pro raises the cap — the fallback goes dormant but stays as a safety net.
+
+**3. Ops alerting is a generic webhook.** `ALERT_WEBHOOK_URL` (worker) receives permanent-failure and db-pool-error alerts with a payload carrying both Slack (`text`) and Discord (`content`) fields; log-only when unset; never throws. No email infra, no vendor SDK.
+
+**4. Vercel deploy findings (config-as-code where possible).** Project `merai-web`, root directory `apps/web` (set via `vercel api` — the CLI has no flag for it), framework pinned in `apps/web/vercel.json`; worker deploy config in `railway.json`. Two gotchas hit live: (a) `merai-web.vercel.app` is ANOTHER user's project — our real domain is `merai-web-faditabibs-projects.vercel.app` until merai.studio is attached; (b) SSG locale routes break @vercel/next's route→lambda mapping ("Unable to find lambda for route: /ar/login"), so the `[locale]` layout is `force-dynamic` for now — trivial pages, no meaningful cost. **Revisit when:** the builder handles Next 16 SSG locale routes, or the custom domain lands.
+
 ## 2026-07-10 — Export rendering moved fully server-side; ffmpeg.wasm removed
 Strategic pivot (owner decision): unit economics showed ~$1.50/subscriber/month between browser and server rendering — not worth the wasm complexity (segment-wise workarounds, wasm FS management, device variance). ffmpeg.wasm is fully deleted; exports are now `render_export` jobs on the existing Railway worker, and the export panel is request + poll (same pattern as transcription) with server-checkpointed cancel. The segment-wise planner moved unchanged to @merai/core (it was already pure).
 

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # staged e2e test clips (regenerable, large binaries — never commit)
 /public/e2e-*.mp4
+
+.vercel
+.env*

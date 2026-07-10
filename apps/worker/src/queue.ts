@@ -28,6 +28,20 @@ export async function failJob(jobId: string, error: string): Promise<void> {
 }
 
 /**
+ * Hard-fail immediately, skipping remaining retries — for deterministic
+ * errors (PermanentJobError) where re-running the handler cannot succeed.
+ */
+export async function failJobPermanently(jobId: string, error: string): Promise<void> {
+  await getDb().query(
+    `update public.jobs
+     set status = 'failed', attempts = greatest(attempts, max_attempts),
+         locked_at = null, locked_by = null, last_error = $2
+     where id = $1`,
+    [jobId, error],
+  );
+}
+
+/**
  * Requeue jobs stuck in 'processing' whose worker died mid-job (crash,
  * deploy, OOM). Threshold must exceed the longest legitimate job — the
  * transcribe handler can poll AssemblyAI for up to 15 minutes.

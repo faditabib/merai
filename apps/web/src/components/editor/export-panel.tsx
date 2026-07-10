@@ -19,8 +19,12 @@ interface ExportRow {
   aspect_ratio: string;
   storage_path: string | null;
   size_bytes: number | null;
+  parts: number;
   created_at: string;
 }
+
+const EXPORT_ROW_COLUMNS =
+  "id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, parts, created_at";
 
 export interface ExportPanelProps {
   projectId: string;
@@ -45,14 +49,15 @@ export function ExportPanel(props: ExportPanelProps) {
   const [requestError, setRequestError] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [previous, setPrevious] = useState<ExportRow[]>([]);
+  /** Export id whose multi-part download is being reassembled client-side. */
+  const [assembling, setAssembling] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState(false);
   const listStale = useRef(false);
 
   const refreshList = useCallback(async () => {
     const { data } = await createClient()
       .from("exports")
-      .select(
-        "id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at",
-      )
+      .select(EXPORT_ROW_COLUMNS)
       .eq("project_id", props.projectId)
       .order("created_at", { ascending: false })
       .limit(10);
@@ -69,9 +74,7 @@ export function ExportPanel(props: ExportPanelProps) {
     const timer = setInterval(async () => {
       const { data } = await createClient()
         .from("exports")
-        .select(
-          "id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at",
-        )
+        .select(EXPORT_ROW_COLUMNS)
         .eq("id", activeId)
         .maybeSingle();
       if (!data) return;
@@ -106,7 +109,7 @@ export function ExportPanel(props: ExportPanelProps) {
           caption_style: props.edl.captionStyle,
           status: "pending",
         })
-        .select("id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at")
+        .select(EXPORT_ROW_COLUMNS)
         .single();
       if (createError || !created) throw createError ?? new Error("insert failed");
 
@@ -135,12 +138,41 @@ export function ExportPanel(props: ExportPanelProps) {
   }
 
   async function download(row: ExportRow) {
-    if (!row.storage_path) return;
+    if (!row.storage_path || assembling) return;
     const objectName = row.storage_path.slice(EXPORTS_BUCKET.length + 1);
-    const { data } = await createClient()
-      .storage.from(EXPORTS_BUCKET)
-      .createSignedUrl(objectName, 600, { download: true });
-    if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+    const storage = createClient().storage.from(EXPORTS_BUCKET);
+
+    if (!row.parts || row.parts <= 1) {
+      const { data } = await storage.createSignedUrl(objectName, 600, { download: true });
+      if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+      return;
+    }
+
+    // Over-cap outputs are stored as .partN objects (see the worker's
+    // render_export fallback); reassemble them into one file here.
+    setAssembling(row.id);
+    setDownloadError(false);
+    try {
+      const blobs: Blob[] = [];
+      for (let i = 0; i < row.parts; i++) {
+        const { data, error } = await storage.createSignedUrl(`${objectName}.part${i}`, 600);
+        if (error || !data?.signedUrl) throw error ?? new Error("sign failed");
+        const res = await fetch(data.signedUrl);
+        if (!res.ok) throw new Error(`part ${i}: HTTP ${res.status}`);
+        blobs.push(await res.blob());
+      }
+      const url = URL.createObjectURL(new Blob(blobs, { type: "video/mp4" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `merai-export-${row.id}.mp4`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("multi-part download failed", err);
+      setDownloadError(true);
+    } finally {
+      setAssembling(null);
+    }
   }
 
   const busy = starting || activeId !== null;
@@ -214,10 +246,16 @@ export function ExportPanel(props: ExportPanelProps) {
           <button
             type="button"
             onClick={() => void download(active)}
-            className="rounded-lg bg-accent px-4 py-1.5 font-semibold text-accent-foreground"
+            disabled={assembling !== null}
+            className="rounded-lg bg-accent px-4 py-1.5 font-semibold text-accent-foreground disabled:opacity-50"
           >
-            {t("download")}
+            {assembling === active.id ? t("assembling") : t("download")}
           </button>
+        </p>
+      )}
+      {downloadError && (
+        <p role="alert" className="text-sm text-red-500">
+          {t("downloadFailed")}
         </p>
       )}
       {!busy && active?.status === "cancelled" && (
@@ -248,9 +286,10 @@ export function ExportPanel(props: ExportPanelProps) {
                   <button
                     type="button"
                     onClick={() => void download(row)}
-                    className="ms-auto rounded-lg border border-border px-3 py-1 text-xs hover:border-accent hover:text-accent"
+                    disabled={assembling !== null}
+                    className="ms-auto rounded-lg border border-border px-3 py-1 text-xs hover:border-accent hover:text-accent disabled:opacity-50"
                   >
-                    {t("download")}
+                    {assembling === row.id ? t("assembling") : t("download")}
                   </button>
                 )}
               </li>

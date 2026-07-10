@@ -1,5 +1,48 @@
 # Merai — Progress Log
 
+## Phase A — Production hardening + first deploys (2026-07-10)
+
+### Done (78 tests: 24 core + 42 worker + 12 web)
+- **Permanent error classification**: `PermanentJobError` short-circuits queue
+  retries (missing rows, storage cap); runner surfaces + alerts. New
+  `failJobPermanently` + runner short-circuit covered by queue tests.
+- **Over-cap download fallback**: outputs rejected by the storage per-file
+  cap are stored as 45MB `.partN` objects (migration 6: `exports.parts`,
+  applied live) and reassembled into one file by the browser on download.
+  Covered by handler tests (2-part split + cap-below-part-size permanent).
+- **Alerting**: `ALERT_WEBHOOK_URL` webhook (Slack/Discord payload) on
+  permanent failures and db-pool errors; log-only when unset.
+- **Vercel deploy LIVE**: project `merai-web`, rootDirectory `apps/web`,
+  env vars set (values never echoed). Deployed and verified serving the
+  real app (/, /signup, /login — RTL Arabic) via authenticated probes.
+- `railway.json` + `apps/web/vercel.json` config-as-code;
+  `apps/worker/scripts/apply-migration.ts` migration applier.
+
+### Full-flow smoke test (production build `next start` + live Supabase +
+### live AssemblyAI + live Haiku + worker, driven by headless Chrome)
+login → tus upload (16s Arabic clip) → transcribe 12.8s (23 words, ar) →
+analyze 4.5s → project ready → editor → export → render_export 8.1s →
+exports row uploaded (459KB, 11.99s output — AI cuts applied) → download
+HTTP 200 video/mp4. Signup page exercised live (renders, submits, surfaces
+provider errors); happy-path signup needs a real inbox for the confirm
+email — see blockers.
+
+### Blockers needing owner action
+1. **Vercel SSO deployment protection is ON for all URLs**
+   (`all_except_custom_domains`): the production URL redirects anonymous
+   visitors to Vercel SSO. Toggling it (or adding the merai.studio custom
+   domain, which bypasses it by definition) is an access-control decision —
+   deliberately left to the owner. One command:
+   `vercel project protection disable merai-web --sso` (or add the domain).
+2. **Railway deploy blocked on login**: no Railway CLI session on this
+   machine and login is browser-interactive. After `railway login`:
+   `railway init` + `railway up` (railway.json handles the Dockerfile), set
+   env vars from `apps/worker/.env.example`.
+3. Supabase Pro upgrade (per Phase 4.5) still pending — the part-split
+   fallback now covers >50MB exports in the meantime.
+
+---
+
 ## Phase 4.5 — Server-side rendering pivot (BUILT + live-verified 2026-07-10)
 
 ffmpeg.wasm fully removed (owner decision — see DECISIONS.md). Exports are now

@@ -27,9 +27,13 @@ export function getDb(): Db {
     // (observed live 2026-07-09 after an overnight idle). Log and continue;
     // pg discards the dead client and dials a fresh one on next use.
     pool.on("error", (err) => {
-      // Lazy import avoided: console keeps db.ts dependency-free.
       console.error(
         `${new Date().toISOString()} [ERROR] idle db client error (recovered): ${err.message}`,
+      );
+      // Dynamic import keeps db.ts's static graph dependency-free and avoids
+      // any import-order surprises; the alert itself never throws.
+      void import("./alert").then(({ sendAlert }) =>
+        sendAlert(`Merai worker: idle db client error (recovered): ${err.message}`),
       );
     });
     const wrapped: Db = {

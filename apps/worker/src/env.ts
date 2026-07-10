@@ -16,6 +16,8 @@ export const env = {
   verygoodFfmpegApiKey: process.env.VERYGOODFFMPEG_API_KEY ?? null,
   /** ffmpeg binary for the local render engine. */
   ffmpegPath: process.env.FFMPEG_PATH ?? "ffmpeg",
+  /** Ops webhook (Slack/Discord-compatible) for permanent-failure alerts. */
+  alertWebhookUrl: process.env.ALERT_WEBHOOK_URL ?? null,
   dolbyAppKey: process.env.DOLBY_APP_KEY ?? null,
   dolbyAppSecret: process.env.DOLBY_APP_SECRET ?? null,
   pixabayApiKey: process.env.PIXABAY_API_KEY ?? null,

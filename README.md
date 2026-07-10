@@ -34,11 +34,13 @@ Arabic is served at `/` (RTL); English at `/en`.
 
 ## Deployment
 
-- **Web → Vercel**: root directory `apps/web`; set the two `NEXT_PUBLIC_SUPABASE_*`
-  vars (+ `SUPABASE_SERVICE_ROLE_KEY` as a server-only var).
-- **Worker → Railway**: Dockerfile deploy with root build context and
-  `apps/worker/Dockerfile` as the Dockerfile path; set vars from
-  `apps/worker/.env.example`.
+- **Web → Vercel**: project `merai-web` (root directory `apps/web`,
+  framework pinned in `apps/web/vercel.json`); set the two
+  `NEXT_PUBLIC_SUPABASE_*` vars (+ `SUPABASE_SERVICE_ROLE_KEY` as a
+  server-only var). Deploy with `vercel deploy --prod` from the repo root.
+- **Worker → Railway**: `railway.json` at the repo root points at
+  `apps/worker/Dockerfile` (root build context). After `railway login`:
+  `railway init` + `railway up`; set vars from `apps/worker/.env.example`.
 
 ## Ground rules (see PRD + DECISIONS.md)
 

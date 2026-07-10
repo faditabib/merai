@@ -159,6 +159,8 @@
     "cancelling": "Cancelling…",
     "cancelledNote": "Export cancelled.",
     "download": "Download",
+    "assembling": "Preparing file…",
+    "downloadFailed": "Download failed — please try again.",
     "error": "Export failed. Please try again.",
     "previous": "Previous exports",
     "statuses": {

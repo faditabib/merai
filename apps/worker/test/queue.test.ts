@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { setDb } from "../src/db";
-import { claimNextJob, completeJob, failJob } from "../src/queue";
+import { claimNextJob, completeJob, failJob, failJobPermanently } from "../src/queue";
+import { processOne } from "../src/runner";
 import { createTestDb, type TestDb } from "./helpers/pglite-db";
 
 let db: TestDb;
@@ -80,6 +81,45 @@ describe("postgres job queue (real migration applied to PGlite)", () => {
       [id],
     ));
     expect(rows[0]!.status).toBe("failed");
+  });
+
+  it("failJobPermanently hard-fails on the first attempt (no retries left)", async () => {
+    const id = await db.enqueue("cleanup_expired", {}, { dedupeKey: "q5" });
+    const job = await claimNextJob("w-test", ["cleanup_expired"]);
+    expect(job?.attempts).toBe(1);
+    await failJobPermanently(id, "deterministic failure");
+
+    const { rows } = await db.query<{
+      status: string;
+      attempts: number;
+      max_attempts: number;
+      last_error: string;
+    }>("select status, attempts, max_attempts, last_error from public.jobs where id = $1", [id]);
+    expect(rows[0]).toMatchObject({ status: "failed", last_error: "deterministic failure" });
+    expect(rows[0]!.attempts).toBe(rows[0]!.max_attempts);
+    // A hard-failed job never re-enters the queue.
+    expect(await claimNextJob("w-test", ["cleanup_expired"])).toBeNull();
+  });
+
+  it("runner short-circuits PermanentJobError on attempt 1 (render_export, missing row)", async () => {
+    const id = await db.enqueue(
+      "render_export",
+      {
+        exportId: "00000000-0000-4000-8000-00000000dead",
+        projectId: "00000000-0000-4000-8000-00000000feed",
+        ownerId: "00000000-0000-4000-8000-00000000beef",
+      },
+      { dedupeKey: "q6" },
+    );
+
+    expect(await processOne("w-test")).toBe(true);
+
+    const { rows } = await db.query<{ status: string; attempts: number; last_error: string }>(
+      "select status, attempts, last_error from public.jobs where id = $1",
+      [id],
+    );
+    expect(rows[0]!.status).toBe("failed"); // not requeued despite attempts < max
+    expect(rows[0]!.last_error).toMatch(/not found/);
   });
 
   it("dedupe_key rejects duplicate enqueues", async () => {
