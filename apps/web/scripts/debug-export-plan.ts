@@ -1,5 +1,5 @@
-// TEMP diagnostic: rebuild the failing export plan from the saved EDL and
-// run it against native ffmpeg to surface the real error. Delete after use.
+// TEMP diagnostic: rebuild the export plan from the saved EDL and run it
+// against native ffmpeg to validate + time it. Delete once resolved.
 import "dotenv/config";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync, copyFileSync } from "node:fs";
@@ -28,8 +28,9 @@ async function main() {
   const words = transcripts[0]!.words as TranscriptWord[];
   const plan = buildExportPlan({ edl, words });
 
-  console.log("segments:", edl.timeline.length, "captions:", plan.captions.length);
-  console.log("filter_complex chars:", plan.args[plan.args.indexOf("-filter_complex") + 1]!.length);
+  console.log(
+    `segments: ${plan.segments.length}, captions: ${plan.captions.length}, output: ${(plan.outputDurationMs / 1000).toFixed(1)}s`,
+  );
 
   mkdirSync(WORK, { recursive: true });
   copyFileSync(SOURCE, join(WORK, "input.mp4"));
@@ -37,32 +38,36 @@ async function main() {
   execFileSync("ffmpeg", [
     "-y", "-v", "error",
     "-f", "lavfi", "-i", `color=black@0.0:s=${plan.width}x${plan.height},format=rgba`,
-    "-frames:v", "1", join(WORK, "cap-template.png"),
+    "-frames:v", "1", join(WORK, "blank.png"),
   ]);
   for (const caption of plan.captions) {
-    copyFileSync(join(WORK, "cap-template.png"), join(WORK, caption.file));
-  }
-  copyFileSync(join(WORK, "cap-template.png"), join(WORK, "blank.png"));
-  if (plan.concatScript) writeFileSync(join(WORK, "captions.txt"), plan.concatScript);
-
-  let args = [...plan.args];
-  if (process.env.DEBUG_MODE === "nocap") {
-    // Strip the caption input + overlay: isolate the cuts graph.
-    const concatIdx = args.indexOf("-f");
-    args.splice(concatIdx, 6); // -f concat -safe 0 -i captions.txt
-    const filterIdx = args.indexOf("-filter_complex") + 1;
-    args[filterIdx] = args[filterIdx]!.replace(/;\[vs\]\[1:v\]overlay=0:0\[vo\]/, "");
-    args[args.indexOf("[vo]")] = "[vs]";
+    copyFileSync(join(WORK, "blank.png"), join(WORK, caption.file));
   }
 
   const startedAt = Date.now();
   try {
-    execFileSync("ffmpeg", ["-y", "-v", "error", ...args], {
+    for (const step of plan.segments) {
+      if (step.captionsFile && step.captionsScript) {
+        writeFileSync(join(WORK, step.captionsFile), step.captionsScript);
+      }
+      const stepStart = Date.now();
+      execFileSync("ffmpeg", ["-y", "-v", "error", ...step.args], {
+        cwd: WORK,
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      console.log(
+        `  seg${step.index} (${(step.durationMs / 1000).toFixed(1)}s) rendered in ${((Date.now() - stepStart) / 1000).toFixed(1)}s`,
+      );
+    }
+    writeFileSync(join(WORK, plan.joinFile), plan.joinScript);
+    const joinStart = Date.now();
+    execFileSync("ffmpeg", ["-y", "-v", "error", ...plan.joinArgs], {
       cwd: WORK,
       stdio: ["ignore", "pipe", "pipe"],
     });
+    console.log(`  join in ${((Date.now() - joinStart) / 1000).toFixed(1)}s`);
     console.log(
-      `NATIVE FFMPEG: SUCCESS in ${((Date.now() - startedAt) / 1000).toFixed(0)}s`,
+      `NATIVE FFMPEG: SUCCESS in ${((Date.now() - startedAt) / 1000).toFixed(0)}s total`,
     );
   } catch (err) {
     const e = err as { stderr?: Buffer };

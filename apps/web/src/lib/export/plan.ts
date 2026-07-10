@@ -9,14 +9,23 @@ import {
 } from "@merai/core";
 
 /**
- * Pure export planning: EDL → ffmpeg args + caption overlay windows.
+ * Pure export planning: EDL → a SEGMENT-WISE render plan.
  * No ffmpeg or DOM access here — fully unit-testable.
  *
- * Cut model: one-pass filter_complex trim/atrim + concat per kept segment
- * (frame-accurate re-encode — the authoritative render the preview only
- * approximates). Captions arrive as pre-rendered transparent PNGs (Arabic
- * shaping happens in the browser canvas, never in ffmpeg) overlaid with
- * enable='between(t,…)' windows computed in OUTPUT time.
+ * Why segment-wise (stress test, 2026-07-09): single-command filter graphs
+ * over a ~10-minute source ran out of memory even in NATIVE ffmpeg — first
+ * with 139 per-caption overlays, then with N-branch trim+concat, then with a
+ * single-pass select graph. Rendering each kept segment as its own small
+ * ffmpeg run (input-seeked, so only that window is decoded) bounds peak
+ * memory to one segment regardless of total duration; the final join of the
+ * identically-encoded parts is a -c copy remux (no re-encode, no quality
+ * loss, negligible memory). Frames are still encoded exactly once.
+ *
+ * Captions arrive as pre-rendered transparent PNGs (Arabic shaping happens
+ * in the browser canvas, never in ffmpeg). Each segment overlays ONE
+ * concat-demuxer image sequence (caption PNGs + blank gaps) clipped to its
+ * own output window; a caption line spanning a cut simply appears in both
+ * adjacent segments.
  */
 
 /** 720-class outputs: wasm encode speed over pixels (margin decision). */
@@ -29,6 +38,8 @@ export const EXPORT_RESOLUTIONS: Record<
   "16:9": { width: 1280, height: 720 },
 };
 
+export const BLANK_IMAGE = "blank.png";
+
 export interface CaptionOverlayPlan {
   /** PNG filename in the ffmpeg FS. */
   file: string;
@@ -37,33 +48,63 @@ export interface CaptionOverlayPlan {
   endOutMs: number;
 }
 
-/** One entry of the caption image sequence (caption PNG or transparent gap). */
+/** One entry of a caption image sequence (caption PNG or transparent gap). */
 export interface CaptionSequenceEntry {
   file: string;
   durationMs: number;
 }
 
-export interface ExportPlan {
+/** One per-segment ffmpeg invocation. */
+export interface SegmentRenderStep {
+  index: number;
   args: string[];
+  outputFile: string;
+  /** ffconcat script for this segment's caption sequence (null = no captions). */
+  captionsScript: string | null;
+  captionsFile: string | null;
+  durationMs: number;
+}
+
+export interface ExportPlan {
+  segments: SegmentRenderStep[];
+  /** Final -c copy remux joining the segment files. */
+  joinArgs: string[];
+  joinFile: string;
+  joinScript: string;
+  /** All caption lines (global output-time windows) for rasterization. */
   captions: CaptionOverlayPlan[];
-  /**
-   * Contiguous image sequence covering 0..outputDuration: caption PNGs with
-   * BLANK_IMAGE gaps. Fed to ffmpeg as ONE concat-demuxer input and applied
-   * with ONE overlay — per-caption overlay filters exhaust memory on long
-   * videos (139 concurrent overlays OOMed even native ffmpeg; stress test
-   * 2026-07-09).
-   */
-  sequence: CaptionSequenceEntry[];
-  /** ffconcat script describing `sequence` (written as captions.txt). */
-  concatScript: string;
   width: number;
   height: number;
   outputDurationMs: number;
 }
 
-export const BLANK_IMAGE = "blank.png";
-
 const seconds = (ms: number) => (ms / 1000).toFixed(3);
+
+const ENCODE_ARGS = [
+  "-c:v",
+  "libx264",
+  "-preset",
+  "veryfast",
+  "-crf",
+  "23",
+  "-pix_fmt",
+  "yuv420p",
+  "-c:a",
+  "aac",
+  "-b:a",
+  "128k",
+];
+
+function ffconcatScript(sequence: CaptionSequenceEntry[]): string {
+  return [
+    "ffconcat version 1.0",
+    ...sequence.map((entry) => `file ${entry.file}\nduration ${seconds(entry.durationMs)}`),
+    // concat-demuxer quirk: the last duration only applies when a trailing
+    // file entry follows it.
+    `file ${BLANK_IMAGE}`,
+    "",
+  ].join("\n");
+}
 
 export function buildExportPlan(input: {
   edl: EdlV1;
@@ -71,8 +112,9 @@ export function buildExportPlan(input: {
 }): ExportPlan {
   const { edl, words } = input;
   const { width, height } = EXPORT_RESOLUTIONS[edl.aspectRatio];
+  const outputDurationMs = edlOutputDurationMs(edl);
 
-  // Caption lines from kept words, in output (timeline) order.
+  // --- caption lines from kept words, windows in OUTPUT time --------------
   const wordById = new Map(words.map((w) => [w.id, w]));
   const keptWords: TranscriptWord[] = [];
   for (const segment of edl.timeline) {
@@ -82,8 +124,6 @@ export function buildExportPlan(input: {
     }
   }
 
-  const outputDurationMs = edlOutputDurationMs(edl);
-
   const captions: CaptionOverlayPlan[] = [];
   let cursorGuard = 0;
   buildCaptionLines(keptWords).forEach((line, index) => {
@@ -92,124 +132,104 @@ export function buildExportPlan(input: {
     // the segment even when the word ends exactly at a cut boundary.
     const endOutMs = sourceToOutputMs(edl, Math.max(line.startMs, line.endMs - 1));
     if (startOutMs == null || endOutMs == null || endOutMs <= startOutMs) return;
-    // The sequence must be monotonic — clamp any overlap with the previous line.
+    // Windows must be monotonic — clamp any overlap with the previous line.
     const start = Math.max(startOutMs, cursorGuard);
     if (endOutMs <= start) return;
     cursorGuard = endOutMs;
     captions.push({ file: `cap${index}.png`, line, startOutMs: start, endOutMs });
   });
 
-  // Contiguous caption sequence: gaps filled with the transparent blank.
-  // (Empty when there are no captions — no gap-only sequence.)
-  const sequence: CaptionSequenceEntry[] = [];
-  let cursor = 0;
-  for (const caption of captions) {
-    if (caption.startOutMs > cursor) {
-      sequence.push({ file: BLANK_IMAGE, durationMs: caption.startOutMs - cursor });
+  // --- one small ffmpeg run per kept segment ------------------------------
+  const scaleCrop = `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`;
+  const segments: SegmentRenderStep[] = [];
+  let outCursor = 0;
+
+  edl.timeline.forEach((segment, index) => {
+    const durationMs = segment.sourceOutMs - segment.sourceInMs;
+    const segStartOutMs = outCursor;
+    const segEndOutMs = outCursor + durationMs;
+    outCursor = segEndOutMs;
+
+    // Captions overlapping this segment, clipped to segment-local time
+    // (output timestamps restart at 0 after the input seek).
+    const sequence: CaptionSequenceEntry[] = [];
+    let cursor = 0;
+    for (const caption of captions) {
+      if (caption.endOutMs <= segStartOutMs || caption.startOutMs >= segEndOutMs) {
+        continue;
+      }
+      const localStart = Math.max(0, caption.startOutMs - segStartOutMs);
+      const localEnd = Math.min(durationMs, caption.endOutMs - segStartOutMs);
+      if (localEnd <= localStart) continue;
+      if (localStart > cursor) {
+        sequence.push({ file: BLANK_IMAGE, durationMs: localStart - cursor });
+      }
+      sequence.push({ file: caption.file, durationMs: localEnd - localStart });
+      cursor = localEnd;
     }
-    sequence.push({ file: caption.file, durationMs: caption.endOutMs - caption.startOutMs });
-    cursor = caption.endOutMs;
-  }
-  if (captions.length > 0 && outputDurationMs > cursor) {
-    sequence.push({ file: BLANK_IMAGE, durationMs: outputDurationMs - cursor });
-  }
+    if (sequence.length > 0 && durationMs > cursor) {
+      sequence.push({ file: BLANK_IMAGE, durationMs: durationMs - cursor });
+    }
 
-  const concatScript =
-    sequence.length > 0
-      ? [
-          "ffconcat version 1.0",
-          ...sequence.map((entry) => `file ${entry.file}\nduration ${seconds(entry.durationMs)}`),
-          // concat-demuxer quirk: the last duration only applies when a
-          // trailing file entry follows it.
-          `file ${BLANK_IMAGE}`,
-          "",
-        ].join("\n")
-      : "";
+    const hasCaptions = sequence.length > 0;
+    const captionsFile = hasCaptions ? `captions-seg${index}.txt` : null;
+    const filter = hasCaptions
+      ? `[0:v]${scaleCrop}[vs];[vs][1:v]overlay=0:0[vo]`
+      : `[0:v]${scaleCrop}[vs]`;
 
-  // --- filter graph -----------------------------------------------------
-  // Two cut strategies (stress test 2026-07-09):
-  //  * SOURCE-ORDERED timelines (the normal case) use ONE select/aselect
-  //    pass — constant memory. The N-branch trim+concat graph buffers
-  //    later segments' frames while earlier ones drain and OOMs on long
-  //    videos (~full decoded video in RAM), even in native ffmpeg.
-  //  * REORDERED timelines can't be expressed with select (it preserves
-  //    decode order), so they fall back to trim+concat — fine for short
-  //    videos, memory-risky for long ones (documented limitation).
-  const parts: string[] = [];
-  const isSourceOrdered = edl.timeline.every(
-    (segment, index) =>
-      index === 0 || segment.sourceInMs >= edl.timeline[index - 1]!.sourceInMs,
-  );
-
-  if (isSourceOrdered) {
-    const windows = edl.timeline
-      .map(
-        (s) => `between(t,${seconds(s.sourceInMs)},${seconds(s.sourceOutMs)})`,
-      )
-      .join("+");
-    // fps=30 normalizes to CFR so the frame-index PTS rebuild stays in sync
-    // (VFR phone footage would drift otherwise).
-    parts.push(
-      `[0:v]fps=30,select='${windows}',setpts=N/FRAME_RATE/TB[vc]`,
-      `[0:a]aselect='${windows}',asetpts=N/SR/TB[ac]`,
-    );
-  } else {
-    edl.timeline.forEach((segment, index) => {
-      const from = seconds(segment.sourceInMs);
-      const to = seconds(segment.sourceOutMs);
-      parts.push(
-        `[0:v]trim=start=${from}:end=${to},setpts=PTS-STARTPTS[v${index}]`,
-        `[0:a]atrim=start=${from}:end=${to},asetpts=PTS-STARTPTS[a${index}]`,
-      );
+    segments.push({
+      index,
+      args: [
+        // Input seeking: only this window is demuxed/decoded — the memory
+        // and time bound that makes long videos viable in wasm.
+        "-ss",
+        seconds(segment.sourceInMs),
+        "-t",
+        seconds(durationMs),
+        "-i",
+        "input.mp4",
+        ...(hasCaptions ? ["-f", "concat", "-safe", "0", "-i", captionsFile!] : []),
+        "-filter_complex",
+        filter,
+        "-map",
+        hasCaptions ? "[vo]" : "[vs]",
+        "-map",
+        "0:a",
+        ...ENCODE_ARGS,
+        `seg${index}.mp4`,
+      ],
+      outputFile: `seg${index}.mp4`,
+      captionsScript: hasCaptions ? ffconcatScript(sequence) : null,
+      captionsFile,
+      durationMs,
     });
-    const concatInputs = edl.timeline.map((_, i) => `[v${i}][a${i}]`).join("");
-    parts.push(`${concatInputs}concat=n=${edl.timeline.length}:v=1:a=1[vc][ac]`);
-  }
+  });
 
-  parts.push(
-    `[vc]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}[vs]`,
-  );
-
-  const hasCaptions = captions.length > 0;
-  if (hasCaptions) {
-    // ONE overlay for the whole video; the sequence stream carries the
-    // timing. repeatlast holds the final (blank) frame to the end.
-    parts.push(`[vs][1:v]overlay=0:0[vo]`);
-  }
-  const finalVideo = hasCaptions ? "[vo]" : "[vs]";
-
-  const args = [
+  // --- final join: pure remux, no re-encode -------------------------------
+  const joinScript =
+    ["ffconcat version 1.0", ...segments.map((s) => `file ${s.outputFile}`), ""].join(
+      "\n",
+    );
+  const joinArgs = [
+    "-f",
+    "concat",
+    "-safe",
+    "0",
     "-i",
-    "input.mp4",
-    ...(hasCaptions ? ["-f", "concat", "-safe", "0", "-i", "captions.txt"] : []),
-    "-filter_complex",
-    parts.join(";"),
-    "-map",
-    finalVideo,
-    "-map",
-    "[ac]",
-    "-c:v",
-    "libx264",
-    "-preset",
-    "veryfast",
-    "-crf",
-    "23",
-    "-pix_fmt",
-    "yuv420p",
-    "-c:a",
-    "aac",
-    "-b:a",
-    "128k",
+    "join.txt",
+    "-c",
+    "copy",
     "-movflags",
     "+faststart",
     "out.mp4",
   ];
 
   return {
-    args,
+    segments,
+    joinArgs,
+    joinFile: "join.txt",
+    joinScript,
     captions,
-    sequence,
-    concatScript,
     width,
     height,
     outputDurationMs,

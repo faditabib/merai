@@ -1,5 +1,44 @@
 # Merai — Progress Log
 
+## Phase 4 — 10-minute export stress test (RESOLVED 2026-07-09, segment-wise)
+
+Full pipeline on a 575s / 41.5MB / 1280×720 Arabic clip (994 words, 137
+caption lines, 13 kept segments): upload 30s → AssemblyAI 17s → Haiku 21s
+($0.029) → export.
+
+**Three single-command render architectures failed in NATIVE ffmpeg** (32GB
+machine): 139 per-caption overlays; N-branch trim+concat cuts; single-pass
+select/aselect. All "Cannot allocate memory" — filter graphs buffer
+unboundedly on long inputs. A plain full-length encode passed, isolating the
+graphs as the cause.
+
+**Fix: segment-wise rendering** (see DECISIONS.md): one input-seeked ffmpeg
+run per kept segment (only that window decoded; captions as one
+concat-demuxer PNG sequence clipped to the segment), then a -c copy join.
+Results on the stress clip:
+- **Native: 36s total** (13 segments + 0.3s join), output verified by
+  ffprobe (h264/aac, 720×1280, 576.8s — matches plan within rounding).
+- **Browser (single-thread wasm): render COMPLETED — no OOM.** Wall time
+  **1,030s (~17 min) for a 9.6-min video ≈ 1.8× realtime**. Observed JS
+  heap flat at ~27MB throughout (caveat: worker-thread wasm memory may not
+  be fully captured by performance.memory; the load-bearing evidence is
+  completion + flat profile vs. yesterday's instant OOMs).
+- **New finding: the upload failed, not the render** — the 53.7MB output
+  exceeds the Supabase free-tier 50MB per-file cap ("The object exceeded
+  the maximum allowed size"). Plan-level constraint: paid tiers raise it;
+  at our bitrate the cap bites at roughly the 9-10-min ceiling.
+
+Known follow-ups (not yet implemented):
+- Keep the local download available when cloud upload fails (render
+  succeeded — the user should still get their file).
+- Decide the storage story for long exports: paid-tier limit raise (the
+  production answer) and/or a bitrate ceiling for the free tier.
+- ~17 min for a max-length export is workable-but-slow UX; the future
+  speed fork remains multithreaded core (COOP/COEP) vs. server-side
+  rendering — both deferred, neither blocks Phase 5.
+
+---
+
 ## Phase 4 — Export pipeline, ffmpeg.wasm (BUILT, live-verified 2026-07-09)
 
 ### Done (55 tests: 16 core + 20 worker + 19 web)

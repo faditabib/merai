@@ -27,107 +27,121 @@ const edl: EdlV1 = {
   captionStyle: "minimal-white-bottom",
 };
 
-describe("buildExportPlan", () => {
+describe("buildExportPlan (segment-wise)", () => {
   const plan = buildExportPlan({ edl, words });
-  const filter = plan.args[plan.args.indexOf("-filter_complex") + 1]!;
 
-  it("cuts source-ordered timelines with ONE select pass (constant memory)", () => {
-    // N-branch trim+concat OOMed on long videos (stress test) — ordered
-    // timelines must use the single-pass select graph.
-    expect(filter).toContain(
-      "[0:v]fps=30,select='between(t,0.000,1.000)+between(t,5.800,7.000)',setpts=N/FRAME_RATE/TB[vc]",
-    );
-    expect(filter).toContain(
-      "[0:a]aselect='between(t,0.000,1.000)+between(t,5.800,7.000)',asetpts=N/SR/TB[ac]",
-    );
-    expect(filter).not.toContain("concat=n=");
+  it("renders each kept segment as its own input-seeked ffmpeg run", () => {
+    // One giant filter graph OOMed even native ffmpeg on long videos —
+    // the plan must never contain select/trim/concat-filter cuts.
+    expect(plan.segments).toHaveLength(2);
+
+    const [first, second] = plan.segments;
+    expect(first!.args.slice(0, 6)).toEqual([
+      "-ss", "0.000", "-t", "1.000", "-i", "input.mp4",
+    ]);
+    expect(second!.args.slice(0, 6)).toEqual([
+      "-ss", "5.800", "-t", "1.200", "-i", "input.mp4",
+    ]);
+    expect(first!.outputFile).toBe("seg0.mp4");
+    expect(second!.outputFile).toBe("seg1.mp4");
+
+    for (const step of plan.segments) {
+      const filter = step.args[step.args.indexOf("-filter_complex") + 1]!;
+      expect(filter).not.toMatch(/select|trim|concat/);
+      expect(filter).toContain(
+        "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280",
+      );
+      expect(step.args.join(" ")).toContain("-map 0:a");
+      expect(step.args.join(" ")).toContain("-c:v libx264 -preset veryfast -crf 23");
+    }
   });
 
-  it("falls back to trim+concat only for reordered timelines", () => {
+  it("clips caption windows to each segment's local time", () => {
+    // Global windows: line 1 at 100..~800 (seg0), line 2 at 1200..~2000
+    // in output time → local 200..~1000 within seg1 (which starts at 1000).
+    expect(plan.captions).toHaveLength(2);
+    expect(plan.captions[0]!.startOutMs).toBe(100);
+    expect(plan.captions[1]!.startOutMs).toBe(1200);
+
+    const [first, second] = plan.segments;
+    expect(first!.captionsScript).toContain("file cap0.png");
+    expect(first!.captionsScript).not.toContain("cap1.png");
+    expect(first!.captionsScript).toContain("file blank.png\nduration 0.100");
+    expect(second!.captionsScript).toContain("file cap1.png");
+    expect(second!.captionsScript).not.toContain("cap0.png");
+    // seg1-local: caption starts at 1200-1000=200ms.
+    expect(second!.captionsScript).toContain("file blank.png\nduration 0.200");
+
+    // Caption sequence rides in as ONE concat-demuxer input + ONE overlay.
+    for (const step of plan.segments) {
+      expect(step.args.join(" ")).toContain(`-f concat -safe 0 -i ${step.captionsFile}`);
+      const filter = step.args[step.args.indexOf("-filter_complex") + 1]!;
+      expect(filter.match(/overlay/g)).toHaveLength(1);
+    }
+  });
+
+  it("caption sequences fully cover each segment (blank-padded, monotonic)", () => {
+    for (const step of plan.segments) {
+      const durations = [...step.captionsScript!.matchAll(/duration (\d+\.\d+)/g)].map(
+        (m) => Math.round(Number(m[1]) * 1000),
+      );
+      expect(durations.reduce((a, b) => a + b, 0)).toBe(step.durationMs);
+      for (const d of durations) expect(d).toBeGreaterThan(0);
+    }
+  });
+
+  it("joins with a -c copy remux (no second encode)", () => {
+    expect(plan.joinScript).toBe(
+      "ffconcat version 1.0\nfile seg0.mp4\nfile seg1.mp4\n",
+    );
+    expect(plan.joinArgs.join(" ")).toBe(
+      "-f concat -safe 0 -i join.txt -c copy -movflags +faststart out.mp4",
+    );
+  });
+
+  it("handles reordered timelines with the same machinery (file order = output order)", () => {
     const reordered = buildExportPlan({
       edl: { ...edl, timeline: [edl.timeline[1]!, edl.timeline[0]!] },
       words,
     });
-    const reorderedFilter =
-      reordered.args[reordered.args.indexOf("-filter_complex") + 1]!;
-    expect(reorderedFilter).toContain("[0:v]trim=start=5.800:end=7.000");
-    expect(reorderedFilter).toContain("concat=n=2:v=1:a=1[vc][ac]");
-    expect(reorderedFilter).not.toContain("select=");
-  });
-
-  it("scales+crops to the aspect-ratio resolution", () => {
-    expect(filter).toContain(
-      "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280",
-    );
-    expect(plan.width).toBe(720);
-    expect(plan.height).toBe(1280);
-
-    const wide = buildExportPlan({ edl: { ...edl, aspectRatio: "16:9" }, words });
-    expect(wide.width).toBe(1280);
-    expect(wide.height).toBe(720);
-    expect(Object.keys(EXPORT_RESOLUTIONS)).toEqual(["9:16", "1:1", "16:9"]);
-  });
-
-  it("computes caption windows in OUTPUT time (post-cut)", () => {
-    // The 5s silence gap splits the words into two caption lines.
-    expect(plan.captions).toHaveLength(2);
-    const [first, second] = plan.captions;
-
-    expect(first!.startOutMs).toBe(100); // unchanged before the cut
-    // w2 starts at source 6000 → output = 1000 (seg0) + (6000-5800) = 1200
-    expect(second!.startOutMs).toBe(1200);
-  });
-
-  it("builds ONE contiguous caption sequence (gaps blanked) and ONE overlay", () => {
-    // blank, cap0, blank, cap1, trailing blank — covers 0..outputDuration.
-    expect(plan.sequence.map((e) => e.file)).toEqual([
-      "blank.png",
-      "cap0.png",
-      "blank.png",
-      "cap1.png",
-      "blank.png",
+    expect(reordered.segments[0]!.args.slice(0, 4)).toEqual([
+      "-ss", "5.800", "-t", "1.200",
     ]);
-    const total = plan.sequence.reduce((sum, e) => sum + e.durationMs, 0);
-    expect(total).toBe(plan.outputDurationMs);
-
-    // Exactly one overlay filter regardless of caption count — 139
-    // per-caption overlays OOMed even native ffmpeg (stress test).
-    expect(filter.match(/overlay/g)).toHaveLength(1);
-    expect(filter).toContain("[vs][1:v]overlay=0:0[vo]");
-
-    // The sequence rides in as a single concat-demuxer input.
-    expect(plan.args.join(" ")).toContain("-f concat -safe 0 -i captions.txt");
-    const inputs = plan.args.filter((_, i) => plan.args[i - 1] === "-i");
-    expect(inputs).toEqual(["input.mp4", "captions.txt"]);
-
-    expect(plan.concatScript).toContain("ffconcat version 1.0");
-    expect(plan.concatScript).toContain("file cap0.png\nduration");
-    expect(plan.concatScript.trimEnd().endsWith("file blank.png")).toBe(true);
+    expect(reordered.joinScript).toContain("file seg0.mp4\nfile seg1.mp4");
+    // seg0.mp4 now holds the later source material — order preserved by join.
+    expect(reordered.segments[0]!.outputFile).toBe("seg0.mp4");
   });
 
-  it("maps the final overlaid video and encodes x264+aac, faststart, even dims", () => {
-    expect(plan.args).toContain("[vo]");
-    expect(plan.args.join(" ")).toContain("-c:v libx264 -preset veryfast -crf 23");
-    expect(plan.args.join(" ")).toContain("-c:a aac");
-    expect(plan.args.join(" ")).toContain("-movflags +faststart");
-    expect(plan.args[plan.args.length - 1]).toBe("out.mp4");
-    expect(plan.width % 2).toBe(0);
-    expect(plan.height % 2).toBe(0);
-  });
-
-  it("omits the caption input and overlay entirely when there are no captions", () => {
+  it("omits the caption input and overlay for caption-less segments", () => {
     const bare = buildExportPlan({
       edl: { ...edl, timeline: edl.timeline.map((s) => ({ ...s, wordIds: [] })) },
       words,
     });
     expect(bare.captions).toHaveLength(0);
-    expect(bare.sequence).toHaveLength(0);
-    expect(bare.concatScript).toBe("");
-    expect(bare.args).toContain("[vs]");
-    expect(bare.args.filter((a) => a === "-i")).toHaveLength(1);
+    for (const step of bare.segments) {
+      expect(step.captionsFile).toBeNull();
+      expect(step.captionsScript).toBeNull();
+      expect(step.args.filter((a) => a === "-i")).toHaveLength(1);
+      expect(step.args).toContain("[vs]");
+    }
+  });
+
+  it("maps aspect ratios to even-dimensioned resolutions", () => {
+    expect(plan.width).toBe(720);
+    expect(plan.height).toBe(1280);
+    const wide = buildExportPlan({ edl: { ...edl, aspectRatio: "16:9" }, words });
+    expect(wide.width).toBe(1280);
+    expect(wide.height).toBe(720);
+    for (const { width, height } of Object.values(EXPORT_RESOLUTIONS)) {
+      expect(width % 2).toBe(0);
+      expect(height % 2).toBe(0);
+    }
   });
 
   it("reports the ripple output duration", () => {
     expect(plan.outputDurationMs).toBe(1000 + 1200);
+    expect(plan.segments.reduce((sum, s) => sum + s.durationMs, 0)).toBe(
+      plan.outputDurationMs,
+    );
   });
 });
