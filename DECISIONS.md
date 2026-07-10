@@ -1,5 +1,8 @@
 # Merai — Architectural Decisions
 
+## 2026-07-11 — EDL v2 (multi-track) foundation: readers-first, refusal over flattening
+Build 5 introduces the multi-track EDL (explicit `timelineInMs` placement, video/audio/caption tracks, locked A/V pairs via `linkedClipId` — a J/L-cut is a linked pair whose windows differ — multiple assets, open effect/transition metadata) in `@merai/core/edl-v2.ts`, plus a serializable `EditCommand` surface (`edit-commands.ts`) that the editor UI and future AI re-editing share. Three binding rules: **(1) expand/contract, readers first** — every jsonb reader now goes through `parseEdl`/`edlV1ViewOf` (the blind `as EdlV1` casts are gone); writers keep producing v1 until the multi-track UI build, so production data is unchanged and no DB migration exists (the JSON `version` literal from Phase 0 is the discriminator). **(2) Downgrade refuses, never flattens** — `downgradeEdlV2ToV1` returns a typed reason (12 enumerated) for anything not v1-representable; the render handler turns that into a `PermanentJobError`. Silently dropping a track would corrupt a user's edit. Round-trip law `downgrade(upgrade(v1)) ≡ v1` is a test. **(3) AI edits are commands, not EDL patches** — models emit `EditCommand` JSON, zod-validated, routed through the same tested ops as the UI. **Revisit when:** the multi-track UI lands (editor state moves to v2, save writes v2, planner learns tracks).
+
 ## 2026-07-10 — Phase A hardening: permanent errors, over-cap download fallback, alerting, first deploys
 Four decisions from the pre-first-users hardening pass:
 

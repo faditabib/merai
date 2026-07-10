@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   edlOutputDurationMs,
+  edlV1ViewOf,
   type EdlV1,
   type RemovalReason,
   type TranscriptWord,
@@ -78,7 +79,9 @@ export function ProjectStatusView({
         .maybeSingle(),
     ]);
     if (transcriptRow) setTranscript(transcriptRow as TranscriptSnapshot);
-    if (edlRow?.edl) setEdl(edlRow.edl as EdlV1);
+    // Version-aware (Build 5): v1 or representable v2; null hides the
+    // edit-summary chips instead of crashing on a future multi-track row.
+    if (edlRow?.edl) setEdl(edlV1ViewOf(edlRow.edl));
   }, []);
 
   useEffect(() => {

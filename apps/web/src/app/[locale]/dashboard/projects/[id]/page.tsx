@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type { EdlV1 } from "@merai/core";
+import { edlV1ViewOf } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -55,7 +55,7 @@ export default async function ProjectPage({
         <ProjectStatusView
           initialProject={project as ProjectSnapshot}
           initialTranscript={(transcript as TranscriptSnapshot | null) ?? null}
-          initialEdl={(edlRow?.edl as EdlV1 | null) ?? null}
+          initialEdl={edlRow?.edl ? edlV1ViewOf(edlRow.edl) : null}
         />
       </main>
     </div>

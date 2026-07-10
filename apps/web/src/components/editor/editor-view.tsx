@@ -3,18 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  removeWords,
-  restoreRemoved,
-  reorderSegment,
-  rippleDeleteSegment,
+  applyEditCommand,
   segmentAtSource,
   nextSegmentAfterSource,
-  splitSegmentAt,
-  trimSegment,
   edlOutputDurationMs,
   sourceToOutputMs,
   CAPTION_STYLE_TOKENS,
   type CaptionStyleToken,
+  type EditCommand,
   type EdlV1,
   type TranscriptWord,
 } from "@merai/core";
@@ -127,6 +123,13 @@ export function EditorView(props: EditorViewProps) {
     [edl],
   );
 
+  /** Every mutation goes through the serializable command surface (Build 5):
+   *  UI handlers and future AI re-editing share this one entry point. */
+  const runCommand = useCallback(
+    (command: EditCommand) => apply(applyEditCommand(edl, props.words, command)),
+    [apply, edl, props.words],
+  );
+
   const undo = useCallback(() => {
     setUndoStack((stack) => {
       const previous = stack[stack.length - 1];
@@ -151,9 +154,9 @@ export function EditorView(props: EditorViewProps) {
 
   const deleteSelectedWords = useCallback(() => {
     if (selectedWordIds.length === 0) return;
-    apply(removeWords(edl, props.words, selectedWordIds));
+    runCommand({ type: "remove-words", wordIds: selectedWordIds });
     setSelectedWordIds([]);
-  }, [apply, edl, props.words, selectedWordIds]);
+  }, [runCommand, selectedWordIds]);
 
   const save = useCallback(async (): Promise<string | null> => {
     setSaving(true);
@@ -323,7 +326,7 @@ export function EditorView(props: EditorViewProps) {
               <button
                 key={token}
                 type="button"
-                onClick={() => apply({ ...edl, captionStyle: token })}
+                onClick={() => runCommand({ type: "set-caption-style", styleToken: token })}
                 className={`rounded-lg border px-3 py-1.5 text-sm ${
                   edl.captionStyle === token
                     ? "border-accent bg-accent/15 text-accent"
@@ -346,7 +349,7 @@ export function EditorView(props: EditorViewProps) {
           onSelectWords={setSelectedWordIds}
           onSeek={seekSource}
           onDeleteSelected={deleteSelectedWords}
-          onRestore={(removedId) => apply(restoreRemoved(edl, removedId))}
+          onRestore={(removedId) => runCommand({ type: "restore-removed", removedId })}
         />
       </div>
 
@@ -358,23 +361,27 @@ export function EditorView(props: EditorViewProps) {
         sourceDurationMs={props.sourceDurationMs}
         onSeek={seekSource}
         onTrim={(segmentId, edge, ms) =>
-          apply(trimSegment(edl, segmentId, edge, ms, props.words))
+          runCommand({ type: "trim-segment", segmentId, edge, ms })
         }
         onSplit={(segmentId, ms) =>
-          apply(splitSegmentAt(edl, segmentId, ms, props.words))
+          runCommand({ type: "split-segment", segmentId, sourceMs: ms })
         }
         onReorder={(segmentId, toIndex) =>
-          apply(reorderSegment(edl, segmentId, toIndex))
+          runCommand({ type: "reorder-segment", segmentId, toIndex })
         }
-        onRippleDelete={(segmentId) => apply(rippleDeleteSegment(edl, segmentId))}
-        onRestore={(removedId) => apply(restoreRemoved(edl, removedId))}
+        onRippleDelete={(segmentId) =>
+          runCommand({ type: "ripple-delete-segment", segmentId })
+        }
+        onRestore={(removedId) => runCommand({ type: "restore-removed", removedId })}
       />
 
       <ExportPanel
         projectId={props.projectId}
         ownerId={props.ownerId}
         edl={edl}
-        onChangeAspect={(ratio) => apply({ ...edl, aspectRatio: ratio })}
+        onChangeAspect={(ratio) =>
+          runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
+        }
         ensureSavedVersion={ensureSavedVersion}
       />
     </main>

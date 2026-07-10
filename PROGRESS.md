@@ -1,5 +1,29 @@
 # Merai — Progress Log
 
+## Build 5 — Professional editing core: EDL v2 foundation (2026-07-11)
+
+93 tests green (36 core + 45 worker + 12 web; was 78). Zero production
+impact: writers still produce v1; every reader is now version-aware.
+Full detail: BUILD_5_ANALYSIS.md (pre-code) + BUILD_5_REPORT.md (post).
+
+- **EDL v2 schema** (`@merai/core/edl-v2.ts`): explicit clip placement
+  (`timelineInMs` — gaps/overlaps legal), video/audio/caption tracks,
+  locked A/V pairs (J/L-cut = linked pair with differing windows), multiple
+  assets (B-roll/music groundwork), `gainDb`, open effects/transitions
+  metadata, captions as mode (derived-words | clips), v1 `removed` intact.
+- **Adapters**: lossless `upgradeEdlV1ToV2`; `downgradeEdlV2ToV1` with 12
+  typed refusal reasons (never silently flattens); `parseEdl` version
+  dispatch; `edlV1ViewOf` reader view. Round-trip law tested.
+- **Edit commands** (`edit-commands.ts`): serializable 8-command union +
+  dispatcher over the existing ops — the shared UI/AI mutation entry point;
+  editor-view now routes ALL mutations through it (behavior identical).
+- **Blind casts eliminated**: render handler (v2 downgrade path renders
+  identically — test-asserted; multi-track/malformed → PermanentJobError),
+  editor loader (graceful redirect), project views (chips degrade, not crash).
+- Verified: full suites + `next build` ✓; render planner untouched.
+
+---
+
 ## Railway worker deploy + production render test (2026-07-11)
 
 Worker deployed: project **merai-worker**, service **worker** (Dockerfile

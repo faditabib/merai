@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type { EdlV1, TranscriptWord } from "@merai/core";
+import { edlV1ViewOf, type TranscriptWord } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -58,6 +58,15 @@ export default async function EditorPage({
     redirect({ href: `/dashboard/projects/${id}`, locale });
   }
 
+  // Version-aware ingestion (Build 5): v1 passes through, a v1-representable
+  // v2 is downgraded for the single-track editor. A true multi-track EDL has
+  // no editable view here yet — send the user back to the project page
+  // rather than rendering a broken editor.
+  const initialEdl = edlV1ViewOf(edlRow!.edl);
+  if (!initialEdl) {
+    redirect({ href: `/dashboard/projects/${id}`, locale });
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <AppHeader />
@@ -67,7 +76,7 @@ export default async function EditorPage({
         ownerId={user!.id}
         words={transcript!.words as TranscriptWord[]}
         languageCode={transcript!.language_code as string | null}
-        initialEdl={edlRow!.edl as EdlV1}
+        initialEdl={initialEdl!}
         initialVersion={edlRow!.version as number}
         initialEdlVersionId={edlRow!.id as string}
         storagePath={upload!.storage_path as string}

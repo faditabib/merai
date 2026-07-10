@@ -1,5 +1,7 @@
 import {
   buildExportPlan,
+  downgradeEdlV2ToV1,
+  parseEdl,
   renderExportPayloadSchema,
   transcriptWordsSchema,
   type AspectRatio,
@@ -116,15 +118,40 @@ export async function renderExportWithEngine(
     return;
   }
 
-  const { rows: edlRows } = await db.query<{ edl: EdlV1 }>(
+  const { rows: edlRows } = await db.query<{ edl: unknown }>(
     "select edl from public.edl_versions where id = $1",
     [exportRow.edl_version_id],
   );
   if (!edlRows[0])
     throw new PermanentJobError(`edl version ${exportRow.edl_version_id} not found`);
+  // Version-aware ingestion (Build 5): the planner renders v1; a stored v2 is
+  // downgraded when it is v1-representable. A true multi-track composition is
+  // a permanent failure until the renderer learns tracks — refusing loudly
+  // beats silently flattening the user's edit.
+  let baseEdl: EdlV1;
+  let parsed: ReturnType<typeof parseEdl>;
+  try {
+    parsed = parseEdl(edlRows[0].edl);
+  } catch (error) {
+    // Malformed jsonb is deterministic — retrying cannot fix it.
+    throw new PermanentJobError(
+      `edl version ${exportRow.edl_version_id} failed validation: ${error instanceof Error ? error.message.slice(0, 200) : "unknown"}`,
+    );
+  }
+  if (parsed.version === 1) {
+    baseEdl = parsed;
+  } else {
+    const downgraded = downgradeEdlV2ToV1(parsed);
+    if (!downgraded.ok) {
+      throw new PermanentJobError(
+        `edl version ${exportRow.edl_version_id} is multi-track (${downgraded.reason}) — not renderable yet`,
+      );
+    }
+    baseEdl = downgraded.edl;
+  }
   // The exports row records what the user requested at export time.
   const edl: EdlV1 = {
-    ...edlRows[0].edl,
+    ...baseEdl,
     aspectRatio: exportRow.aspect_ratio,
     captionStyle: exportRow.caption_style,
   };

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { EdlV1 } from "@merai/core";
+import { upgradeEdlV1ToV2, type EdlV1 } from "@merai/core";
 import { setDb } from "../src/db";
 import { PermanentJobError } from "../src/errors";
 import {
@@ -20,12 +20,18 @@ beforeAll(async () => {
 
 afterAll(() => db.end());
 
-async function seedExport(overrides: { cancelRequested?: boolean } = {}) {
+async function seedExport(
+  overrides: {
+    cancelRequested?: boolean;
+    /** Replace the stored edl jsonb (Build 5: version-aware ingestion tests). */
+    edlJson?: (v1: EdlV1) => unknown;
+  } = {},
+) {
   const ownerId = await db.seedUser();
   const projectId = await db.seedProject(ownerId, "ready");
   const uploadId = await db.seedUpload(projectId, ownerId, "uploaded");
 
-  const edl: EdlV1 = {
+  const v1: EdlV1 = {
     version: 1,
     projectId,
     sourceUploadId: uploadId,
@@ -34,6 +40,7 @@ async function seedExport(overrides: { cancelRequested?: boolean } = {}) {
     aspectRatio: "9:16",
     captionStyle: "minimal-white-bottom",
   };
+  const edl = overrides.edlJson ? overrides.edlJson(v1) : v1;
   const { rows: edlRows } = await db.query<{ id: string }>(
     `insert into public.edl_versions (project_id, owner_id, version, source, edl)
      values ($1, $2, 1, 'ai', $3) returning id`,
@@ -232,6 +239,56 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
     await expect(
       renderExportWithEngine(
         jobFor({ ...ids, exportId: "00000000-0000-4000-8000-00000000dead" }),
+        { name: "stub", render: async () => new Uint8Array([1]) },
+        stubDeps(),
+      ),
+    ).rejects.toBeInstanceOf(PermanentJobError);
+  });
+
+  it("renders a stored EDL v2 identically via the downgrade path (Build 5)", async () => {
+    const ids = await seedExport({ edlJson: (v1) => upgradeEdlV1ToV2(v1) });
+    const engine: RenderEngine = {
+      name: "stub",
+      async render(request: RenderRequest) {
+        // The planner saw a v1 view: same single segment, same window.
+        expect(request.plan.segments).toHaveLength(1);
+        expect(request.plan.outputDurationMs).toBe(4000);
+        return new Uint8Array([9, 9]);
+      },
+    };
+    const uploaded: { path?: string; bytes?: Uint8Array } = {};
+    await renderExportWithEngine(jobFor(ids), engine, stubDeps(uploaded));
+    expect(uploaded.path).toBe(`${ids.ownerId}/${ids.exportId}.mp4`);
+    const { rows } = await db.query<{ status: string }>(
+      "select status from public.exports where id = $1",
+      [ids.exportId],
+    );
+    expect(rows[0]!.status).toBe("uploaded");
+  });
+
+  it("classifies a true multi-track EDL v2 as a permanent failure (Build 5)", async () => {
+    const ids = await seedExport({
+      edlJson: (v1) => {
+        const v2 = upgradeEdlV1ToV2(v1);
+        // B-roll: a second video track — not v1-representable.
+        v2.tracks.push({ ...v2.tracks[0]!, id: "video-2", clips: [] });
+        return v2;
+      },
+    });
+    await expect(
+      renderExportWithEngine(
+        jobFor(ids),
+        { name: "stub", render: async () => new Uint8Array([1]) },
+        stubDeps(),
+      ),
+    ).rejects.toThrow(/multi-track \(multiple-video-tracks\)/);
+  });
+
+  it("classifies malformed edl jsonb as a permanent failure (Build 5)", async () => {
+    const ids = await seedExport({ edlJson: () => ({ version: 42, junk: true }) });
+    await expect(
+      renderExportWithEngine(
+        jobFor(ids),
         { name: "stub", render: async () => new Uint8Array([1]) },
         stubDeps(),
       ),
