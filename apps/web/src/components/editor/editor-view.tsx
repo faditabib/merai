@@ -373,10 +373,7 @@ export function EditorView(props: EditorViewProps) {
       <ExportPanel
         projectId={props.projectId}
         ownerId={props.ownerId}
-        storagePath={props.storagePath}
-        languageCode={props.languageCode}
         edl={edl}
-        words={props.words}
         onChangeAspect={(ratio) => apply({ ...edl, aspectRatio: ratio })}
         ensureSavedVersion={ensureSavedVersion}
       />

@@ -1,53 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  CAPTION_STYLE_SPECS,
-  DEFAULT_CAPTION_STYLE,
-  type AspectRatio,
-  type CaptionStyleToken,
-  type EdlV1,
-  type TranscriptWord,
-} from "@merai/core";
+import type { AspectRatio, EdlV1 } from "@merai/core";
+import { requestExportRender } from "@/app/actions/projects";
 import { createClient } from "@/lib/supabase/client";
-import { renderBlankImage, renderCaptionImages } from "@/lib/export/caption-images";
-import { buildExportPlan } from "@/lib/export/plan";
-import {
-  cancelActiveExport,
-  ExportCancelledError,
-  renderExport,
-} from "@/lib/export/renderer";
 
-const RAW_BUCKET = "raw-uploads";
 const EXPORTS_BUCKET = "exports";
 const ASPECT_RATIOS: AspectRatio[] = ["9:16", "1:1", "16:9"];
-
-type Stage =
-  | "idle"
-  | "saving"
-  | "loading"
-  | "downloading"
-  | "captions"
-  | "rendering"
-  | "uploading"
-  | "done"
-  | "error";
-
-const ACTIVE_STAGES: Stage[] = [
-  "saving",
-  "loading",
-  "downloading",
-  "captions",
-  "rendering",
-  "uploading",
-];
+const POLL_INTERVAL_MS = 2_500;
+const ACTIVE_STATUSES = ["pending", "rendering"];
 
 interface ExportRow {
   id: string;
   status: string;
+  progress: number | string;
+  cancel_requested: boolean;
   aspect_ratio: string;
-  caption_style: string;
   storage_path: string | null;
   size_bytes: number | null;
   created_at: string;
@@ -56,31 +25,34 @@ interface ExportRow {
 export interface ExportPanelProps {
   projectId: string;
   ownerId: string;
-  storagePath: string;
-  languageCode: string | null;
   edl: EdlV1;
-  words: TranscriptWord[];
   onChangeAspect: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
 }
 
 /**
- * Client-side export: ffmpeg.wasm renders the saved EDL + burned captions at
- * the chosen aspect ratio, then uploads to the private exports bucket for
- * re-download (90-day retention).
+ * Server-side export (Phase 4.5): "request export" fires a render_export job
+ * on the worker; this panel just polls the exports row for status/progress —
+ * the same pattern as transcription. The user can close the tab; the render
+ * continues on the server.
  */
 export function ExportPanel(props: ExportPanelProps) {
   const t = useTranslations("export");
-  const [stage, setStage] = useState<Stage>("idle");
-  const [progress, setProgress] = useState(0);
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [active, setActive] = useState<ExportRow | null>(null);
+  const [starting, setStarting] = useState(false);
+  const [requestError, setRequestError] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const [previous, setPrevious] = useState<ExportRow[]>([]);
+  const listStale = useRef(false);
 
   const refreshList = useCallback(async () => {
     const { data } = await createClient()
       .from("exports")
-      .select("id, status, aspect_ratio, caption_style, storage_path, size_bytes, created_at")
+      .select(
+        "id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at",
+      )
       .eq("project_id", props.projectId)
       .order("created_at", { ascending: false })
       .limit(10);
@@ -91,22 +63,36 @@ export function ExportPanel(props: ExportPanelProps) {
     void refreshList();
   }, [refreshList]);
 
-  // Never lose a render to an accidental tab close.
+  // Poll the active export until it reaches a terminal state.
   useEffect(() => {
-    if (!ACTIVE_STAGES.includes(stage)) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [stage]);
+    if (!activeId) return;
+    const timer = setInterval(async () => {
+      const { data } = await createClient()
+        .from("exports")
+        .select(
+          "id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at",
+        )
+        .eq("id", activeId)
+        .maybeSingle();
+      if (!data) return;
+      const row = data as ExportRow;
+      setActive(row);
+      if (!ACTIVE_STATUSES.includes(row.status)) {
+        clearInterval(timer);
+        setActiveId(null);
+        setCancelling(false);
+        void refreshList();
+      }
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [activeId, refreshList]);
 
   async function startExport() {
     const supabase = createClient();
-    let exportId: string | null = null;
-    setBlobUrl(null);
-    setProgress(0);
-
+    setStarting(true);
+    setRequestError(false);
+    setActive(null);
     try {
-      setStage("saving");
       const versionId = await props.ensureSavedVersion();
       if (!versionId) throw new Error("save failed");
 
@@ -118,87 +104,37 @@ export function ExportPanel(props: ExportPanelProps) {
           edl_version_id: versionId,
           aspect_ratio: props.edl.aspectRatio,
           caption_style: props.edl.captionStyle,
-          status: "rendering",
+          status: "pending",
         })
-        .select("id")
+        .select("id, status, progress, cancel_requested, aspect_ratio, storage_path, size_bytes, created_at")
         .single();
       if (createError || !created) throw createError ?? new Error("insert failed");
-      exportId = created.id as string;
 
-      const plan = buildExportPlan({ edl: props.edl, words: props.words });
+      const queued = await requestExportRender({ exportId: created.id as string });
+      if (!queued.ok) throw new Error(queued.error);
 
-      setStage("captions");
-      const spec =
-        CAPTION_STYLE_SPECS[props.edl.captionStyle as CaptionStyleToken] ??
-        CAPTION_STYLE_SPECS[DEFAULT_CAPTION_STYLE];
-      const captionImages = await renderCaptionImages(
-        plan.captions,
-        spec,
-        plan.width,
-        plan.height,
-        (props.languageCode ?? "ar").startsWith("ar"),
-      );
-      if (plan.captions.length > 0) {
-        captionImages.push(await renderBlankImage(plan.width, plan.height));
-      }
-
-      const objectName = props.storagePath.slice(RAW_BUCKET.length + 1);
-      const { data: signed, error: signError } = await supabase.storage
-        .from(RAW_BUCKET)
-        .createSignedUrl(objectName, 3600);
-      if (signError || !signed) throw signError ?? new Error("sign failed");
-
-      const bytes = await renderExport({
-        videoUrl: signed.signedUrl,
-        plan,
-        captionImages,
-        onStage: setStage,
-        onProgress: setProgress,
-      });
-
-      setStage("uploading");
-      const objectPath = `${props.ownerId}/${exportId}.mp4`;
-      const blob = new Blob([bytes.buffer as ArrayBuffer], { type: "video/mp4" });
-      const { error: uploadError } = await supabase.storage
-        .from(EXPORTS_BUCKET)
-        .upload(objectPath, blob, { contentType: "video/mp4", upsert: true });
-      if (uploadError) throw uploadError;
-
-      await supabase
-        .from("exports")
-        .update({
-          status: "uploaded",
-          storage_path: `${EXPORTS_BUCKET}/${objectPath}`,
-          size_bytes: bytes.length,
-          duration_seconds: plan.outputDurationMs / 1000,
-        })
-        .eq("id", exportId);
-
-      setBlobUrl(URL.createObjectURL(blob));
-      setStage("done");
-      void refreshList();
+      setActive(created as ExportRow);
+      setActiveId(created.id as string);
+      listStale.current = true;
     } catch (err) {
-      const wasCancelled = err instanceof ExportCancelledError;
-      if (!wasCancelled) console.error("export failed", err);
-      if (exportId) {
-        await supabase
-          .from("exports")
-          .update({
-            status: "failed",
-            error: wasCancelled
-              ? "cancelled"
-              : err instanceof Error
-                ? err.message
-                : "unknown",
-          })
-          .eq("id", exportId);
-      }
-      setStage(wasCancelled ? "idle" : "error");
-      void refreshList();
+      console.error("export request failed", err);
+      setRequestError(true);
+    } finally {
+      setStarting(false);
     }
   }
 
-  async function downloadPrevious(row: ExportRow) {
+  async function cancelActive() {
+    if (!activeId) return;
+    setCancelling(true);
+    await createClient()
+      .from("exports")
+      .update({ cancel_requested: true })
+      .eq("id", activeId);
+    // The worker flips status to 'cancelled' at the next checkpoint.
+  }
+
+  async function download(row: ExportRow) {
     if (!row.storage_path) return;
     const objectName = row.storage_path.slice(EXPORTS_BUCKET.length + 1);
     const { data } = await createClient()
@@ -207,7 +143,8 @@ export function ExportPanel(props: ExportPanelProps) {
     if (data?.signedUrl) window.open(data.signedUrl, "_blank");
   }
 
-  const busy = ACTIVE_STAGES.includes(stage);
+  const busy = starting || activeId !== null;
+  const progressPct = active ? Math.round(Number(active.progress) * 100) : 0;
 
   return (
     <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
@@ -240,47 +177,53 @@ export function ExportPanel(props: ExportPanelProps) {
         </button>
       </div>
 
-      {busy && (
+      {busy && active && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-3 text-sm">
             <span>
-              {stage === "rendering"
-                ? t("stages.rendering", { percent: Math.round(progress * 100) })
-                : t(`stages.${stage}`)}
+              {cancelling
+                ? t("cancelling")
+                : active.status === "pending"
+                  ? t("stages.pending")
+                  : t("stages.rendering", { percent: progressPct })}
             </span>
-            <span className="ms-auto text-xs text-red-500">{t("closeWarning")}</span>
+            <span className="ms-auto text-xs text-muted">{t("serverNote")}</span>
             <button
               type="button"
-              onClick={() => cancelActiveExport()}
-              className="rounded-lg border border-border px-3 py-1 text-xs text-muted hover:border-red-500 hover:text-red-500"
+              onClick={() => void cancelActive()}
+              disabled={cancelling}
+              className="rounded-lg border border-border px-3 py-1 text-xs text-muted hover:border-red-500 hover:text-red-500 disabled:opacity-50"
             >
               {t("cancel")}
             </button>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-border">
             <div
-              className="h-full rounded-full bg-accent transition-all"
-              style={{
-                width: `${stage === "rendering" ? Math.round(progress * 100) : stage === "uploading" ? 95 : 10}%`,
-              }}
+              className={`h-full rounded-full bg-accent transition-all ${
+                active.status === "pending" ? "w-[4%] animate-pulse" : ""
+              }`}
+              style={active.status === "rendering" ? { width: `${progressPct}%` } : undefined}
             />
           </div>
         </div>
       )}
 
-      {stage === "done" && blobUrl && (
+      {!busy && active?.status === "uploaded" && (
         <p className="flex items-center gap-3 rounded-xl bg-accent/10 p-3 text-sm">
           <span className="font-medium text-accent">{t("done")}</span>
-          <a
-            href={blobUrl}
-            download="merai-export.mp4"
+          <button
+            type="button"
+            onClick={() => void download(active)}
             className="rounded-lg bg-accent px-4 py-1.5 font-semibold text-accent-foreground"
           >
             {t("download")}
-          </a>
+          </button>
         </p>
       )}
-      {stage === "error" && (
+      {!busy && active?.status === "cancelled" && (
+        <p className="text-sm text-muted">{t("cancelledNote")}</p>
+      )}
+      {((!busy && active?.status === "failed") || requestError) && (
         <p role="alert" className="text-sm text-red-500">
           {t("error")}
         </p>
@@ -304,7 +247,7 @@ export function ExportPanel(props: ExportPanelProps) {
                 {row.status === "uploaded" && (
                   <button
                     type="button"
-                    onClick={() => void downloadPrevious(row)}
+                    onClick={() => void download(row)}
                     className="ms-auto rounded-lg border border-border px-3 py-1 text-xs hover:border-accent hover:text-accent"
                   >
                     {t("download")}

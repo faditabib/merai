@@ -13,6 +13,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
     "@merai/core": "*",
+    "@napi-rs/canvas": "^1.0.2",
     "@supabase/supabase-js": "^2.110.1",
     "dotenv": "^16.4.0",
     "pg": "^8.13.0",

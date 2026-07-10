@@ -1,5 +1,48 @@
 # Merai — Progress Log
 
+## Phase 4.5 — Server-side rendering pivot (BUILT + live-verified 2026-07-10)
+
+ffmpeg.wasm fully removed (owner decision — see DECISIONS.md). Exports are now
+`render_export` jobs on the Railway worker; the panel is request + poll.
+
+### Done (73 tests: 24 core + 37 worker + 12 web)
+- Planner moved unchanged to @merai/core; `render_export` job contract added.
+- Migration 5 (exports.progress, cancel_requested, 'cancelled' status) — live.
+- RenderEngine pattern: **LocalFfmpegEngine default** (native ffmpeg on the
+  worker, zero marginal cost) ↔ **VeryGoodFfmpegEngine** via
+  VERYGOODFFMPEG_API_KEY (documented REST; unverified until a key exists).
+- Server caption rasterization: @napi-rs/canvas + vendored IBM Plex Arabic —
+  shaping visually verified (connected RTL) before adoption.
+- Handler: idempotent, progress checkpoints to exports.progress, cancel via
+  cancel_requested polled between segments; runner marks exports failed on
+  retry exhaustion (project untouched). 5 new handler tests (stub engine).
+- Web: wasm/renderer/caption-images/core-copy script/@ffmpeg deps deleted;
+  panel = insert pending row → enqueue → poll status+progress → cancel →
+  signed-URL download. "Don't close the tab" replaced with "you can leave".
+
+### Live E2E (same 9.6-min stress clip, through the UI)
+- Request → queue → claim in 2s → **all 13 segments rendered in ~55s wall**
+  (encode sum 35.9s; vs 1,030s browser wasm — ~15×). Engine: local ffmpeg.
+- Upload hit the known Supabase free-tier 50MB cap (53.7MB output) → job
+  retried → **cancel clicked in the UI stopped the retry loop live**: worker
+  marked the row 'cancelled', panel showed أُلغي. Cancel loop verified.
+- Output correctness: byte-equivalent commands were ffprobe-verified in the
+  native run (h264/aac, 720×1280, 576.8s).
+
+### Remaining blockers for MVP
+1. **Supabase free-tier 50MB per-file cap** — renders complete; >50MB outputs
+   can't be stored. Fix: Supabase Pro ($25/mo) + raise the file-size limit in
+   dashboard settings (10-min/720p ≈ 55MB; headroom for future 1080p).
+   Owner/billing action.
+2. Railway deploy of the new worker (Dockerfile installs ffmpeg + fonts) not
+   yet exercised; shared-vCPU render timing TBD.
+3. Renders serialize with transcription on the single worker loop — fine for
+   MVP, split workers when contention appears.
+4. Minor: a deterministic upload-cap failure re-renders through 3 attempts
+   before failing (bounded waste; classify permanent errors later).
+
+---
+
 ## Phase 4 — 10-minute export stress test (RESOLVED 2026-07-09, segment-wise)
 
 Full pipeline on a 575s / 41.5MB / 1280×720 Arabic clip (994 words, 137

@@ -16,7 +16,9 @@ PROGRESS.md     Per-phase status reports
 
 ## Getting started
 
-Prereqs: Node 20+, a Supabase project.
+Prereqs: Node 20+, a Supabase project, and **ffmpeg on PATH** for the worker
+(exports render server-side via the local ffmpeg engine; the worker Docker
+image installs it automatically).
 
 1. **Install** — `npm install` (workspace root).
 2. **Database** — apply `supabase/migrations/*.sql` to your Supabase project

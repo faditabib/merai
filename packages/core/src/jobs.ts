@@ -13,6 +13,7 @@ export const JOB_TYPES = [
   "transcribe",
   "analyze",
   "generate_edl",
+  "render_export",
   "cleanup_expired",
 ] as const;
 export type JobType = (typeof JOB_TYPES)[number];
@@ -34,6 +35,14 @@ export type AnalyzePayload = z.infer<typeof analyzePayloadSchema>;
 export const generateEdlPayloadSchema = analyzePayloadSchema;
 export type GenerateEdlPayload = z.infer<typeof generateEdlPayloadSchema>;
 
+/** Server-side export render (Phase 4.5 — replaced ffmpeg.wasm). */
+export const renderExportPayloadSchema = z.object({
+  exportId: z.string().uuid(),
+  projectId: z.string().uuid(),
+  ownerId: z.string().uuid(),
+});
+export type RenderExportPayload = z.infer<typeof renderExportPayloadSchema>;
+
 /** Periodic retention sweep; no payload. */
 export const cleanupExpiredPayloadSchema = z.object({});
 
@@ -41,6 +50,7 @@ export const jobPayloadSchemas = {
   transcribe: transcribePayloadSchema,
   analyze: analyzePayloadSchema,
   generate_edl: generateEdlPayloadSchema,
+  render_export: renderExportPayloadSchema,
   cleanup_expired: cleanupExpiredPayloadSchema,
 } satisfies Record<JobType, z.ZodTypeAny>;
 

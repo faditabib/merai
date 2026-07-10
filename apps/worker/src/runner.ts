@@ -28,16 +28,29 @@ export async function processOne(workerId: string): Promise<boolean> {
     log.error(`job ${job.id} failed: ${message}`);
     await failJob(job.id, message);
 
-    // Retries exhausted → surface the failure on the project so the UI
-    // shows a terminal error state instead of spinning forever.
-    if (job.attempts >= job.max_attempts && job.project_id) {
-      await getDb().query(
-        "update public.projects set status = 'error' where id = $1",
-        [job.project_id],
-      );
-      log.warn(
-        `job ${job.id} permanently failed — project ${job.project_id} marked error`,
-      );
+    // Retries exhausted → surface the failure where the UI looks for it.
+    if (job.attempts >= job.max_attempts) {
+      // Pipeline jobs gate the project itself…
+      if (job.project_id && (job.type === "transcribe" || job.type === "analyze")) {
+        await getDb().query(
+          "update public.projects set status = 'error' where id = $1",
+          [job.project_id],
+        );
+        log.warn(
+          `job ${job.id} permanently failed — project ${job.project_id} marked error`,
+        );
+      }
+      // …render jobs gate only their exports row (the project stays ready).
+      if (job.type === "render_export") {
+        const exportId = (job.payload as { exportId?: string })?.exportId;
+        if (exportId) {
+          await getDb().query(
+            "update public.exports set status = 'failed', error = $2 where id = $1 and status in ('pending','rendering')",
+            [exportId, message.slice(0, 500)],
+          );
+          log.warn(`job ${job.id} permanently failed — export ${exportId} marked failed`);
+        }
+      }
     }
   }
   return true;

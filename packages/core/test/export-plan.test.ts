@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { EdlV1, TranscriptWord } from "@merai/core";
-import { buildExportPlan, EXPORT_RESOLUTIONS } from "../src/lib/export/plan";
+import {
+  buildExportPlan,
+  EXPORT_RESOLUTIONS,
+  type EdlV1,
+  type TranscriptWord,
+} from "../src/index";
 
 function word(id: string, startMs: number, endMs: number): TranscriptWord {
   return { id, text: `كلمة-${id}`, startMs, endMs, confidence: 0.95 };

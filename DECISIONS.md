@@ -1,5 +1,15 @@
 # Merai — Architectural Decisions
 
+## 2026-07-10 — Export rendering moved fully server-side; ffmpeg.wasm removed
+Strategic pivot (owner decision): unit economics showed ~$1.50/subscriber/month between browser and server rendering — not worth the wasm complexity (segment-wise workarounds, wasm FS management, device variance). ffmpeg.wasm is fully deleted; exports are now `render_export` jobs on the existing Railway worker, and the export panel is request + poll (same pattern as transcription) with server-checkpointed cancel. The segment-wise planner moved unchanged to @merai/core (it was already pure).
+
+**Provider choice (owner asked: Rendi vs Very Good FFmpeg, pick by TS SDK support).** Verified from public pages 2026-07-10: Rendi has NO official SDK, ~$0.15/GB, and job-runtime caps of 1 min (free) / 10 min (Pro) — genuinely risky for 10-minute renders. Very Good FFmpeg has an official TS SDK (`@verygoodffmpeg/sdk`), raw-ffmpeg commands with `{{file}}` templating, 6-hour job runtime, $0.50/GB→$0.10→$0.08 tiers, 2GB free. **VGF wins on the stated criterion and on runtime limits.** Sources: rendi.dev/pricing, verygoodffmpeg.com, renderio.dev/blogs/ffmpeg-api-pricing-compared.
+**Deviation, flagged:** the DEFAULT engine is `LocalFfmpegEngine` — native ffmpeg on the worker itself (one `apk add ffmpeg` in the Dockerfile). Zero marginal cost, media never leaves our storage↔worker path, and it was testable TODAY (a managed provider needs an account/key only the owner can create). The VGF engine is fully wired against their documented REST API (bearer + POST /api/ffmpeg + GET /api/jobs/{id}; the SDK README wasn't reachable, so no unverified SDK shapes) and activates via `VERYGOODFFMPEG_API_KEY` with zero code changes — the exact house pattern (AssemblyAI↔mock, Haiku↔heuristic). Like AssemblyAI in Phase 1, the VGF path is UNVERIFIED until the first live call. **Revisit when:** worker CPU contention appears (renders serialize with transcription on one loop) — then either a dedicated render worker or flipping the env key.
+
+**Captions server-side:** @napi-rs/canvas (Skia+HarfBuzz) rasterizes caption PNGs with vendored IBM Plex Sans Arabic TTFs (OFL) — Arabic shaping visually verified before adoption (connected RTL letterforms). Same PNG-sequence overlay model; ffmpeg still never renders text.
+
+**Measured (this desktop, 9.6-min stress clip, 13 segments, 137 captions):** render ≈ 55s wall (encode sum 35.9s + download/captions/join) vs 1,030s in browser wasm — ~15× faster and the whole "don't close the tab" class of UX is gone. Railway shared-vCPU timing TBD on first deploy.
+
 Append-only log of non-trivial decisions. Each entry: context → decision → why → revisit-when.
 
 ## 2026-07-08 — Monorepo via npm workspaces

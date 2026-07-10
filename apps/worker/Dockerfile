@@ -3,6 +3,9 @@
 # On Railway, set "Dockerfile Path" to apps/worker/Dockerfile with root context.
 FROM node:22-alpine
 
+# Local render engine (exports) runs native ffmpeg.
+RUN apk add --no-cache ffmpeg
+
 WORKDIR /app
 
 # Install with the workspace graph so @merai/core resolves.

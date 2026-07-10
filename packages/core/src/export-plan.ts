@@ -1,12 +1,7 @@
-import {
-  buildCaptionLines,
-  sourceToOutputMs,
-  edlOutputDurationMs,
-  type AspectRatio,
-  type CaptionLine,
-  type EdlV1,
-  type TranscriptWord,
-} from "@merai/core";
+import { buildCaptionLines, type CaptionLine } from "./captions";
+import { edlOutputDurationMs, type AspectRatio, type EdlV1 } from "./edl";
+import { sourceToOutputMs } from "./edl-ops";
+import type { TranscriptWord } from "./transcript";
 
 /**
  * Pure export planning: EDL → a SEGMENT-WISE render plan.

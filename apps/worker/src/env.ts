@@ -12,6 +12,10 @@ export const env = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? null,
   assemblyAiApiKey: process.env.ASSEMBLYAI_API_KEY ?? null,
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? null,
+  /** Managed render provider (Very Good FFmpeg); local ffmpeg when absent. */
+  verygoodFfmpegApiKey: process.env.VERYGOODFFMPEG_API_KEY ?? null,
+  /** ffmpeg binary for the local render engine. */
+  ffmpegPath: process.env.FFMPEG_PATH ?? "ffmpeg",
   dolbyAppKey: process.env.DOLBY_APP_KEY ?? null,
   dolbyAppSecret: process.env.DOLBY_APP_SECRET ?? null,
   pixabayApiKey: process.env.PIXABAY_API_KEY ?? null,

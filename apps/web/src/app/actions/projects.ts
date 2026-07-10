@@ -142,6 +142,47 @@ export async function completeUpload(input: {
   return { ok: true };
 }
 
+/**
+ * Queue a server-side render for an exports row the owner just created.
+ * Ownership is proven by the RLS-scoped select; the enqueue itself needs the
+ * service role (users cannot write jobs).
+ */
+export async function requestExportRender(input: {
+  exportId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "not-authenticated" };
+
+  const { data: exportRow } = await supabase
+    .from("exports")
+    .select("id, project_id, owner_id, status")
+    .eq("id", input.exportId)
+    .single();
+  if (!exportRow) return { ok: false, error: "not-found" };
+
+  const admin = createAdminClient();
+  const { error: jobError } = await admin.from("jobs").upsert(
+    {
+      type: "render_export",
+      payload: {
+        exportId: exportRow.id,
+        projectId: exportRow.project_id,
+        ownerId: user.id,
+      },
+      dedupe_key: `render:${exportRow.id}`,
+      owner_id: user.id,
+      project_id: exportRow.project_id,
+    },
+    { onConflict: "dedupe_key", ignoreDuplicates: true },
+  );
+  if (jobError) return { ok: false, error: "enqueue-failed" };
+
+  return { ok: true };
+}
+
 /** Re-run a permanently failed pipeline (error state → transcribing). */
 export async function retryProcessing(input: {
   projectId: string;

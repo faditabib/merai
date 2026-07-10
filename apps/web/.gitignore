@@ -40,8 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# self-hosted ffmpeg core (copied from node_modules at build)
-/public/ffmpeg/
-
 # staged e2e test clips (regenerable, large binaries — never commit)
 /public/e2e-*.mp4
