@@ -91,5 +91,15 @@
   "89": "routing.ts",
   "90": "RenderRequest",
   "91": "render-export.test.ts",
-  "92": "storage.ts"
+  "92": "storage.ts",
+  "93": "runner.ts",
+  "94": "createClient",
+  "95": "projects.ts",
+  "96": "project-status-view.tsx",
+  "97": "validate.ts",
+  "98": "export-panel.tsx",
+  "99": "Build 5.5 Analysis — AI Editing Brain v1",
+  "100": "Build 6A — Visual QA Report",
+  "101": "Production Alignment Report",
+  "102": "20260711130000_ai_suggestions.sql"
 }

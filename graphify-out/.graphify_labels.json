@@ -101,5 +101,8 @@
   "99": "Build 5.5 Analysis — AI Editing Brain v1",
   "100": "Build 6A — Visual QA Report",
   "101": "Production Alignment Report",
-  "102": "20260711130000_ai_suggestions.sql"
+  "102": "20260711130000_ai_suggestions.sql",
+  "103": "transcribe.ts",
+  "104": "Build 5.6 Analysis — AI Brain UX Polish + Feedback Loop",
+  "105": "20260711160000_ai_feedback_prefs.sql"
 }

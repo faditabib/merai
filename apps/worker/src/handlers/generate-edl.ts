@@ -101,6 +101,7 @@ export async function generateEdl(
     analysisSummary: transcriptRows[0].analysis
       ? JSON.stringify(transcriptRows[0].analysis.result ?? {}).slice(0, 4000)
       : null,
+    intentHint: await resolveIntentHint(db, payload.ownerId),
   });
 
   // The gate: the schema-parsed plan must survive referential checks AND a
@@ -113,15 +114,17 @@ export async function generateEdl(
 
   await db.query(
     `update public.ai_suggestions
-       set status = 'ready', goal = $2, commands = $3, explanation = $4,
-           model = $5, error = null
+       set status = 'ready', goal = $2, commands = $3, steps = $4,
+           explanation = $5, model = $6, error = null
      where id = $1`,
     [
       suggestion.id,
       plan.goal,
       // The NORMALIZED commands — exactly what the dry-run applied, so the
-      // editor's Apply replays a verified batch.
+      // editor's Apply replays a verified batch. Steps stay index-aligned
+      // through normalization (Build 5.6 presentation layer).
       JSON.stringify(validation.commands),
+      JSON.stringify(validation.steps),
       plan.explanation,
       brain.name,
     ],
@@ -129,4 +132,46 @@ export async function generateEdl(
   log.info(
     `ai-edit: suggestion ${suggestion.id} ready (goal=${plan.goal}, ${validation.commands.length} commands)`,
   );
+}
+
+/**
+ * The creator's style hint for the prompt. Explicit setting wins; 'auto'
+ * (or no row) derives from goals of suggestions the user chose to APPLY —
+ * an explicit signal they created — and stores NOTHING (privacy: hidden
+ * profiles never accumulate; see BUILD_5_6_ANALYSIS.md).
+ */
+export async function resolveIntentHint(
+  db: { query<R>(text: string, params?: unknown[]): Promise<{ rows: R[] }> },
+  ownerId: string,
+): Promise<string | null> {
+  const { rows: prefRows } = await db.query<{ intent: string }>(
+    "select intent from public.ai_preferences where owner_id = $1",
+    [ownerId],
+  );
+  const intent = prefRows[0]?.intent ?? "auto";
+  if (intent === "short-form") return "short-form content (TikTok/Reels/Shorts)";
+  if (intent === "educational") return "educational/explainer content";
+  if (intent === "general") return null;
+
+  // auto: derive per-request from applied-suggestion goals (last 10).
+  const { rows: goalRows } = await db.query<{ goal: string | null }>(
+    `select goal from public.ai_suggestions
+     where owner_id = $1 and status = 'applied' and goal is not null
+     order by created_at desc limit 10`,
+    [ownerId],
+  );
+  const goals = goalRows.map((r) => (r.goal ?? "").toLowerCase());
+  const shortForm = goals.filter((g) =>
+    /tiktok|short|reel|قصير|تيك/.test(g),
+  ).length;
+  const educational = goals.filter((g) =>
+    /educat|explain|tutorial|شرح|تعليم/.test(g),
+  ).length;
+  if (shortForm >= 3 && shortForm > educational) {
+    return "short-form content (TikTok/Reels/Shorts) — inferred from their recent applied edits";
+  }
+  if (educational >= 3 && educational > shortForm) {
+    return "educational/explainer content — inferred from their recent applied edits";
+  }
+  return null;
 }

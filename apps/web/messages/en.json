@@ -195,10 +195,57 @@
       },
       "commandCount": "{count, number} suggested changes",
       "apply": "Apply plan",
+      "review": "Review changes",
+      "hideReview": "Hide details",
       "dismiss": "Dismiss",
+      "done": "Close",
       "appliedNote": "Plan applied — review it in the preview; one Undo reverts everything.",
       "staleWarning": "The edit changed after this plan was made — request a fresh suggestion.",
       "requestError": "Couldn't send the request. Please try again.",
+      "planSummary": "Your AI editor will make:",
+      "summaryCuts": "{count, number} cuts",
+      "summaryRestores": "{count, number} restores",
+      "summaryStyle": "Caption style change",
+      "summaryAspect": "Aspect ratio change",
+      "safeNote": "Your original version always remains safe — every change is one Undo away.",
+      "reasonLabel": "Why:",
+      "benefitLabel": "Benefit:",
+      "actions": {
+        "removeWords": "Remove words",
+        "deleteSegment": "Remove segment",
+        "restore": "Restore segment",
+        "style": "Caption style",
+        "aspect": "Aspect ratio"
+      },
+      "categories": {
+        "hook": "Hook",
+        "pacing": "Pacing",
+        "clarity": "Clarity",
+        "style": "Style",
+        "platform": "Platform"
+      },
+      "targetWords": "{count, number} words: {text}",
+      "targetSegment": "a {seconds, number}s segment",
+      "feedback": {
+        "prompt": "Was this suggestion helpful?",
+        "helpful": "Helpful",
+        "notUseful": "Not useful",
+        "why": "Why? (optional)",
+        "thanks": "Thanks — your feedback helps improve your editor.",
+        "reasons": {
+          "prefer-original": "I prefer the original",
+          "misunderstood-context": "AI misunderstood context",
+          "wrong-cut": "The cut is wrong",
+          "other": "Other"
+        }
+      },
+      "preference": {
+        "label": "Your style:",
+        "auto": "Auto",
+        "short-form": "Short-form",
+        "educational": "Educational",
+        "general": "General"
+      },
       "errors": {
         "ai-unavailable": "The AI assistant isn't enabled on the server right now.",
         "generic": "Couldn't produce a valid plan for this request — try different wording."

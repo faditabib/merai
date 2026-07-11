@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   aiEditPlanSchema,
+  parseAnnotatedPlan,
   validateAiEditPlan,
   type AiEditPlan,
   type EdlV1,
@@ -45,6 +46,80 @@ describe("aiEditPlanSchema", () => {
     expect(() =>
       aiEditPlanSchema.parse({ ...plan, commands: [{ type: "explode" }] }),
     ).toThrow();
+  });
+});
+
+describe("parseAnnotatedPlan (Build 5.6)", () => {
+  it("splits inline annotations into pure commands + presentation steps", () => {
+    const plan = parseAnnotatedPlan({
+      goal: "stronger-opening",
+      explanation: "بداية أقوى.",
+      commands: [
+        {
+          type: "ripple-delete-segment",
+          segmentId: "seg-k0",
+          title: "بداية أقوى",
+          reason: "المقدمة بطيئة",
+          benefit: "الوصول إلى الفكرة أسرع",
+          category: "hook",
+        },
+        { type: "set-aspect-ratio", aspectRatio: "9:16" }, // unannotated
+      ],
+    });
+    // Commands are PURE — no annotation keys leak to the dispatcher.
+    expect(plan.commands).toEqual([
+      { type: "ripple-delete-segment", segmentId: "seg-k0" },
+      { type: "set-aspect-ratio", aspectRatio: "9:16" },
+    ]);
+    expect(plan.steps).toEqual([
+      {
+        title: "بداية أقوى",
+        reason: "المقدمة بطيئة",
+        benefit: "الوصول إلى الفكرة أسرع",
+        category: "hook",
+      },
+      {},
+    ]);
+  });
+
+  it("never sinks a valid command on a malformed annotation, and rejects bad categories to empty", () => {
+    const plan = parseAnnotatedPlan({
+      goal: "g",
+      explanation: "x",
+      commands: [
+        { type: "set-caption-style", styleToken: "karaoke-highlight", category: "viral" },
+      ],
+    });
+    expect(plan.commands).toHaveLength(1);
+    expect(plan.steps).toEqual([{}]); // invalid category → best-effort empty step
+    expect(() =>
+      parseAnnotatedPlan({
+        goal: "g",
+        explanation: "x",
+        commands: [{ type: "explode", category: "hook" }],
+      }),
+    ).toThrow(); // mutation stays strict
+  });
+
+  it("keeps steps aligned with commands through normalization", () => {
+    const wordsWithRemoved = [...words, word("wX", 5000, 5300)];
+    const plan = parseAnnotatedPlan({
+      goal: "g",
+      explanation: "x",
+      commands: [
+        // Entirely already-satisfied → command AND step must both drop.
+        { type: "remove-words", wordIds: ["wX"], category: "pacing", reason: "r1" },
+        { type: "set-aspect-ratio", aspectRatio: "16:9", category: "platform", reason: "r2" },
+      ],
+    });
+    const result = validateAiEditPlan(edl, wordsWithRemoved, plan);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.commands).toEqual([
+        { type: "set-aspect-ratio", aspectRatio: "16:9" },
+      ]);
+      expect(result.steps).toEqual([{ category: "platform", reason: "r2" }]);
+    }
   });
 });
 

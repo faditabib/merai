@@ -31,14 +31,80 @@ export type AiEditCommandType = (typeof AI_EDIT_COMMAND_TYPES)[number];
 export const MAX_AI_INSTRUCTION_CHARS = 500;
 export const MAX_AI_PLAN_COMMANDS = 40;
 
+/** Closed category set for AI edit steps (Build 5.6) — localized labels
+ *  live in the UI; unknown/absent categories simply render no chip. */
+export const AI_EDIT_CATEGORIES = [
+  "hook",
+  "pacing",
+  "clarity",
+  "style",
+  "platform",
+] as const;
+export type AiEditCategory = (typeof AI_EDIT_CATEGORIES)[number];
+
+/**
+ * Presentation metadata for ONE command, produced inline by the Brain and
+ * split off before the command reaches the dispatcher. Everything here is
+ * qualitative model output shown to the creator — durations and counts are
+ * derived from the EDL by the UI, never invented by the model.
+ */
+export const aiEditStepSchema = z.object({
+  title: z.string().max(80).optional(),
+  reason: z.string().max(300).optional(),
+  benefit: z.string().max(200).optional(),
+  category: z.enum(AI_EDIT_CATEGORIES).optional(),
+});
+export type AiEditStep = z.infer<typeof aiEditStepSchema>;
+
+const ANNOTATION_KEYS = ["title", "reason", "benefit", "category"] as const;
+
 export const aiEditPlanSchema = z.object({
   /** Short kebab-case slug the model assigns, e.g. "make-shorter". */
   goal: z.string().min(1).max(80),
   commands: z.array(editCommandSchema).max(MAX_AI_PLAN_COMMANDS),
   /** Creator-facing, in the transcript's language. */
   explanation: z.string().min(1).max(1000),
+  /** Index-aligned presentation steps (Build 5.6); absent on old plans. */
+  steps: z.array(aiEditStepSchema).optional(),
 });
 export type AiEditPlan = z.infer<typeof aiEditPlanSchema>;
+
+/**
+ * Parse a raw Brain tool payload whose commands carry INLINE annotations
+ * (title/reason/benefit/category on each command object — annotating inline
+ * avoids index-alignment hazards). Splits every item into the pure command
+ * (dispatcher contract untouched) + its presentation step. Plain
+ * unannotated commands parse fine — steps just come back empty.
+ */
+export function parseAnnotatedPlan(raw: unknown): AiEditPlan {
+  const outer = z
+    .object({
+      goal: z.string().min(1).max(80),
+      commands: z.array(z.record(z.string(), z.unknown())).max(MAX_AI_PLAN_COMMANDS),
+      explanation: z.string().min(1).max(1000),
+    })
+    .parse(raw);
+
+  const commands: EditCommand[] = [];
+  const steps: AiEditStep[] = [];
+  for (const item of outer.commands) {
+    const annotation: Record<string, unknown> = {};
+    const rest: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(item)) {
+      if ((ANNOTATION_KEYS as readonly string[]).includes(key)) {
+        annotation[key] = value;
+      } else {
+        rest[key] = value;
+      }
+    }
+    commands.push(editCommandSchema.parse(rest));
+    // A malformed annotation must never sink a valid command — presentation
+    // is best-effort, mutation is strict.
+    const parsedStep = aiEditStepSchema.safeParse(annotation);
+    steps.push(parsedStep.success ? parsedStep.data : {});
+  }
+  return { goal: outer.goal, explanation: outer.explanation, commands, steps };
+}
 
 export type AiPlanRejection =
   | { ok: false; reason: "command-type-not-allowed"; detail: string }
@@ -48,7 +114,7 @@ export type AiPlanRejection =
   | { ok: false; reason: "apply-failed"; detail: string };
 
 export type AiPlanValidation =
-  | { ok: true; edl: EdlV1; commands: EditCommand[] }
+  | { ok: true; edl: EdlV1; commands: EditCommand[]; steps: AiEditStep[] }
   | AiPlanRejection;
 
 /**
@@ -74,9 +140,18 @@ export function validateAiEditPlan(
   // Normalized copy: intents the edit already satisfies (removing a word
   // that IS already removed) are dropped rather than failing the plan —
   // that's deduplication, not flattening. Ids that exist NOWHERE remain a
-  // hard reject: those are hallucinations.
+  // hard reject: those are hallucinations. Presentation steps travel WITH
+  // their command through normalization (dropped together, kept together).
+  const planSteps = plan.steps ?? [];
   const commands: EditCommand[] = [];
+  const steps: AiEditStep[] = [];
+  const keep = (command: EditCommand, index: number) => {
+    commands.push(command);
+    steps.push(planSteps[index] ?? {});
+  };
+  let index = -1;
   for (const command of plan.commands) {
+    index += 1;
     if (!allowed.has(command.type)) {
       return { ok: false, reason: "command-type-not-allowed", detail: command.type };
     }
@@ -89,7 +164,7 @@ export function validateAiEditPlan(
         }
         const stillKept = command.wordIds.filter((id) => keptWordIds.has(id));
         if (stillKept.length > 0) {
-          commands.push({ ...command, wordIds: stillKept });
+          keep({ ...command, wordIds: stillKept }, index);
         }
         break;
       }
@@ -97,28 +172,33 @@ export function validateAiEditPlan(
         if (!timelineIds.has(command.segmentId)) {
           return { ok: false, reason: "unknown-segment", detail: command.segmentId };
         }
-        commands.push(command);
+        keep(command, index);
         break;
       case "restore-removed":
         if (!removedIds.has(command.removedId)) {
           return { ok: false, reason: "unknown-segment", detail: command.removedId };
         }
-        commands.push(command);
+        keep(command, index);
         break;
       case "set-caption-style":
         if (!(CAPTION_STYLE_TOKENS as readonly string[]).includes(command.styleToken)) {
           return { ok: false, reason: "unknown-caption-style", detail: command.styleToken };
         }
-        commands.push(command);
+        keep(command, index);
         break;
       default:
         // set-aspect-ratio: fully constrained by its zod enum already.
-        commands.push(command);
+        keep(command, index);
     }
   }
 
   try {
-    return { ok: true, edl: applyEditCommands(edl, words, commands), commands };
+    return {
+      ok: true,
+      edl: applyEditCommands(edl, words, commands),
+      commands,
+      steps,
+    };
   } catch (error) {
     return {
       ok: false,
@@ -132,6 +212,27 @@ export function validateAiEditPlan(
 export function parseStoredAiCommands(raw: unknown): EditCommand[] {
   return z.array(editCommandSchema).parse(raw);
 }
+
+/** Steps as stored on an ai_suggestions row; null/absent → empty (old rows). */
+export function parseStoredAiSteps(raw: unknown): AiEditStep[] {
+  if (raw == null) return [];
+  const parsed = z.array(aiEditStepSchema).safeParse(raw);
+  return parsed.success ? parsed.data : [];
+}
+
+export const AI_FEEDBACK_VALUES = ["helpful", "not-useful"] as const;
+export type AiFeedback = (typeof AI_FEEDBACK_VALUES)[number];
+
+export const AI_FEEDBACK_REASONS = [
+  "prefer-original",
+  "misunderstood-context",
+  "wrong-cut",
+  "other",
+] as const;
+export type AiFeedbackReason = (typeof AI_FEEDBACK_REASONS)[number];
+
+export const AI_INTENTS = ["auto", "short-form", "educational", "general"] as const;
+export type AiIntent = (typeof AI_INTENTS)[number];
 
 export const aiSuggestionStatusSchema = z.enum([
   "pending",

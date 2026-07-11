@@ -3,7 +3,7 @@ import type { AiEditPlan, EdlV1 } from "@merai/core";
 import type { EditBrain } from "../src/ai-edit/brain";
 import { setDb } from "../src/db";
 import { PermanentJobError } from "../src/errors";
-import { generateEdl } from "../src/handlers/generate-edl";
+import { generateEdl, resolveIntentHint } from "../src/handlers/generate-edl";
 import { createTestDb, type TestDb } from "./helpers/pglite-db";
 
 let db: TestDb;
@@ -145,6 +145,146 @@ describe("generate_edl handler (AI Editing Brain, real DB + migrations)", () => 
       },
     });
     expect(called).toBe(false);
+  });
+
+  it("stores index-aligned presentation steps and never touches edl_versions (Build 5.6)", async () => {
+    const ids = await seedSuggestion("بداية أقوى");
+    const versionsBefore = await db.query<{ n: string }>(
+      "select count(*) as n from public.edl_versions",
+    );
+    await generateEdl(
+      jobFor(ids),
+      stubBrain({
+        goal: "stronger-opening",
+        commands: [
+          { type: "ripple-delete-segment", segmentId: "seg-k0" },
+          { type: "set-caption-style", styleToken: "bold-yellow-centered" },
+        ],
+        explanation: "بداية أقوى وأسلوب أوضح.",
+        steps: [
+          {
+            title: "بداية أقوى",
+            reason: "المقدمة بطيئة",
+            benefit: "وصول أسرع للفكرة",
+            category: "hook",
+          },
+          { category: "style", reason: "أسلوب أوضح", benefit: "قراءة أسهل" },
+        ],
+      }),
+    );
+    const row = await db.query<{ steps: unknown; commands: unknown }>(
+      "select steps, commands from public.ai_suggestions where id = $1",
+      [ids.suggestionId],
+    );
+    expect(row.rows[0]!.commands).toHaveLength(2);
+    expect(row.rows[0]!.steps).toEqual([
+      expect.objectContaining({ category: "hook", title: "بداية أقوى" }),
+      expect.objectContaining({ category: "style" }),
+    ]);
+    // AI apply safety: the Brain job must never write an EDL version.
+    const versionsAfter = await db.query<{ n: string }>(
+      "select count(*) as n from public.edl_versions",
+    );
+    expect(versionsAfter.rows[0]!.n).toBe(versionsBefore.rows[0]!.n);
+  });
+
+  it("resolveIntentHint: explicit preference wins; auto derives ONLY from the owner's applied goals", async () => {
+    const a = await seedSuggestion(); // owner A, one pending suggestion
+    // Owner A sets an explicit preference.
+    await db.query(
+      "insert into public.ai_preferences (owner_id, intent) values ($1, 'educational')",
+      [a.ownerId],
+    );
+    expect(await resolveIntentHint(db, a.ownerId)).toMatch(/educational/);
+
+    // Owner B (auto, no row): 3 applied tiktok-goal suggestions → short-form.
+    const b = await seedSuggestion();
+    for (let i = 0; i < 3; i++) {
+      await db.query(
+        `insert into public.ai_suggestions
+           (project_id, owner_id, edl_version_id, instruction, status, goal)
+         select project_id, $2, edl_version_id, 'x', 'applied', 'tiktok-version'
+         from public.ai_suggestions where id = $1`,
+        [b.suggestionId, b.ownerId],
+      );
+    }
+    expect(await resolveIntentHint(db, b.ownerId)).toMatch(/short-form/);
+
+    // Owner C (auto, nothing applied): B's history must not leak — isolation.
+    const c = await seedSuggestion();
+    expect(await resolveIntentHint(db, c.ownerId)).toBeNull();
+  });
+
+  it("feedback persists under RLS and cannot be written to a foreign suggestion", async () => {
+    const ids = await seedSuggestion();
+    const stranger = await db.seedUser();
+    await db.query("grant usage on schema public to authenticated");
+    await db.query(
+      "grant select, update on public.ai_suggestions to authenticated",
+    );
+
+    // Owner writes feedback through the RLS path.
+    await db.query("select set_config('test.uid', $1, false)", [ids.ownerId]);
+    await db.query("set role authenticated");
+    await db.query(
+      `update public.ai_suggestions
+         set feedback = 'not-useful', feedback_reason = 'wrong-cut'
+       where id = $1`,
+      [ids.suggestionId],
+    );
+    await db.query("reset role");
+    const { rows } = await db.query<{ feedback: string; feedback_reason: string }>(
+      "select feedback, feedback_reason from public.ai_suggestions where id = $1",
+      [ids.suggestionId],
+    );
+    expect(rows[0]).toEqual({ feedback: "not-useful", feedback_reason: "wrong-cut" });
+
+    // A stranger's update matches zero rows (ownership security).
+    await db.query("select set_config('test.uid', $1, false)", [stranger]);
+    await db.query("set role authenticated");
+    await db.query(
+      "update public.ai_suggestions set feedback = 'helpful' where id = $1",
+      [ids.suggestionId],
+    );
+    await db.query("reset role");
+    const after = await db.query<{ feedback: string }>(
+      "select feedback from public.ai_suggestions where id = $1",
+      [ids.suggestionId],
+    );
+    expect(after.rows[0]!.feedback).toBe("not-useful"); // unchanged
+  });
+
+  it("ai_preferences are isolated per user under RLS", async () => {
+    const owner = await db.seedUser();
+    const stranger = await db.seedUser();
+    await db.query("grant usage on schema public to authenticated");
+    await db.query(
+      "grant select, insert, update on public.ai_preferences to authenticated",
+    );
+
+    await db.query("select set_config('test.uid', $1, false)", [owner]);
+    await db.query("set role authenticated");
+    await db.query(
+      "insert into public.ai_preferences (owner_id, intent) values ($1, 'short-form')",
+      [owner],
+    );
+    // Foreign insert is rejected by the with-check policy.
+    await expect(
+      db.query(
+        "insert into public.ai_preferences (owner_id, intent) values ($1, 'general')",
+        [stranger],
+      ),
+    ).rejects.toThrow(/row-level security/);
+    await db.query("reset role");
+
+    // Stranger cannot see the owner's row.
+    await db.query("select set_config('test.uid', $1, false)", [stranger]);
+    await db.query("set role authenticated");
+    const { rows: visible } = await db.query(
+      "select owner_id from public.ai_preferences",
+    );
+    await db.query("reset role");
+    expect(visible).toHaveLength(0);
   });
 
   it("classifies a missing suggestion row as a permanent failure", async () => {

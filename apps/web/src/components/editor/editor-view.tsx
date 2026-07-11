@@ -414,6 +414,8 @@ export function EditorView(props: EditorViewProps) {
         ownerId={props.ownerId}
         savedVersionId={savedVersionId}
         dirty={dirty}
+        edl={edl}
+        words={props.words}
         ensureSavedVersion={ensureSavedVersion}
         onApplyCommands={applyAiCommands}
       />

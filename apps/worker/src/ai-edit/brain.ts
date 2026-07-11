@@ -1,9 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import {
+  AI_EDIT_CATEGORIES,
   AI_EDIT_COMMAND_TYPES,
-  aiEditPlanSchema,
   CAPTION_STYLE_TOKENS,
   edlOutputDurationMs,
+  parseAnnotatedPlan,
   type AiEditPlan,
   type EdlV1,
   type TranscriptWord,
@@ -29,6 +30,9 @@ export interface EditBrainInput {
   languageCode: string | null;
   /** Persisted analysis notes (fillers/retakes/false starts), if any. */
   analysisSummary: string | null;
+  /** Creator's style preference (explicit setting, or derived per-request
+   *  from their APPLIED suggestions when set to auto — never stored). */
+  intentHint: string | null;
 }
 
 export interface EditBrain {
@@ -76,8 +80,29 @@ const PLAN_TOOL: Anthropic.Tool = {
               enum: ["9:16", "1:1", "16:9"],
               description: "For set-aspect-ratio",
             },
+            title: {
+              type: "string",
+              description:
+                "2-5 word headline for this change, in the transcript's language",
+            },
+            reason: {
+              type: "string",
+              description:
+                "Why this change, one short sentence, transcript's language",
+            },
+            benefit: {
+              type: "string",
+              description:
+                "What the creator gains, one short phrase, transcript's language. Qualitative only — NEVER invented numbers or metrics.",
+            },
+            category: {
+              type: "string",
+              enum: [...AI_EDIT_CATEGORIES],
+              description:
+                "hook=openings/first impression, pacing=speed/tightness, clarity=understanding, style=captions/look, platform=format fit",
+            },
           },
-          required: ["type"],
+          required: ["type", "reason", "benefit", "category"],
         },
       },
       explanation: {
@@ -96,7 +121,9 @@ const SYSTEM_PROMPT = `You are the editing brain of Merai, an Arabic-first AI vi
 2. Interpret the creator's goal faithfully: "shorter/faster" → cut weak words, digressions, slow segments; "more engaging" → tighten pacing, cut weak openings, prefer a punchy caption style; "TikTok/Shorts/Reels version" → 9:16 aspect, karaoke-highlight captions, aggressive tightening. If the instruction asks for something impossible with these commands (music, zooms, effects), do what IS possible and say what you could not do in the explanation.
 3. Be conservative with content: cutting real substance the creator wanted is worse than cutting too little. Never remove so much that the story breaks. If the video already fits the goal, return zero commands and say so.
 4. The creator reviews and applies your plan manually — write the explanation for them: 1-3 short sentences, in the LANGUAGE OF THE TRANSCRIPT, plain words, no jargon.
-5. Cost of mistakes: every id you output is validated and a single bad id rejects the WHOLE plan. Double-check ids against the edit state.`;
+5. Cost of mistakes: every id you output is validated and a single bad id rejects the WHOLE plan. Double-check ids against the edit state.
+6. ANNOTATE every command: title (2-5 words), reason (why), benefit (what the creator gains) — all in the transcript's language — and a category (hook/pacing/clarity/style/platform). Benefits are QUALITATIVE: never invent numbers, percentages, or engagement metrics. The app computes real durations itself.
+7. If a creator style preference is provided, respect it as background taste — the current instruction always wins on conflicts.`;
 
 function renderState(input: EditBrainInput): string {
   const { edl, words } = input;
@@ -127,6 +154,9 @@ function renderState(input: EditBrainInput): string {
 
   return [
     `Creator instruction: ${input.instruction}`,
+    ...(input.intentHint
+      ? [`Creator style preference (background taste): ${input.intentHint}`]
+      : []),
     ``,
     `Video language: ${input.languageCode ?? "unknown"}`,
     `Current output duration: ${seconds(edlOutputDurationMs(edl))}s`,
@@ -183,7 +213,7 @@ export class HaikuEditBrain implements EditBrain {
     log.info(
       `edit brain: goal proposed (in=${response.usage.input_tokens}tok out=${response.usage.output_tokens}tok)`,
     );
-    return aiEditPlanSchema.parse(toolUse.input);
+    return parseAnnotatedPlan(toolUse.input);
   }
 }
 

@@ -195,10 +195,57 @@
       },
       "commandCount": "{count, number} تعديل مقترح",
       "apply": "طبّق الخطة",
+      "review": "مراجعة التغييرات",
+      "hideReview": "إخفاء التفاصيل",
       "dismiss": "تجاهل",
+      "done": "إغلاق",
       "appliedNote": "طُبّقت الخطة — راجعها في المعاينة، ويمكنك التراجع بخطوة واحدة.",
       "staleWarning": "تغيّر المونتاج بعد إعداد هذه الخطة — اطلب اقتراحًا جديدًا.",
       "requestError": "تعذّر إرسال الطلب. حاول مرة أخرى.",
+      "planSummary": "سيجري محرّرك الذكي:",
+      "summaryCuts": "{count, number} قصّة",
+      "summaryRestores": "{count, number} استعادة",
+      "summaryStyle": "تغيير نمط الترجمة",
+      "summaryAspect": "تغيير أبعاد الفيديو",
+      "safeNote": "نسختك الأصلية محفوظة دائمًا — وكل تغيير قابل للتراجع بخطوة واحدة.",
+      "reasonLabel": "السبب:",
+      "benefitLabel": "الفائدة:",
+      "actions": {
+        "removeWords": "حذف كلمات",
+        "deleteSegment": "حذف مقطع",
+        "restore": "استعادة مقطع",
+        "style": "نمط الترجمة",
+        "aspect": "الأبعاد"
+      },
+      "categories": {
+        "hook": "البداية",
+        "pacing": "الإيقاع",
+        "clarity": "الوضوح",
+        "style": "الأسلوب",
+        "platform": "المنصة"
+      },
+      "targetWords": "{count, number} كلمة: {text}",
+      "targetSegment": "مقطع مدته {seconds, number} ث",
+      "feedback": {
+        "prompt": "هل كان الاقتراح مفيدًا؟",
+        "helpful": "مفيد",
+        "notUseful": "غير مفيد",
+        "why": "ما السبب؟ (اختياري)",
+        "thanks": "شكرًا — ملاحظتك تساعدنا في تحسين محرّرك.",
+        "reasons": {
+          "prefer-original": "أفضّل النسخة الأصلية",
+          "misunderstood-context": "المساعد لم يفهم السياق",
+          "wrong-cut": "القصّة غير صحيحة",
+          "other": "سبب آخر"
+        }
+      },
+      "preference": {
+        "label": "أسلوبك المفضّل:",
+        "auto": "تلقائي",
+        "short-form": "مقاطع قصيرة",
+        "educational": "تعليمي",
+        "general": "عام"
+      },
       "errors": {
         "ai-unavailable": "المساعد الذكي غير مفعّل على الخادم حاليًا.",
         "generic": "تعذّر إعداد خطة صالحة لهذا الطلب — جرّب صياغة أخرى."
