@@ -81,6 +81,15 @@ describe("downgradeEdlV2ToV1", () => {
     expect(result).toEqual({ ok: true, edl: v1 });
   });
 
+  it("round-trips a removal carrying the optional confidence hook (Build 6A)", () => {
+    const confident: EdlV1 = {
+      ...v1,
+      removed: [{ ...v1.removed[0]!, confidence: 0.92, note: "long pause" }],
+    };
+    const result = downgradeEdlV2ToV1(upgradeEdlV1ToV2(confident));
+    expect(result).toEqual({ ok: true, edl: confident });
+  });
+
   it("refuses a second video track (B-roll) with the reason", () => {
     const v2 = upgradeEdlV1ToV2(v1);
     const broll: EdlV2 = {

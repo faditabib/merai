@@ -17,6 +17,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { CaptionOverlay } from "./caption-overlay";
 import { ExportPanel } from "./export-panel";
+import { ShortcutsHelp } from "./shortcuts-help";
 import { Timeline } from "./timeline";
 import { TranscriptPanel } from "./transcript-panel";
 
@@ -54,6 +55,7 @@ export function EditorView(props: EditorViewProps) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
 
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [videoError, setVideoError] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -190,7 +192,8 @@ export function EditorView(props: EditorViewProps) {
     return save();
   }, [dirty, save, savedVersionId]);
 
-  // Keyboard: Delete removes selection, ctrl+z/ctrl+shift+z undo/redo, space play.
+  // Keyboard: Delete removes selection, ctrl+z/ctrl+shift+z undo/redo, space
+  // play, ?/؟ shortcut help (؟ = Arabic keyboard layouts), Esc closes it.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
@@ -205,6 +208,11 @@ export function EditorView(props: EditorViewProps) {
       } else if (event.key === " ") {
         event.preventDefault();
         togglePlay();
+      } else if (event.key === "?" || event.key === "؟") {
+        event.preventDefault();
+        setShortcutsOpen((open) => !open);
+      } else if (event.key === "Escape") {
+        setShortcutsOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -238,6 +246,15 @@ export function EditorView(props: EditorViewProps) {
             {t("versionLabel", { version })}
             {dirty && " •"}
           </span>
+          <button
+            type="button"
+            onClick={() => setShortcutsOpen(true)}
+            title={t("shortcuts.hint")}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted hover:border-accent hover:text-accent"
+          >
+            <span dir="ltr">⌨ ?</span>
+            <span className="sr-only">{t("shortcuts.open")}</span>
+          </button>
           <button
             type="button"
             onClick={undo}
@@ -374,6 +391,8 @@ export function EditorView(props: EditorViewProps) {
         }
         onRestore={(removedId) => runCommand({ type: "restore-removed", removedId })}
       />
+
+      <ShortcutsHelp open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
 
       <ExportPanel
         projectId={props.projectId}

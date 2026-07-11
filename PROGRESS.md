@@ -1,5 +1,29 @@
 # Merai — Progress Log
 
+## Build 6A — Creator experience layer (2026-07-11)
+
+94 tests green (37 core + 45 worker + 12 web) · next build ✓ · ar/en key
+parity script-verified (172 = 172). Docs: BUILD_6A_ANALYSIS.md + REPORT.
+No worker/migration/pipeline changes.
+
+- **AI decision card** (shared by transcript popover + timeline ghosts):
+  localized reason + plain-language explainer + real cut duration + engine
+  note + restore. `RemovedSegment.confidence` added as an optional schema
+  hook — rendered only when present, engines emit later (no fake scores).
+- **Creator-voice processing**: `project.working.*` lines under the stepper
+  ("نُصغي إلى صوتك…" / "Understanding your voice…"), export/upload copy
+  re-voiced; chips stay short and factual.
+- **Onboarding**: 4-step dismissible callout + the same steps as the
+  dashboard empty state; per-user via auth user_metadata (no migration).
+- **Shortcut discovery**: ?/؟ (Arabic layouts) or header button opens a
+  dialog listing the six existing shortcuts; Esc closes. No new bindings.
+- **Premium empty/error states**: warmer dashboard empty state with the
+  workflow story, reassuring error recovery copy, actionable video-error.
+- Deferred: engine-emitted confidence, aggressiveness regenerate, per-step
+  numeric progress, browser feel-pass (extension unavailable this session).
+
+---
+
 ## Build 5 — Professional editing core: EDL v2 foundation (2026-07-11)
 
 93 tests green (36 core + 45 worker + 12 web; was 78). Zero production

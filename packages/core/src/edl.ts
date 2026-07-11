@@ -66,6 +66,14 @@ export const removedSegmentSchema = z
     reason: removalReasonSchema,
     /** Model-facing explanation, e.g. "repeated take of sentence 4, weaker delivery". */
     note: z.string().optional(),
+    /**
+     * How certain the analysis engine was about this cut, 0–1. Optional
+     * architecture hook (Build 6A): the UI renders it ONLY when present —
+     * engines don't emit it yet, and absent data must never become a fake
+     * score. Additive-optional, so v1 rows, v2 rows (same schema), and the
+     * upgrade/downgrade round-trip are unaffected.
+     */
+    confidence: z.number().min(0).max(1).optional(),
   })
   .refine((s) => s.sourceOutMs > s.sourceInMs, {
     message: "sourceOutMs must be greater than sourceInMs",

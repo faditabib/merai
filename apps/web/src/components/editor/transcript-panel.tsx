@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { EdlV1, RemovedSegment, TranscriptWord } from "@merai/core";
+import { AiDecisionCard } from "./ai-decision-card";
 
 export interface TranscriptPanelProps {
   edl: EdlV1;
@@ -108,24 +109,13 @@ export function TranscriptPanel(props: TranscriptPanelProps) {
                 </button>{" "}
                 {open && (
                   <span className="absolute start-0 top-full z-20 mt-1 block w-64 rounded-xl border border-border bg-card p-3 text-sm shadow-lg">
-                    <span className="block font-semibold text-red-500">
-                      {t(`reasons.${removedSegment.reason}`)}
-                    </span>
-                    {removedSegment.note && (
-                      <span className="mt-1 block text-xs leading-relaxed text-muted">
-                        {removedSegment.note}
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => {
+                    <AiDecisionCard
+                      segment={removedSegment}
+                      onRestore={() => {
                         props.onRestore(removedSegment.id);
                         setOpenRemovedId(null);
                       }}
-                      className="mt-2 block rounded-lg bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground"
-                    >
-                      {t("restore")}
-                    </button>
+                    />
                   </span>
                 )}
               </span>

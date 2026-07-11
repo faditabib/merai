@@ -2,6 +2,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
+import { OnboardingCallout, WorkflowSteps } from "@/components/onboarding-callout";
 
 // Per-user page — always rendered at request time, never prerendered.
 export const dynamic = "force-dynamic";
@@ -36,6 +37,14 @@ export default async function DashboardPage({
     .select("id, title, status, created_at")
     .order("created_at", { ascending: false });
 
+  // First-time onboarding: per-user flag in auth metadata (Build 6A) — the
+  // user object is already loaded, so this costs zero extra queries. The
+  // empty state tells the workflow story itself, so the callout only adds
+  // value once projects exist.
+  const showOnboarding =
+    !user?.user_metadata?.onboarding_dismissed_at &&
+    (projects?.length ?? 0) > 0;
+
   return (
     <div className="flex min-h-screen flex-col">
       <AppHeader />
@@ -53,6 +62,8 @@ export default async function DashboardPage({
             {t("newProject")}
           </Link>
         </div>
+
+        {showOnboarding && <OnboardingCallout />}
 
         {projects && projects.length > 0 ? (
           <ul className="flex flex-col gap-3">
@@ -84,17 +95,23 @@ export default async function DashboardPage({
             ))}
           </ul>
         ) : (
-          <section className="flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border p-12 text-center">
-            <h2 className="text-lg font-semibold">{t("emptyTitle")}</h2>
-            <p className="max-w-md text-sm leading-relaxed text-muted">
-              {t("emptyBody")}
-            </p>
-            <Link
-              href="/dashboard/new"
-              className="mt-3 rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
-            >
-              {t("newProject")}
-            </Link>
+          <section className="flex flex-1 flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-border p-8 text-center sm:p-12">
+            <div className="flex flex-col items-center gap-3">
+              <h2 className="text-xl font-bold">{t("emptyTitle")}</h2>
+              <p className="max-w-md text-sm leading-relaxed text-muted">
+                {t("emptyBody")}
+              </p>
+              <Link
+                href="/dashboard/new"
+                className="mt-1 rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
+              >
+                {t("newProject")}
+              </Link>
+            </div>
+            {/* The workflow story doubles as the empty state (Build 6A). */}
+            <div className="w-full max-w-3xl border-t border-border pt-6 text-start">
+              <WorkflowSteps />
+            </div>
           </section>
         )}
       </main>

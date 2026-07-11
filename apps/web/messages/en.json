@@ -42,9 +42,32 @@
   "dashboard": {
     "title": "Dashboard",
     "greeting": "Hello, {name}",
-    "emptyTitle": "No projects yet",
-    "emptyBody": "Upload your first raw video and Merai will handle the edit, from transcript to export.",
+    "emptyTitle": "Ready for your first video?",
+    "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
     "newProject": "New project",
+    "onboarding": {
+      "title": "How Merai works",
+      "subtitle": "Four steps from raw footage to a publish-ready video",
+      "dismiss": "Got it, hide this",
+      "steps": {
+        "upload": {
+          "title": "Upload your video",
+          "body": "Drop your raw recording as-is — up to 10 minutes per clip."
+        },
+        "analyze": {
+          "title": "AI analyzes your content",
+          "body": "Accurate transcription, then silence, fillers and repeated takes are removed."
+        },
+        "review": {
+          "title": "Review the AI edits",
+          "body": "Every cut is explained and restorable — and you edit the video as text."
+        },
+        "export": {
+          "title": "Export your final video",
+          "body": "A finished video with burned-in captions, ready for every platform."
+        }
+      }
+    },
     "statuses": {
       "draft": "Draft",
       "uploading": "Uploading",
@@ -60,7 +83,7 @@
     "dropHint": "Up to 10 minutes per clip — MP4, MOV, WebM or MKV",
     "probing": "Reading video info…",
     "starting": "Preparing the upload…",
-    "uploading": "Uploading…",
+    "uploading": "Uploading your video…",
     "paused": "Upload paused",
     "finalizing": "Finishing the upload…",
     "pause": "Pause",
@@ -88,9 +111,14 @@
       "analyzing": "Analysis",
       "ready": "Ready"
     },
-    "processingHint": "Processing is in progress — you can leave this page and come back later.",
-    "errorTitle": "We couldn't process the video",
-    "errorBody": "Something went wrong during processing. Try again, and contact us if the problem persists.",
+    "processingHint": "You can leave this page and come back later — we'll keep working in the background.",
+    "working": {
+      "uploading": "Uploading your video…",
+      "transcribing": "Understanding your voice…",
+      "analyzing": "Finding your strongest moments and drafting the first cut…"
+    },
+    "errorTitle": "Processing hit a snag",
+    "errorBody": "Your video is safe. Try again now — and if this keeps happening, contact us and we'll help.",
     "retry": "Retry processing",
     "transcriptTitle": "Transcript",
     "emptyTranscript": "We didn't detect any speech in this video. Make sure the clip contains clear audio.",
@@ -117,7 +145,7 @@
     "pause": "Pause",
     "previewEdit": "Preview edit (skip removed)",
     "videoLoading": "Loading video…",
-    "videoError": "Couldn't load the video.",
+    "videoError": "Couldn't load the video — refresh the page and it'll be right back.",
     "captionStyle": "Caption style:",
     "captionPresets": {
       "bold-yellow-centered": "Bold yellow — centered",
@@ -138,6 +166,37 @@
       "bad-take": "Repeated take — a better take was kept",
       "false-start": "False start",
       "user": "Removed by you"
+    },
+    "aiCard": {
+      "title": "AI editor decision",
+      "userTitle": "Your edit",
+      "durationCut": "{seconds}s removed",
+      "confidence": "{percent}% confident"
+    },
+    "reasonExplainers": {
+      "filler": "A filler word that adds no meaning — cutting it tightens the pacing.",
+      "silence": "A quiet gap longer than natural between speech.",
+      "bad-take": "You recorded this line more than once — the strongest take was kept.",
+      "false-start": "A sentence that started, then was restarted.",
+      "user": "You cut this yourself — restore it anytime."
+    },
+    "shortcuts": {
+      "open": "Shortcuts",
+      "title": "Keyboard shortcuts",
+      "hint": "Press ? anytime to open this list",
+      "close": "Close",
+      "items": {
+        "play": "Play / pause",
+        "deleteSelection": "Delete selected words",
+        "undo": "Undo",
+        "redo": "Redo",
+        "seek": "Jump to a word",
+        "range": "Select a range of words"
+      },
+      "keys": {
+        "click": "Click",
+        "shiftClick": "Shift + Click"
+      }
     }
   },
   "export": {
@@ -150,8 +209,8 @@
     },
     "start": "Export video",
     "stages": {
-      "pending": "Queued on the server…",
-      "rendering": "Rendering on the server… {percent}%"
+      "pending": "Queued — starting in a moment…",
+      "rendering": "Preparing your final video… {percent}%"
     },
     "serverNote": "You can leave this page — the export continues on the server",
     "done": "Export complete — your video is ready to publish!",

@@ -85,5 +85,11 @@
   "83": "Phase 4 — Export pipeline, ffmpeg.wasm (live-verified)",
   "84": "Phase 4 — 10-minute export stress test (resolved segment-wise)",
   "85": "Merai Ground Rules (i18n strings, logical CSS, Haiku-only, signed URLs, no tracking)",
-  "86": "Merai — AI Video Editing OS for Arabic Creators"
+  "86": "Merai — AI Video Editing OS for Arabic Creators",
+  "87": "Merai Product Audit — from Developer Tool to Premium Creator Platform",
+  "88": "Build 6A Report — Creator Experience Layer",
+  "89": "routing.ts",
+  "90": "RenderRequest",
+  "91": "render-export.test.ts",
+  "92": "storage.ts"
 }

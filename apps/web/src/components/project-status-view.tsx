@@ -158,7 +158,19 @@ export function ProjectStatusView({
         })}
       </ol>
 
-      {!terminal && <p className="text-sm text-muted">{t("processingHint")}</p>}
+      {!terminal && (
+        <div className="flex flex-col gap-1">
+          {/* Creator-voice working line for the active step (Build 6A). */}
+          {(project.status === "uploading" ||
+            project.status === "transcribing" ||
+            project.status === "analyzing") && (
+            <p className="text-base font-medium">
+              {t(`working.${project.status}`)}
+            </p>
+          )}
+          <p className="text-sm text-muted">{t("processingHint")}</p>
+        </div>
+      )}
 
       {project.status === "error" && (
         <div className="flex flex-col gap-3 rounded-2xl border border-red-500/40 bg-red-500/5 p-6">

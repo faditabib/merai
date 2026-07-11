@@ -10,6 +10,7 @@ import {
   type RemovedSegment,
   type TranscriptWord,
 } from "@merai/core";
+import { AiDecisionCard } from "./ai-decision-card";
 
 export interface TimelineProps {
   edl: EdlV1;
@@ -213,7 +214,6 @@ export function Timeline(props: TimelineProps) {
                     setOpenRemovedId(null);
                   }}
                   reasonLabel={t(`reasons.${ghost.reason}`)}
-                  restoreLabel={t("restore")}
                 />
               ))}
               <div
@@ -261,7 +261,6 @@ export function Timeline(props: TimelineProps) {
               setOpenRemovedId(null);
             }}
             reasonLabel={t(`reasons.${ghost.reason}`)}
-            restoreLabel={t("restore")}
           />
         ))}
 
@@ -283,7 +282,6 @@ function RemovedGhost(props: {
   onToggle: () => void;
   onRestore: () => void;
   reasonLabel: string;
-  restoreLabel: string;
 }) {
   return (
     <div className="relative flex items-stretch">
@@ -294,20 +292,13 @@ function RemovedGhost(props: {
         aria-label={props.reasonLabel}
       />
       {props.open && (
-        <div className="absolute bottom-full left-0 z-30 mb-1 w-56 rounded-xl border border-border bg-card p-3 text-sm shadow-lg">
-          <span className="block font-semibold text-red-500">{props.reasonLabel}</span>
-          {props.ghost.note && (
-            <span className="mt-1 block text-xs leading-relaxed text-muted">
-              {props.ghost.note}
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={props.onRestore}
-            className="mt-2 rounded-lg bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground"
-          >
-            {props.restoreLabel}
-          </button>
+        <div
+          // The popover is prose in the UI language even though the strip
+          // itself is pinned LTR.
+          dir="auto"
+          className="absolute bottom-full left-0 z-30 mb-1 w-64 rounded-xl border border-border bg-card p-3 text-sm shadow-lg"
+        >
+          <AiDecisionCard segment={props.ghost} onRestore={props.onRestore} />
         </div>
       )}
     </div>
