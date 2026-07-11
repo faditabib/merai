@@ -47,7 +47,9 @@ export type AiPlanRejection =
   | { ok: false; reason: "unknown-caption-style"; detail: string }
   | { ok: false; reason: "apply-failed"; detail: string };
 
-export type AiPlanValidation = { ok: true; edl: EdlV1 } | AiPlanRejection;
+export type AiPlanValidation =
+  | { ok: true; edl: EdlV1; commands: EditCommand[] }
+  | AiPlanRejection;
 
 /**
  * Validate a plan against the exact EDL it will be applied to:
@@ -64,43 +66,59 @@ export function validateAiEditPlan(
   const keptWordIds = new Set(
     edl.timeline.flatMap((segment) => segment.wordIds ?? []),
   );
+  const knownWordIds = new Set(words.map((w) => w.id));
   const timelineIds = new Set(edl.timeline.map((s) => s.id));
   const removedIds = new Set(edl.removed.map((s) => s.id));
   const allowed = new Set<string>(AI_EDIT_COMMAND_TYPES);
 
+  // Normalized copy: intents the edit already satisfies (removing a word
+  // that IS already removed) are dropped rather than failing the plan —
+  // that's deduplication, not flattening. Ids that exist NOWHERE remain a
+  // hard reject: those are hallucinations.
+  const commands: EditCommand[] = [];
   for (const command of plan.commands) {
     if (!allowed.has(command.type)) {
       return { ok: false, reason: "command-type-not-allowed", detail: command.type };
     }
     switch (command.type) {
-      case "remove-words":
+      case "remove-words": {
         for (const id of command.wordIds) {
-          if (!keptWordIds.has(id)) {
+          if (!knownWordIds.has(id)) {
             return { ok: false, reason: "unknown-word", detail: id };
           }
         }
+        const stillKept = command.wordIds.filter((id) => keptWordIds.has(id));
+        if (stillKept.length > 0) {
+          commands.push({ ...command, wordIds: stillKept });
+        }
         break;
+      }
       case "ripple-delete-segment":
         if (!timelineIds.has(command.segmentId)) {
           return { ok: false, reason: "unknown-segment", detail: command.segmentId };
         }
+        commands.push(command);
         break;
       case "restore-removed":
         if (!removedIds.has(command.removedId)) {
           return { ok: false, reason: "unknown-segment", detail: command.removedId };
         }
+        commands.push(command);
         break;
       case "set-caption-style":
         if (!(CAPTION_STYLE_TOKENS as readonly string[]).includes(command.styleToken)) {
           return { ok: false, reason: "unknown-caption-style", detail: command.styleToken };
         }
+        commands.push(command);
         break;
-      // set-aspect-ratio: fully constrained by its zod enum already.
+      default:
+        // set-aspect-ratio: fully constrained by its zod enum already.
+        commands.push(command);
     }
   }
 
   try {
-    return { ok: true, edl: applyEditCommands(edl, words, plan.commands) };
+    return { ok: true, edl: applyEditCommands(edl, words, commands), commands };
   } catch (error) {
     return {
       ok: false,

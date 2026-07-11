@@ -117,8 +117,12 @@ function renderState(input: EditBrainInput): string {
         `  ${segment.id} [${seconds(segment.sourceInMs)}s-${seconds(segment.sourceOutMs)}s] reason=${segment.reason}`,
     )
     .join("\n");
+  const keptIds = new Set(edl.timeline.flatMap((s) => s.wordIds ?? []));
   const wordList = words
-    .map((w) => `${w.id}|${seconds(w.startMs)}|${w.text}`)
+    .map(
+      (w) =>
+        `${w.id}|${seconds(w.startMs)}|${w.text}|${keptIds.has(w.id) ? "kept" : "REMOVED"}`,
+    )
     .join("\n");
 
   return [
@@ -136,7 +140,8 @@ function renderState(input: EditBrainInput): string {
     removed || "  (none)",
     ``,
     input.analysisSummary ? `Prior AI analysis notes:\n${input.analysisSummary}\n` : ``,
-    `Words (id|startSeconds|text) — the ONLY valid word ids:`,
+    `Words (id|startSeconds|text|kept-or-REMOVED) — the ONLY valid word ids;`,
+    `remove-words may target KEPT words only (REMOVED ones are already cut):`,
     wordList,
   ].join("\n");
 }

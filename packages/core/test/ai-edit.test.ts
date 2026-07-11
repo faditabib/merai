@@ -103,6 +103,31 @@ describe("validateAiEditPlan", () => {
     ).toMatchObject({ ok: false, reason: "unknown-caption-style" });
   });
 
+  it("drops already-removed word ids (intent satisfied) but rejects hallucinated ids", () => {
+    // w3 is kept; pretend wX was removed by the first draft (exists in words,
+    // not in any kept segment).
+    const wordsWithRemoved = [...words, word("wX", 5000, 5300)];
+    const result = validateAiEditPlan(edl, wordsWithRemoved, {
+      goal: "make-shorter",
+      commands: [{ type: "remove-words", wordIds: ["wX", "w3"] }],
+      explanation: "x",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      // Normalized: only the still-kept word survives in the stored command.
+      expect(result.commands).toEqual([{ type: "remove-words", wordIds: ["w3"] }]);
+    }
+
+    // A command that is ENTIRELY already-satisfied disappears.
+    const noop = validateAiEditPlan(edl, wordsWithRemoved, {
+      goal: "g",
+      commands: [{ type: "remove-words", wordIds: ["wX"] }],
+      explanation: "x",
+    });
+    expect(noop.ok).toBe(true);
+    if (noop.ok) expect(noop.commands).toEqual([]);
+  });
+
   it("accepts an empty plan (no changes suggested)", () => {
     const result = validateAiEditPlan(edl, words, {
       goal: "already-good",

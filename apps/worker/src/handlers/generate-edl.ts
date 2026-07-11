@@ -119,12 +119,14 @@ export async function generateEdl(
     [
       suggestion.id,
       plan.goal,
-      JSON.stringify(plan.commands),
+      // The NORMALIZED commands — exactly what the dry-run applied, so the
+      // editor's Apply replays a verified batch.
+      JSON.stringify(validation.commands),
       plan.explanation,
       brain.name,
     ],
   );
   log.info(
-    `ai-edit: suggestion ${suggestion.id} ready (goal=${plan.goal}, ${plan.commands.length} commands)`,
+    `ai-edit: suggestion ${suggestion.id} ready (goal=${plan.goal}, ${validation.commands.length} commands)`,
   );
 }
