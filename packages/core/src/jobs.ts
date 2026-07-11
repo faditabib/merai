@@ -32,7 +32,13 @@ export const analyzePayloadSchema = z.object({
 });
 export type AnalyzePayload = z.infer<typeof analyzePayloadSchema>;
 
-export const generateEdlPayloadSchema = analyzePayloadSchema;
+/** AI Editing Brain request (Build 5.5) — the job fills an ai_suggestions
+ *  row; it never mutates EDLs. Formerly a reserved stub. */
+export const generateEdlPayloadSchema = z.object({
+  suggestionId: z.string().uuid(),
+  projectId: z.string().uuid(),
+  ownerId: z.string().uuid(),
+});
 export type GenerateEdlPayload = z.infer<typeof generateEdlPayloadSchema>;
 
 /** Server-side export render (Phase 4.5 — replaced ffmpeg.wasm). */

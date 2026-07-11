@@ -183,6 +183,48 @@ export async function requestExportRender(input: {
   return { ok: true };
 }
 
+/**
+ * Queue the AI Editing Brain for an ai_suggestions row the owner just
+ * created (Build 5.5). Same shape as requestExportRender: RLS proves
+ * ownership, the service role enqueues (users cannot write jobs). The job
+ * only fills the suggestion row — applying is a manual editor action.
+ */
+export async function requestAiEdit(input: {
+  suggestionId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "not-authenticated" };
+
+  const { data: suggestion } = await supabase
+    .from("ai_suggestions")
+    .select("id, project_id, owner_id, status")
+    .eq("id", input.suggestionId)
+    .single();
+  if (!suggestion) return { ok: false, error: "not-found" };
+
+  const admin = createAdminClient();
+  const { error: jobError } = await admin.from("jobs").upsert(
+    {
+      type: "generate_edl",
+      payload: {
+        suggestionId: suggestion.id,
+        projectId: suggestion.project_id,
+        ownerId: user.id,
+      },
+      dedupe_key: `ai-edit:${suggestion.id}`,
+      owner_id: user.id,
+      project_id: suggestion.project_id,
+    },
+    { onConflict: "dedupe_key", ignoreDuplicates: true },
+  );
+  if (jobError) return { ok: false, error: "enqueue-failed" };
+
+  return { ok: true };
+}
+
 /** Re-run a permanently failed pipeline (error state → transcribing). */
 export async function retryProcessing(input: {
   projectId: string;

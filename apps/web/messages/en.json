@@ -181,6 +181,29 @@
       "false-start": "A sentence that started, then was restarted.",
       "user": "You cut this yourself — restore it anytime."
     },
+    "aiAssistant": {
+      "title": "AI assistant",
+      "subtitle": "State your goal and Merai proposes an edit plan — you approve it",
+      "placeholder": "e.g. Make this shorter and faster",
+      "send": "Suggest",
+      "thinking": "Thinking…",
+      "workingNote": "The assistant is studying your video and drafting a plan — a few seconds…",
+      "presets": {
+        "shorter": "Make it shorter and faster",
+        "engaging": "Make it more engaging",
+        "tiktok": "Create a TikTok version"
+      },
+      "commandCount": "{count, number} suggested changes",
+      "apply": "Apply plan",
+      "dismiss": "Dismiss",
+      "appliedNote": "Plan applied — review it in the preview; one Undo reverts everything.",
+      "staleWarning": "The edit changed after this plan was made — request a fresh suggestion.",
+      "requestError": "Couldn't send the request. Please try again.",
+      "errors": {
+        "ai-unavailable": "The AI assistant isn't enabled on the server right now.",
+        "generic": "Couldn't produce a valid plan for this request — try different wording."
+      }
+    },
     "shortcuts": {
       "open": "Shortcuts",
       "title": "Keyboard shortcuts",

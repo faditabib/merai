@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   applyEditCommand,
+  applyEditCommands,
   segmentAtSource,
   nextSegmentAfterSource,
   edlOutputDurationMs,
@@ -15,6 +16,7 @@ import {
   type TranscriptWord,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
+import { AiAssistantPanel } from "./ai-assistant-panel";
 import { CaptionOverlay } from "./caption-overlay";
 import { ExportPanel } from "./export-panel";
 import { ShortcutsHelp } from "./shortcuts-help";
@@ -126,9 +128,16 @@ export function EditorView(props: EditorViewProps) {
   );
 
   /** Every mutation goes through the serializable command surface (Build 5):
-   *  UI handlers and future AI re-editing share this one entry point. */
+   *  UI handlers and AI re-editing share this one entry point. */
   const runCommand = useCallback(
     (command: EditCommand) => apply(applyEditCommand(edl, props.words, command)),
+    [apply, edl, props.words],
+  );
+
+  /** AI Brain plans apply as ONE batch = one undo snapshot (Build 5.5). */
+  const applyAiCommands = useCallback(
+    (commands: EditCommand[]) =>
+      apply(applyEditCommands(edl, props.words, commands)),
     [apply, edl, props.words],
   );
 
@@ -399,6 +408,15 @@ export function EditorView(props: EditorViewProps) {
       />
 
       <ShortcutsHelp open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+
+      <AiAssistantPanel
+        projectId={props.projectId}
+        ownerId={props.ownerId}
+        savedVersionId={savedVersionId}
+        dirty={dirty}
+        ensureSavedVersion={ensureSavedVersion}
+        onApplyCommands={applyAiCommands}
+      />
 
       <ExportPanel
         projectId={props.projectId}
