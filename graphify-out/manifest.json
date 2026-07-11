@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1783804219.4267592,
-    "ast_hash": "268a77cab200f6540a2c0d87ff571cdc",
+    "mtime": 1783811444.3912306,
+    "ast_hash": "54295e01748e8f3e15f3356e9d58235b",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -300,8 +300,8 @@
     "semantic_hash": "38e05a24814c7d7b15b4dcd2e22b23eb"
   },
   "apps/worker/src/handlers/render-export.ts": {
-    "mtime": 1783795031.3893745,
-    "ast_hash": "7b026855d17cd39318a33c79710a73a9",
+    "mtime": 1783811232.7532668,
+    "ast_hash": "60b310b3f9ee6ecd92892b6087ba1631",
     "semantic_hash": ""
   },
   "apps/worker/src/handlers/transcribe.ts": {
@@ -325,8 +325,8 @@
     "semantic_hash": ""
   },
   "apps/worker/src/render/captions.ts": {
-    "mtime": 1783794987.4900177,
-    "ast_hash": "e5bd73e472425c1d00ef932d96622c2c",
+    "mtime": 1783811221.291901,
+    "ast_hash": "a26593ff690d61b1c06dcb3707f69e90",
     "semantic_hash": ""
   },
   "apps/worker/src/render/index.ts": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1783803083.5564895,
-    "ast_hash": "447aea8af79a14eb040970fa47a839dd",
+    "mtime": 1783811499.7366624,
+    "ast_hash": "1b5e8273534e8fc185fa4adf637ef231",
     "semantic_hash": ""
   },
   "README.md": {
@@ -872,6 +872,16 @@
   "BUILD_6B_PRODUCTIZATION_ANALYSIS.md": {
     "mtime": 1783793390.4256096,
     "ast_hash": "100ad5f605cb7f1235547d331d52be39",
+    "semantic_hash": ""
+  },
+  "apps/worker/test/caption-placement.test.ts": {
+    "mtime": 1783811243.80242,
+    "ast_hash": "9a373be88989b807eabf0958c9b37f76",
+    "semantic_hash": ""
+  },
+  "BUILD_6B_1_PRODUCTION_REPORT.md": {
+    "mtime": 1783811486.1024792,
+    "ast_hash": "add8b571f9fa3e45df1ca7c069dcebb3",
     "semantic_hash": ""
   }
 }

@@ -20,7 +20,14 @@ committed first (`0ca6b47`); this build finished web + i18n + tests + docs.
 - Decision: branding is an export-row snapshot, NOT an EDL field (downgrade
   refuses effects); brand PNGs ride the caption channel so no engine changed.
 - Deferred: logo compositing, overlay animation, AI preset suggestion, export
-  preview/receipt, dashboard redesign. Deploy + live E2E pending owner creds.
+  preview/receipt, dashboard redesign.
+- **Production (2026-07-12):** migration 9 applied live; Railway worker +
+  Vercel web deployed; live E2E through the deployed worker PASSED (branded +
+  unbranded, frames visually verified — captions/gradient/lower-third render,
+  unbranded unchanged). Live finding fixed same session (`504a3be`): captions
+  overprinted the lower third → `captionSpecAboveLowerThird` lifts bottom
+  captions above it. 133 tests (56 core + 65 worker + 12 web).
+  See BUILD_6B_1_PRODUCTION_REPORT.md.
 
 ---
 
