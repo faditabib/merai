@@ -1,5 +1,29 @@
 # Merai — Progress Log
 
+## Build 6B.1 — Creator Identity Layer (2026-07-11)
+
+129 tests green (56 core + 61 worker + 12 web) · next build ✓ · ar/en parity
+274 = 274 · migration 9 written (not yet applied live)
+(BUILD_6B_PRODUCTIZATION_ANALYSIS.md + BUILD_6B_1_REPORT.md). Backend
+committed first (`0ca6b47`); this build finished web + i18n + tests + docs.
+
+- Brand Kit: one kit per creator (`brand_kits`, owner-only RLS) — colors,
+  logo, default caption preset, gradient + lower-third defaults. Settings
+  page + header nav + live preview; RTL-first.
+- Caption Studio: new `professional-clean` preset (4th token) + visual
+  `CaptionStylePicker` (real-color mini frames) in the editor and Brand Kit.
+- Brand overlays foundation: gradient readability band + static RTL-aware
+  lower third, rasterized on the caption canvas, composited in binding order
+  video → gradient → captions → lower third.
+- Export: "Apply my branding" snapshots the kit into `exports.brand` (null =
+  unbranded, byte-identical to before); malformed snapshot → PermanentJobError.
+- Decision: branding is an export-row snapshot, NOT an EDL field (downgrade
+  refuses effects); brand PNGs ride the caption channel so no engine changed.
+- Deferred: logo compositing, overlay animation, AI preset suggestion, export
+  preview/receipt, dashboard redesign. Deploy + live E2E pending owner creds.
+
+---
+
 ## Build 5.6 — AI Brain UX polish + feedback loop (2026-07-11)
 
 113 tests green (47 core + 54 worker + 12 web) · next build ✓ · migration 8

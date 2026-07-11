@@ -1,5 +1,10 @@
 import { notFound } from "next/navigation";
-import { edlV1ViewOf, type TranscriptWord } from "@merai/core";
+import {
+  brandKitRowSchema,
+  edlV1ViewOf,
+  type BrandExportConfig,
+  type TranscriptWord,
+} from "@merai/core";
 import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -31,7 +36,7 @@ export default async function EditorPage({
     redirect({ href: `/dashboard/projects/${id}`, locale });
   }
 
-  const [{ data: transcript }, { data: edlRow }, { data: upload }] =
+  const [{ data: transcript }, { data: edlRow }, { data: upload }, { data: kitRow }] =
     await Promise.all([
       supabase
         .from("transcripts")
@@ -52,6 +57,13 @@ export default async function EditorPage({
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
+      supabase
+        .from("brand_kits")
+        .select(
+          "id, owner_id, name, logo_path, primary_color, secondary_color, accent_color, caption_style_default, overlay_default, lower_third_default",
+        )
+        .eq("owner_id", user!.id)
+        .maybeSingle(),
     ]);
 
   if (!transcript?.words || !edlRow?.edl || !upload) {
@@ -65,6 +77,26 @@ export default async function EditorPage({
   const initialEdl = edlV1ViewOf(edlRow!.edl);
   if (!initialEdl) {
     redirect({ href: `/dashboard/projects/${id}`, locale });
+  }
+
+  // Compile the owner's Brand Kit into an export snapshot (gradient +
+  // lower third). A layer is included only when configured; when neither
+  // is, brandConfig is null and the export panel shows the "set up" prompt.
+  let brandConfig: BrandExportConfig | null = null;
+  if (kitRow) {
+    const parsedKit = brandKitRowSchema.safeParse(kitRow);
+    if (parsedKit.success) {
+      const kit = parsedKit.data;
+      const config: BrandExportConfig = {};
+      if (kit.overlay_default) config.gradient = kit.overlay_default;
+      if (kit.lower_third_default?.name.trim()) {
+        config.lowerThird = {
+          ...kit.lower_third_default,
+          name: kit.lower_third_default.name.trim(),
+        };
+      }
+      if (config.gradient || config.lowerThird) brandConfig = config;
+    }
   }
 
   return (
@@ -81,6 +113,7 @@ export default async function EditorPage({
         initialEdlVersionId={edlRow!.id as string}
         storagePath={upload!.storage_path as string}
         sourceDurationMs={Math.round(Number(upload!.duration_seconds ?? 0) * 1000)}
+        brandConfig={brandConfig}
       />
     </div>
   );

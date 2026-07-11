@@ -6,6 +6,7 @@
   "common": {
     "appName": "مِيراي",
     "dashboard": "لوحة التحكم",
+    "brandKit": "الهوية البصرية",
     "login": "تسجيل الدخول",
     "signup": "إنشاء حساب",
     "signOut": "تسجيل الخروج",
@@ -270,6 +271,53 @@
       }
     }
   },
+  "captionStudio": {
+    "sample": "نص الترجمة",
+    "sampleHighlighted": "كلمة",
+    "sampleRest": "مميّزة",
+    "presets": {
+      "bold-yellow-centered": "أصفر جريء — وسط",
+      "minimal-white-bottom": "أبيض بسيط — أسفل",
+      "karaoke-highlight": "تمييز كلمة بكلمة",
+      "professional-clean": "احترافي أنيق — أسفل"
+    }
+  },
+  "brandKit": {
+    "pageTitle": "الهوية البصرية",
+    "pageSubtitle": "حدّد هوية علامتك مرة واحدة، ويحملها كل فيديو تصدّره.",
+    "loading": "جارٍ التحميل…",
+    "loadError": "تعذّر تحميل الهوية البصرية. حاول مرة أخرى.",
+    "identityTitle": "الهوية",
+    "nameLabel": "اسم العلامة",
+    "namePlaceholder": "مثال: قناة أحمد الطبية",
+    "logoUpload": "رفع الشعار",
+    "logoReplace": "تغيير الشعار",
+    "logoError": "تعذّر رفع الشعار. استخدم PNG أو JPG أو WebP أو SVG بحجم أقل من ٢ ميغابايت.",
+    "colorsTitle": "الألوان",
+    "primaryColor": "اللون الأساسي",
+    "secondaryColor": "اللون الثانوي",
+    "accentColor": "لون التمييز",
+    "captionTitle": "نمط الترجمة الافتراضي",
+    "captionHint": "النمط الذي يُقترح تلقائيًا عند تصدير فيديوهاتك.",
+    "gradientTitle": "تدرّج سفلي لتحسين الوضوح",
+    "gradientHint": "طبقة داكنة متدرّجة أسفل الفيديو تجعل الترجمة أوضح على الفيديوهات العمودية.",
+    "gradientOpacity": "الشفافية: {percent, number}٪",
+    "gradientHeight": "الارتفاع: {percent, number}٪",
+    "lowerThirdTitle": "الشريط التعريفي",
+    "lowerThirdHint": "اسمك وصفتك يظهران أسفل الفيديو — اتركه فارغًا لإخفائه.",
+    "lowerThirdName": "الاسم",
+    "lowerThirdNamePlaceholder": "مثال: د. أحمد",
+    "lowerThirdRole": "الصفة",
+    "lowerThirdRolePlaceholder": "مثال: استشاري قلب",
+    "lowerThirdSubtitle": "سطر إضافي",
+    "saving": "جارٍ الحفظ…",
+    "save": "حفظ الهوية",
+    "savedNote": "حُفظت الهوية البصرية.",
+    "saveError": "تعذّر الحفظ. حاول مرة أخرى.",
+    "previewTitle": "معاينة",
+    "previewCaption": "نص الترجمة",
+    "previewNote": "معاينة تقريبية — سيظهر التدرّج والشريط التعريفي على فيديوهاتك عند التصدير."
+  },
   "export": {
     "title": "التصدير",
     "aspect": "الأبعاد:",
@@ -278,6 +326,11 @@
       "1x1": "مربع",
       "16x9": "أفقي"
     },
+    "branding": "الهوية البصرية",
+    "applyBranding": "طبّق هويتي البصرية على هذا الفيديو",
+    "brandingHint": "يضيف التدرّج السفلي والشريط التعريفي من هويتك البصرية.",
+    "brandingNone": "لم تُعدّ هوية بصرية بعد.",
+    "brandingSetup": "أنشئ هويتك البصرية",
     "start": "تصدير الفيديو",
     "stages": {
       "pending": "في الطابور — نبدأ خلال لحظات…",

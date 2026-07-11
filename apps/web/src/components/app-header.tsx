@@ -12,6 +12,12 @@ export async function AppHeader() {
         {t("appName")}
       </Link>
       <nav className="flex items-center gap-3">
+        <Link
+          href="/dashboard/brand-kit"
+          className="text-sm text-muted transition hover:text-accent"
+        >
+          {t("brandKit")}
+        </Link>
         <LocaleSwitcher />
         <SignOutButton />
       </nav>

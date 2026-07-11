@@ -25,6 +25,8 @@ async function seedExport(
     cancelRequested?: boolean;
     /** Replace the stored edl jsonb (Build 5: version-aware ingestion tests). */
     edlJson?: (v1: EdlV1) => unknown;
+    /** Branding snapshot written to exports.brand (Build 6B.1). */
+    brand?: unknown;
   } = {},
 ) {
   const ownerId = await db.seedUser();
@@ -53,10 +55,16 @@ async function seedExport(
   );
   const { rows: exportRows } = await db.query<{ id: string }>(
     `insert into public.exports
-       (project_id, owner_id, edl_version_id, aspect_ratio, caption_style, status, cancel_requested)
-     values ($1, $2, $3, '9:16', 'minimal-white-bottom', 'pending', $4)
+       (project_id, owner_id, edl_version_id, aspect_ratio, caption_style, status, cancel_requested, brand)
+     values ($1, $2, $3, '9:16', 'minimal-white-bottom', 'pending', $4, $5)
      returning id`,
-    [projectId, ownerId, edlRows[0]!.id, overrides.cancelRequested ?? false],
+    [
+      projectId,
+      ownerId,
+      edlRows[0]!.id,
+      overrides.cancelRequested ?? false,
+      overrides.brand === undefined ? null : JSON.stringify(overrides.brand),
+    ],
   );
   return { ownerId, projectId, exportId: exportRows[0]!.id };
 }
@@ -286,6 +294,64 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
 
   it("classifies malformed edl jsonb as a permanent failure (Build 5)", async () => {
     const ids = await seedExport({ edlJson: () => ({ version: 42, junk: true }) });
+    await expect(
+      renderExportWithEngine(
+        jobFor(ids),
+        { name: "stub", render: async () => new Uint8Array([1]) },
+        stubDeps(),
+      ),
+    ).rejects.toBeInstanceOf(PermanentJobError);
+  });
+
+  it("stages brand layer PNGs when the export carries a brand snapshot (Build 6B.1)", async () => {
+    const ids = await seedExport({
+      brand: {
+        gradient: { opacity: 0.6, heightPct: 0.35, color: "#000000" },
+        lowerThird: {
+          name: "د. أحمد",
+          title: "استشاري قلب",
+          accentColor: "#7C3AED",
+          textColor: "#FFFFFF",
+        },
+      },
+    });
+    let seenNames: string[] = [];
+    const engine: RenderEngine = {
+      name: "stub",
+      async render(request: RenderRequest) {
+        seenNames = request.captionImages.map((i) => i.name);
+        // The plan carries both brand layers; each rasterized PNG has bytes.
+        expect(request.plan.brandImages).toEqual([
+          "brand-gradient.png",
+          "brand-lower-third.png",
+        ]);
+        for (const img of request.captionImages) expect(img.data.length).toBeGreaterThan(0);
+        return new Uint8Array([1, 2, 3, 4]);
+      },
+    };
+    await renderExportWithEngine(jobFor(ids), engine, stubDeps());
+    expect(seenNames).toContain("brand-gradient.png");
+    expect(seenNames).toContain("brand-lower-third.png");
+  });
+
+  it("stages no brand layers for an unbranded export (backward compatible)", async () => {
+    const ids = await seedExport(); // brand column is null
+    let seenNames: string[] = [];
+    const engine: RenderEngine = {
+      name: "stub",
+      async render(request: RenderRequest) {
+        seenNames = request.captionImages.map((i) => i.name);
+        expect(request.plan.brandImages).toEqual([]);
+        return new Uint8Array([1, 2, 3, 4]);
+      },
+    };
+    await renderExportWithEngine(jobFor(ids), engine, stubDeps());
+    // No captions (empty wordIds) and no branding → nothing staged.
+    expect(seenNames).toEqual([]);
+  });
+
+  it("fails safely (permanent) on a malformed brand snapshot", async () => {
+    const ids = await seedExport({ brand: { gradient: { opacity: 5, color: "blue" } } });
     await expect(
       renderExportWithEngine(
         jobFor(ids),

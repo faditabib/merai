@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { AspectRatio, EdlV1 } from "@merai/core";
+import type { AspectRatio, BrandExportConfig, EdlV1 } from "@merai/core";
 import { requestExportRender } from "@/app/actions/projects";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const EXPORTS_BUCKET = "exports";
@@ -30,6 +31,8 @@ export interface ExportPanelProps {
   projectId: string;
   ownerId: string;
   edl: EdlV1;
+  /** Owner's Brand Kit as an export snapshot; null = nothing to apply. */
+  brandConfig: BrandExportConfig | null;
   onChangeAspect: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
@@ -53,6 +56,9 @@ export function ExportPanel(props: ExportPanelProps) {
   const [assembling, setAssembling] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState(false);
   const listStale = useRef(false);
+  // A kit exists only if it carries at least one renderable layer.
+  const hasBranding = props.brandConfig != null;
+  const [applyBranding, setApplyBranding] = useState(hasBranding);
 
   const refreshList = useCallback(async () => {
     const { data } = await createClient()
@@ -107,6 +113,9 @@ export function ExportPanel(props: ExportPanelProps) {
           edl_version_id: versionId,
           aspect_ratio: props.edl.aspectRatio,
           caption_style: props.edl.captionStyle,
+          // Snapshot the branding so later Brand Kit edits never change a
+          // render that already happened (same as aspect/caption columns).
+          brand: applyBranding ? props.brandConfig : null,
           status: "pending",
         })
         .select(EXPORT_ROW_COLUMNS)
@@ -207,6 +216,33 @@ export function ExportPanel(props: ExportPanelProps) {
         >
           {t("start")}
         </button>
+      </div>
+
+      {/* Branding (Build 6B.1): apply the creator's Brand Kit to this export. */}
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-medium">{t("branding")}</span>
+        {hasBranding ? (
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={applyBranding}
+              disabled={busy}
+              onChange={(e) => setApplyBranding(e.target.checked)}
+            />
+            <span>{t("applyBranding")}</span>
+            <span className="text-xs text-muted">{t("brandingHint")}</span>
+          </label>
+        ) : (
+          <span className="flex items-center gap-2 text-muted">
+            {t("brandingNone")}
+            <Link
+              href="/dashboard/brand-kit"
+              className="text-accent hover:underline"
+            >
+              {t("brandingSetup")}
+            </Link>
+          </span>
+        )}
       </div>
 
       {busy && active && (

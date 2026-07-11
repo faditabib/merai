@@ -9,13 +9,14 @@ import {
   nextSegmentAfterSource,
   edlOutputDurationMs,
   sourceToOutputMs,
-  CAPTION_STYLE_TOKENS,
+  type BrandExportConfig,
   type CaptionStyleToken,
   type EditCommand,
   type EdlV1,
   type TranscriptWord,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
+import { CaptionStylePicker } from "@/components/caption-style-picker";
 import { AiAssistantPanel } from "./ai-assistant-panel";
 import { CaptionOverlay } from "./caption-overlay";
 import { ExportPanel } from "./export-panel";
@@ -36,6 +37,8 @@ export interface EditorViewProps {
   initialEdlVersionId: string;
   storagePath: string;
   sourceDurationMs: number;
+  /** Owner's Brand Kit compiled to an export snapshot; null = no branding set. */
+  brandConfig: BrandExportConfig | null;
 }
 
 /**
@@ -351,23 +354,15 @@ export function EditorView(props: EditorViewProps) {
             </label>
           </div>
 
-          {/* Caption preset picker */}
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Caption preset picker (Build 6B.1: visual selector) */}
+          <div className="flex flex-col gap-2">
             <span className="text-sm font-medium">{t("captionStyle")}</span>
-            {CAPTION_STYLE_TOKENS.map((token) => (
-              <button
-                key={token}
-                type="button"
-                onClick={() => runCommand({ type: "set-caption-style", styleToken: token })}
-                className={`rounded-lg border px-3 py-1.5 text-sm ${
-                  edl.captionStyle === token
-                    ? "border-accent bg-accent/15 text-accent"
-                    : "border-border text-muted hover:border-accent"
-                }`}
-              >
-                {t(`captionPresets.${token}`)}
-              </button>
-            ))}
+            <CaptionStylePicker
+              value={edl.captionStyle}
+              onChange={(token) =>
+                runCommand({ type: "set-caption-style", styleToken: token })
+              }
+            />
           </div>
         </section>
 
@@ -424,6 +419,7 @@ export function EditorView(props: EditorViewProps) {
         projectId={props.projectId}
         ownerId={props.ownerId}
         edl={edl}
+        brandConfig={props.brandConfig}
         onChangeAspect={(ratio) =>
           runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
         }

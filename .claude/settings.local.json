@@ -9,7 +9,11 @@
       "PowerShell(npm run build 2>&1)",
       "Bash(graphify query *)",
       "PowerShell(Get-ChildItem \"D:\\\\Merai app\\\\apps\\\\web\\\\src\" -Recurse -File | Where-Object { $_.FullName -notmatch \"node_modules\" } | ForEach-Object { $_.FullName.Replace\\(\"D:\\\\Merai app\\\\apps\\\\web\\\\src\\\\\", \"\"\\) })",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e ' *)",
+      "Bash(npx eslint *)",
+      "Bash(graphify update *)",
+      "Bash(npm test *)"
     ]
   }
 }

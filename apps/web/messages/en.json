@@ -6,6 +6,7 @@
   "common": {
     "appName": "Merai",
     "dashboard": "Dashboard",
+    "brandKit": "Brand Kit",
     "login": "Log in",
     "signup": "Sign up",
     "signOut": "Sign out",
@@ -270,6 +271,53 @@
       }
     }
   },
+  "captionStudio": {
+    "sample": "Caption text",
+    "sampleHighlighted": "Word",
+    "sampleRest": "styled",
+    "presets": {
+      "bold-yellow-centered": "Bold yellow — centered",
+      "minimal-white-bottom": "Minimal white — bottom",
+      "karaoke-highlight": "Word-by-word highlight",
+      "professional-clean": "Professional clean — bottom"
+    }
+  },
+  "brandKit": {
+    "pageTitle": "Brand Kit",
+    "pageSubtitle": "Set your brand identity once — every video you export carries it.",
+    "loading": "Loading…",
+    "loadError": "Couldn't load your Brand Kit. Please try again.",
+    "identityTitle": "Identity",
+    "nameLabel": "Brand name",
+    "namePlaceholder": "e.g. Dr. Ahmad's Health Channel",
+    "logoUpload": "Upload logo",
+    "logoReplace": "Replace logo",
+    "logoError": "Couldn't upload the logo. Use PNG, JPG, WebP or SVG under 2 MB.",
+    "colorsTitle": "Colors",
+    "primaryColor": "Primary color",
+    "secondaryColor": "Secondary color",
+    "accentColor": "Accent color",
+    "captionTitle": "Default caption style",
+    "captionHint": "The style suggested automatically when you export.",
+    "gradientTitle": "Bottom readability gradient",
+    "gradientHint": "A dark gradient at the bottom makes captions easier to read on vertical videos.",
+    "gradientOpacity": "Opacity: {percent, number}%",
+    "gradientHeight": "Height: {percent, number}%",
+    "lowerThirdTitle": "Lower third",
+    "lowerThirdHint": "Your name and title shown at the bottom — leave empty to hide it.",
+    "lowerThirdName": "Name",
+    "lowerThirdNamePlaceholder": "e.g. Dr. Ahmad",
+    "lowerThirdRole": "Title",
+    "lowerThirdRolePlaceholder": "e.g. Cardiologist",
+    "lowerThirdSubtitle": "Extra line",
+    "saving": "Saving…",
+    "save": "Save Brand Kit",
+    "savedNote": "Brand Kit saved.",
+    "saveError": "Couldn't save. Please try again.",
+    "previewTitle": "Preview",
+    "previewCaption": "Caption text",
+    "previewNote": "Approximate preview — the gradient and lower third appear on your videos at export."
+  },
   "export": {
     "title": "Export",
     "aspect": "Aspect:",
@@ -278,6 +326,11 @@
       "1x1": "square",
       "16x9": "horizontal"
     },
+    "branding": "Branding",
+    "applyBranding": "Apply my branding to this video",
+    "brandingHint": "Adds the bottom gradient and lower third from your Brand Kit.",
+    "brandingNone": "No Brand Kit set up yet.",
+    "brandingSetup": "Create your Brand Kit",
     "start": "Export video",
     "stages": {
       "pending": "Queued — starting in a moment…",
