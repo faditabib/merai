@@ -13,7 +13,21 @@
       "Bash(node -e ' *)",
       "Bash(npx eslint *)",
       "Bash(graphify update *)",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "Bash(railway whoami *)",
+      "Bash(vercel whoami *)",
+      "Bash(node -e \"require.resolve\\('pg'\\); console.log\\('pg: yes'\\)\")",
+      "Bash(node \"C:/Users/utopi/AppData/Local/Temp/claude/D--Merai-app/83761fc0-0a67-48c9-8a83-fb6035b34ebc/scratchpad/apply-migration-9.js\" \"/d/Merai app\")",
+      "Bash(NODE_PATH=\"/d/Merai app/node_modules\" node \"C:/Users/utopi/AppData/Local/Temp/claude/D--Merai-app/83761fc0-0a67-48c9-8a83-fb6035b34ebc/scratchpad/apply-migration-9.js\" \"/d/Merai app\")",
+      "Bash(railway status *)",
+      "Bash(vercel deploy *)",
+      "Bash(timeout 25 railway logs)",
+      "Bash(NODE_PATH='/d/Merai app/node_modules' node -e ' *)",
+      "Bash(ffmpeg -y -f lavfi -i color=c=0x3B6FB0:s=720x1280:d=6 -f lavfi -i sine=frequency=440:duration=6 -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest C:/Users/utopi/AppData/Local/Temp/claude/D--Merai-app/83761fc0-0a67-48c9-8a83-fb6035b34ebc/scratchpad/e2e-src.mp4)",
+      "Bash(railway up *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/dashboard/brand-kit)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/en/dashboard/brand-kit)"
     ]
   }
 }
