@@ -22,10 +22,11 @@ import { log } from "../logger";
  */
 
 const FONT_DIR = join(dirname(fileURLToPath(import.meta.url)), "../../assets/fonts");
-const FONT_FAMILY = "IBM Plex Sans Arabic";
+export const FONT_FAMILY = "IBM Plex Sans Arabic";
 
 let fontsRegistered = false;
-function registerFonts(): void {
+/** Shared by caption and brand-layer rasterizers (render/brand.ts). */
+export function registerCaptionFonts(): void {
   if (fontsRegistered) return;
   for (const file of ["IBMPlexSansArabic-Medium.ttf", "IBMPlexSansArabic-Bold.ttf"]) {
     const ok = GlobalFonts.registerFromPath(join(FONT_DIR, file), FONT_FAMILY);
@@ -55,7 +56,7 @@ export function renderCaptionImages(
   width: number,
   height: number,
 ): { name: string; data: Uint8Array }[] {
-  registerFonts();
+  registerCaptionFonts();
   const fontSize = Math.round(height * 0.045);
   // Skia weight selection happens via the CSS-style font string.
   const fontDecl = `${spec.fontWeight} ${fontSize}px "${FONT_FAMILY}"`;

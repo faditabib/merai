@@ -1,3 +1,8 @@
+import {
+  BRAND_GRADIENT_IMAGE,
+  BRAND_LOWER_THIRD_IMAGE,
+  type BrandExportConfig,
+} from "./brand";
 import { buildCaptionLines, type CaptionLine } from "./captions";
 import { edlOutputDurationMs, type AspectRatio, type EdlV1 } from "./edl";
 import { sourceToOutputMs } from "./edl-ops";
@@ -68,6 +73,12 @@ export interface ExportPlan {
   joinScript: string;
   /** All caption lines (global output-time windows) for rasterization. */
   captions: CaptionOverlayPlan[];
+  /**
+   * Brand layer PNGs (Build 6B.1) the worker must rasterize and stage
+   * alongside caption images. Empty array = unbranded export, and every
+   * segment's args are byte-identical to pre-6B.1 plans.
+   */
+  brandImages: string[];
   width: number;
   height: number;
   outputDurationMs: number;
@@ -104,8 +115,10 @@ function ffconcatScript(sequence: CaptionSequenceEntry[]): string {
 export function buildExportPlan(input: {
   edl: EdlV1;
   words: TranscriptWord[];
+  /** Optional creator branding (exports.brand snapshot); absent = legacy plan. */
+  brand?: BrandExportConfig | null;
 }): ExportPlan {
-  const { edl, words } = input;
+  const { edl, words, brand } = input;
   const { width, height } = EXPORT_RESOLUTIONS[edl.aspectRatio];
   const outputDurationMs = edlOutputDurationMs(edl);
 
@@ -133,6 +146,15 @@ export function buildExportPlan(input: {
     cursorGuard = endOutMs;
     captions.push({ file: `cap${index}.png`, line, startOutMs: start, endOutMs });
   });
+
+  // --- brand layers (Build 6B.1): static PNGs overlaid in every segment ---
+  // Layer order is binding (see brand.ts): gradient sits UNDER captions
+  // (readability layer), the lower third sits ON TOP of captions.
+  const gradientImage = brand?.gradient ? BRAND_GRADIENT_IMAGE : null;
+  const lowerThirdImage = brand?.lowerThird ? BRAND_LOWER_THIRD_IMAGE : null;
+  const brandImages = [gradientImage, lowerThirdImage].filter(
+    (f): f is string => f !== null,
+  );
 
   // --- one small ffmpeg run per kept segment ------------------------------
   const scaleCrop = `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`;
@@ -168,9 +190,39 @@ export function buildExportPlan(input: {
 
     const hasCaptions = sequence.length > 0;
     const captionsFile = hasCaptions ? `captions-seg${index}.txt` : null;
-    const filter = hasCaptions
-      ? `[0:v]${scaleCrop}[vs];[vs][1:v]overlay=0:0[vo]`
-      : `[0:v]${scaleCrop}[vs]`;
+
+    // Inputs after input.mp4 (index 0), in order: caption concat sequence,
+    // then static brand PNGs (a single-frame image input persists across the
+    // segment — overlay's default repeatlast holds the last frame).
+    const inputArgs: string[] = [];
+    let nextInput = 1;
+    let captionsInput = -1;
+    let gradientInput = -1;
+    let lowerThirdInput = -1;
+    if (hasCaptions) {
+      inputArgs.push("-f", "concat", "-safe", "0", "-i", captionsFile!);
+      captionsInput = nextInput++;
+    }
+    if (gradientImage) {
+      inputArgs.push("-i", gradientImage);
+      gradientInput = nextInput++;
+    }
+    if (lowerThirdImage) {
+      inputArgs.push("-i", lowerThirdImage);
+      lowerThirdInput = nextInput++;
+    }
+
+    // Chain overlays in layer order: gradient → captions → lower third.
+    const stages: string[] = [`[0:v]${scaleCrop}[vs]`];
+    let label = "[vs]";
+    let stage = 0;
+    const overlayOnto = (inputIndex: number, out: string) => {
+      stages.push(`${label}[${inputIndex}:v]overlay=0:0${out}`);
+      label = out;
+    };
+    if (gradientInput !== -1) overlayOnto(gradientInput, `[vb${stage++}]`);
+    if (captionsInput !== -1) overlayOnto(captionsInput, "[vo]");
+    if (lowerThirdInput !== -1) overlayOnto(lowerThirdInput, `[vb${stage++}]`);
 
     segments.push({
       index,
@@ -183,11 +235,11 @@ export function buildExportPlan(input: {
         seconds(durationMs),
         "-i",
         "input.mp4",
-        ...(hasCaptions ? ["-f", "concat", "-safe", "0", "-i", captionsFile!] : []),
+        ...inputArgs,
         "-filter_complex",
-        filter,
+        stages.join(";"),
         "-map",
-        hasCaptions ? "[vo]" : "[vs]",
+        label,
         "-map",
         "0:a",
         ...ENCODE_ARGS,
@@ -225,6 +277,7 @@ export function buildExportPlan(input: {
     joinFile: "join.txt",
     joinScript,
     captions,
+    brandImages,
     width,
     height,
     outputDurationMs,

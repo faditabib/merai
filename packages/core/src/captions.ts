@@ -92,6 +92,7 @@ export const CAPTION_STYLE_TOKENS = [
   "bold-yellow-centered", // high-impact, all-caps-feel, center of frame
   "minimal-white-bottom", // clean lower-third, subtle background
   "karaoke-highlight", // word-by-word highlight following speech
+  "professional-clean", // premium low placement, no box — doctors/founders/educators
 ] as const;
 
 export type CaptionStyleToken = (typeof CAPTION_STYLE_TOKENS)[number];
@@ -143,5 +144,14 @@ export const CAPTION_STYLE_SPECS: Record<CaptionStyleToken, CaptionStyleSpec> = 
     highlightColor: "#22D3EE",
     uppercaseLatin: false,
     wordLevel: true,
+  },
+  "professional-clean": {
+    token: "professional-clean",
+    fontFamily: "IBM Plex Sans Arabic",
+    fontWeight: 500,
+    verticalAnchor: 0.88,
+    textColor: "#F5F5F4",
+    uppercaseLatin: false,
+    wordLevel: false,
   },
 };

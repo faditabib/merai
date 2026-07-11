@@ -1,3 +1,4 @@
+export * from "./brand";
 export * from "./edl";
 export * from "./edl-ops";
 export * from "./edl-v2";

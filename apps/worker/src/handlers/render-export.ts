@@ -1,10 +1,12 @@
 import {
+  brandExportConfigSchema,
   buildExportPlan,
   downgradeEdlV2ToV1,
   parseEdl,
   renderExportPayloadSchema,
   transcriptWordsSchema,
   type AspectRatio,
+  type BrandExportConfig,
   type EdlV1,
   type JobRow,
 } from "@merai/core";
@@ -12,6 +14,7 @@ import { getDb } from "../db";
 import { PermanentJobError } from "../errors";
 import { log } from "../logger";
 import { createSignedMediaUrl, getServiceClient } from "../storage";
+import { renderBrandImages } from "../render/brand";
 import {
   renderBlankImage,
   renderCaptionImages,
@@ -40,6 +43,7 @@ interface ExportRow {
   cancel_requested: boolean;
   aspect_ratio: AspectRatio;
   caption_style: string;
+  brand: unknown;
 }
 
 /** Injectable side effects so tests never touch storage or real ffmpeg. */
@@ -95,7 +99,7 @@ export async function renderExportWithEngine(
 
   const { rows: exportRows } = await db.query<ExportRow>(
     `select id, project_id, owner_id, edl_version_id, status, cancel_requested,
-            aspect_ratio, caption_style
+            aspect_ratio, caption_style, brand
      from public.exports where id = $1`,
     [payload.exportId],
   );
@@ -156,6 +160,20 @@ export async function renderExportWithEngine(
     captionStyle: exportRow.caption_style,
   };
 
+  // Branding snapshot (Build 6B.1): null = unbranded, exactly the pre-6B.1
+  // plan. A malformed snapshot is deterministic — fail loud, don't render
+  // something that silently ignores the creator's branding.
+  let brand: BrandExportConfig | null = null;
+  if (exportRow.brand != null) {
+    const parsedBrand = brandExportConfigSchema.safeParse(exportRow.brand);
+    if (!parsedBrand.success) {
+      throw new PermanentJobError(
+        `export ${exportRow.id} has an invalid brand config: ${parsedBrand.error.issues[0]?.message ?? "unknown"}`,
+      );
+    }
+    brand = parsedBrand.data;
+  }
+
   const { rows: transcriptRows } = await db.query<{ words: unknown }>(
     "select words from public.transcripts where project_id = $1",
     [exportRow.project_id],
@@ -175,7 +193,7 @@ export async function renderExportWithEngine(
     [exportRow.id],
   );
 
-  const plan = buildExportPlan({ edl, words });
+  const plan = buildExportPlan({ edl, words, brand });
   const captionImages = renderCaptionImages(
     plan.captions,
     resolveStyleSpec(exportRow.caption_style),
@@ -184,6 +202,11 @@ export async function renderExportWithEngine(
   );
   if (plan.captions.length > 0) {
     captionImages.push(renderBlankImage(plan.width, plan.height));
+  }
+  // Brand layer PNGs ride alongside caption images — both engines stage the
+  // array's files generically, so no engine changes are needed.
+  if (brand) {
+    captionImages.push(...renderBrandImages(brand, plan.width, plan.height));
   }
 
   let bytes: Uint8Array;
