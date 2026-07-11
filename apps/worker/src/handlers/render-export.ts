@@ -16,6 +16,7 @@ import { log } from "../logger";
 import { createSignedMediaUrl, getServiceClient } from "../storage";
 import { renderBrandImages } from "../render/brand";
 import {
+  captionSpecAboveLowerThird,
   renderBlankImage,
   renderCaptionImages,
   resolveStyleSpec,
@@ -194,9 +195,15 @@ export async function renderExportWithEngine(
   );
 
   const plan = buildExportPlan({ edl, words, brand });
+  // A lower third owns the bottom band — lift bottom captions above it so the
+  // two don't overprint (live E2E finding, Build 6B.1).
+  const captionSpec = captionSpecAboveLowerThird(
+    resolveStyleSpec(exportRow.caption_style),
+    Boolean(brand?.lowerThird),
+  );
   const captionImages = renderCaptionImages(
     plan.captions,
-    resolveStyleSpec(exportRow.caption_style),
+    captionSpec,
     plan.width,
     plan.height,
   );

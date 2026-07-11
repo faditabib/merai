@@ -42,6 +42,30 @@ export function resolveStyleSpec(token: string): CaptionStyleSpec {
   );
 }
 
+/**
+ * Highest vertical anchor a caption may keep when a lower third shares the
+ * bottom band. The lower third occupies roughly 0.84–0.92 of frame height
+ * (see render/brand.ts); anchoring captions at ≤0.74 clears it with room to
+ * breathe. Live E2E finding (Build 6B.1): minimal-white-bottom (0.85) and a
+ * lower third overprinted each other.
+ */
+export const CAPTION_ANCHOR_ABOVE_LOWER_THIRD = 0.74;
+
+/**
+ * Lift a bottom-anchored caption above a lower third so the two never
+ * overprint. Centered/high styles (anchor already ≤ the ceiling) are
+ * untouched; only bottom styles move, and only when a lower third exists.
+ */
+export function captionSpecAboveLowerThird(
+  spec: CaptionStyleSpec,
+  hasLowerThird: boolean,
+): CaptionStyleSpec {
+  if (!hasLowerThird || spec.verticalAnchor <= CAPTION_ANCHOR_ABOVE_LOWER_THIRD) {
+    return spec;
+  }
+  return { ...spec, verticalAnchor: CAPTION_ANCHOR_ABOVE_LOWER_THIRD };
+}
+
 export function renderBlankImage(width: number, height: number): {
   name: string;
   data: Uint8Array;
