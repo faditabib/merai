@@ -108,7 +108,9 @@ export async function generateEdl(
   // full dry-run against the exact base EDL before the editor ever sees it.
   const validation = validateAiEditPlan(edl, words, plan);
   if (!validation.ok) {
-    await fail(`invalid-plan:${validation.reason}`);
+    // detail (e.g. the offending id) goes into the row for diagnosability;
+    // the UI shows only its localized generic message.
+    await fail(`invalid-plan:${validation.reason}:${validation.detail.slice(0, 80)}`);
     return;
   }
 

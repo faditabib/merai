@@ -203,6 +203,24 @@ describe("validateAiEditPlan", () => {
     if (noop.ok) expect(noop.commands).toEqual([]);
   });
 
+  it("drops already-satisfied segment intents (delete removed / restore kept) — live finding #2", () => {
+    const result = validateAiEditPlan(edl, words, {
+      goal: "g",
+      commands: [
+        { type: "ripple-delete-segment", segmentId: "seg-r0" }, // already removed
+        { type: "restore-removed", removedId: "seg-k0" }, // already on timeline
+        { type: "ripple-delete-segment", segmentId: "seg-k1" }, // genuinely new
+      ],
+      explanation: "x",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.commands).toEqual([
+        { type: "ripple-delete-segment", segmentId: "seg-k1" },
+      ]);
+    }
+  });
+
   it("accepts an empty plan (no changes suggested)", () => {
     const result = validateAiEditPlan(edl, words, {
       goal: "already-good",

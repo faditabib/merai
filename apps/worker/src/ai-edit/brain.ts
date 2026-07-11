@@ -166,7 +166,7 @@ function renderState(input: EditBrainInput): string {
     `Timeline segments (in output order):`,
     timeline || "  (empty)",
     ``,
-    `Removed segments (restorable):`,
+    `Removed segments (already cut — restore-removed may reference these; never ripple-delete them):`,
     removed || "  (none)",
     ``,
     input.analysisSummary ? `Prior AI analysis notes:\n${input.analysisSummary}\n` : ``,

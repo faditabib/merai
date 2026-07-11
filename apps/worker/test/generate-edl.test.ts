@@ -119,7 +119,7 @@ describe("generate_edl handler (AI Editing Brain, real DB + migrations)", () => 
     );
     const row = await suggestionRow(ids.suggestionId);
     expect(row.status).toBe("failed");
-    expect(row.error).toBe("invalid-plan:unknown-segment");
+    expect(row.error).toBe("invalid-plan:unknown-segment:seg-hallucinated");
   });
 
   it("fails cleanly as ai-unavailable when no brain is configured", async () => {

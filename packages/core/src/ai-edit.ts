@@ -169,12 +169,16 @@ export function validateAiEditPlan(
         break;
       }
       case "ripple-delete-segment":
+        // Already removed → intent satisfied, drop (same rule as words).
+        if (removedIds.has(command.segmentId)) break;
         if (!timelineIds.has(command.segmentId)) {
           return { ok: false, reason: "unknown-segment", detail: command.segmentId };
         }
         keep(command, index);
         break;
       case "restore-removed":
+        // Already on the timeline → intent satisfied, drop.
+        if (timelineIds.has(command.removedId)) break;
         if (!removedIds.has(command.removedId)) {
           return { ok: false, reason: "unknown-segment", detail: command.removedId };
         }
