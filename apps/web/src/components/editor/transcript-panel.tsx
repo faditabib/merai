@@ -1,9 +1,37 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { EdlV1, RemovedSegment, TranscriptWord } from "@merai/core";
 import { AiDecisionCard } from "./ai-decision-card";
+
+const CARD_WIDTH_PX = 256; // w-64 — keep in sync with the popover class
+
+/** Where to pin the decision card: viewport coords clamped to stay fully
+ *  visible, flipped above the word when the space below is too tight
+ *  (visual QA bug #1/#3 — the old in-container popover was clipped by the
+ *  transcript's own overflow, cutting off the restore button). */
+interface CardAnchor {
+  removedId: string;
+  top: number;
+  left: number;
+  above: boolean;
+}
+
+function anchorFor(removedId: string, button: HTMLElement): CardAnchor {
+  const rect = button.getBoundingClientRect();
+  const left = Math.min(
+    Math.max(8, rect.left + rect.width / 2 - CARD_WIDTH_PX / 2),
+    window.innerWidth - CARD_WIDTH_PX - 8,
+  );
+  const above = window.innerHeight - rect.bottom < 260;
+  return {
+    removedId,
+    left,
+    top: above ? rect.top - 6 : rect.bottom + 6,
+    above,
+  };
+}
 
 export interface TranscriptPanelProps {
   edl: EdlV1;
@@ -27,7 +55,20 @@ export interface TranscriptPanelProps {
 export function TranscriptPanel(props: TranscriptPanelProps) {
   const t = useTranslations("editor");
   const [anchorId, setAnchorId] = useState<string | null>(null);
-  const [openRemovedId, setOpenRemovedId] = useState<string | null>(null);
+  const [card, setCard] = useState<CardAnchor | null>(null);
+
+  // The card is pinned to viewport coordinates — any scroll or resize would
+  // detach it from its word, so close it instead of chasing the anchor.
+  useEffect(() => {
+    if (!card) return;
+    const close = () => setCard(null);
+    window.addEventListener("scroll", close, { capture: true, passive: true });
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("scroll", close, { capture: true });
+      window.removeEventListener("resize", close);
+    };
+  }, [card]);
 
   const isRtl = (props.languageCode ?? "ar").startsWith("ar");
 
@@ -82,7 +123,9 @@ export function TranscriptPanel(props: TranscriptPanelProps) {
           disabled={props.selectedWordIds.length === 0}
           className="rounded-lg border border-border px-3 py-1.5 text-sm text-red-500 disabled:opacity-40"
         >
-          {t("deleteSelected", { count: props.selectedWordIds.length })}
+          {props.selectedWordIds.length > 0
+            ? t("deleteSelected", { count: props.selectedWordIds.length })
+            : t("deleteSelectedNone")}
         </button>
       </div>
       <p className="text-xs text-muted">{t("transcriptHint")}</p>
@@ -95,29 +138,26 @@ export function TranscriptPanel(props: TranscriptPanelProps) {
           const removedSegment = removedByWordId.get(word.id);
 
           if (removedSegment) {
-            const open = openRemovedId === removedSegment.id;
+            const open = card?.removedId === removedSegment.id;
             return (
-              <span key={word.id} className="relative inline-block">
+              <span key={word.id}>
                 <button
                   type="button"
-                  onClick={() =>
-                    setOpenRemovedId(open ? null : removedSegment.id)
+                  onClick={(event) =>
+                    setCard(
+                      open
+                        ? null
+                        : anchorFor(removedSegment.id, event.currentTarget),
+                    )
                   }
-                  className="rounded px-0.5 text-muted line-through opacity-60 hover:bg-red-500/10 hover:opacity-100"
+                  className={`rounded px-0.5 line-through ${
+                    open
+                      ? "bg-red-500/10 text-muted"
+                      : "text-muted opacity-60 hover:bg-red-500/10 hover:opacity-100"
+                  }`}
                 >
                   {word.text}
                 </button>{" "}
-                {open && (
-                  <span className="absolute start-0 top-full z-20 mt-1 block w-64 rounded-xl border border-border bg-card p-3 text-sm shadow-lg">
-                    <AiDecisionCard
-                      segment={removedSegment}
-                      onRestore={() => {
-                        props.onRestore(removedSegment.id);
-                        setOpenRemovedId(null);
-                      }}
-                    />
-                  </span>
-                )}
               </span>
             );
           }
@@ -144,6 +184,34 @@ export function TranscriptPanel(props: TranscriptPanelProps) {
           );
         })}
       </article>
+
+      {/* AI decision card — viewport-pinned so the transcript's own scroll
+          container can never clip it (restore stays reachable). */}
+      {card &&
+        (() => {
+          const segment = props.edl.removed.find(
+            (s) => s.id === card.removedId,
+          );
+          if (!segment) return null;
+          return (
+            <div
+              className="fixed z-50 w-64 rounded-xl border border-border bg-card p-3 text-sm shadow-lg"
+              style={{
+                top: card.top,
+                left: card.left,
+                transform: card.above ? "translateY(-100%)" : undefined,
+              }}
+            >
+              <AiDecisionCard
+                segment={segment}
+                onRestore={() => {
+                  props.onRestore(card.removedId);
+                  setCard(null);
+                }}
+              />
+            </div>
+          );
+        })()}
     </section>
   );
 }

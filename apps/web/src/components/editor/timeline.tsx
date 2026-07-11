@@ -288,7 +288,9 @@ function RemovedGhost(props: {
       <button
         type="button"
         onClick={props.onToggle}
-        className="w-2 shrink-0 rounded-sm bg-red-500/50 hover:bg-red-500"
+        // before: widens the tap target to ~20px without changing the 2px
+        // visual — the strip was untappable on touch screens (QA #9).
+        className="relative w-2 shrink-0 rounded-sm bg-red-500/50 before:absolute before:-inset-x-2 before:inset-y-0 before:content-[''] hover:bg-red-500"
         aria-label={props.reasonLabel}
       />
       {props.open && (

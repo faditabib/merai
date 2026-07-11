@@ -122,20 +122,20 @@
     "retry": "Retry processing",
     "transcriptTitle": "Transcript",
     "emptyTranscript": "We didn't detect any speech in this video. Make sure the clip contains clear audio.",
-    "wordCount": "{count} words",
+    "wordCount": "{count, number} words",
     "mockBadge": "Sample data — mock provider",
     "edit": {
-      "keptDuration": "Duration after edit: {seconds}s",
-      "removedFillers": "Fillers: {count}",
-      "removedSilence": "Silence: {count}",
-      "removedBadTakes": "Repeated takes: {count}",
-      "removedFalseStarts": "False starts: {count}",
+      "keptDuration": "Duration after edit: {seconds, number}s",
+      "removedFillers": "Fillers: {count, number}",
+      "removedSilence": "Silence: {count, number}",
+      "removedBadTakes": "Repeated takes: {count, number}",
+      "removedFalseStarts": "False starts: {count, number}",
       "legend": "Struck-through words will be cut from the final video — open the editor to review and adjust every cut."
     },
     "openEditor": "Open editor"
   },
   "editor": {
-    "versionLabel": "Version {version}",
+    "versionLabel": "Version {version, number}",
     "undo": "Undo",
     "redo": "Redo",
     "save": "Save",
@@ -154,7 +154,8 @@
     },
     "transcriptTitle": "Edit by text",
     "transcriptHint": "Click a word to seek, Shift+click to select a range, then delete it. Click struck-through words to see why they were cut or to restore them.",
-    "deleteSelected": "Delete selected ({count})",
+    "deleteSelected": "Delete selected ({count, number})",
+    "deleteSelectedNone": "Delete selected",
     "restore": "Restore",
     "timelineTitle": "Timeline",
     "timelineHint": "Drag edges to trim, drag a block to reorder; red markers are removed content",
@@ -170,8 +171,8 @@
     "aiCard": {
       "title": "AI editor decision",
       "userTitle": "Your edit",
-      "durationCut": "{seconds}s removed",
-      "confidence": "{percent}% confident"
+      "durationCut": "{seconds, number}s removed",
+      "confidence": "{percent, number}% confident"
     },
     "reasonExplainers": {
       "filler": "A filler word that adds no meaning — cutting it tightens the pacing.",
@@ -210,7 +211,7 @@
     "start": "Export video",
     "stages": {
       "pending": "Queued — starting in a moment…",
-      "rendering": "Preparing your final video… {percent}%"
+      "rendering": "Preparing your final video… {percent, number}%"
     },
     "serverNote": "You can leave this page — the export continues on the server",
     "done": "Export complete — your video is ready to publish!",

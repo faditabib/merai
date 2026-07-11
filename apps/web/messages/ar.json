@@ -122,20 +122,20 @@
     "retry": "إعادة المعالجة",
     "transcriptTitle": "التفريغ النصي",
     "emptyTranscript": "لم نرصد أي كلام في هذا الفيديو. تأكد من أن المقطع يحتوي على صوت واضح.",
-    "wordCount": "{count} كلمة",
+    "wordCount": "{count, number} كلمة",
     "mockBadge": "بيانات تجريبية — مزوّد وهمي",
     "edit": {
-      "keptDuration": "المدة بعد المونتاج: {seconds} ثانية",
-      "removedFillers": "حشو: {count}",
-      "removedSilence": "صمت: {count}",
-      "removedBadTakes": "لقطات مكررة: {count}",
-      "removedFalseStarts": "بدايات ملغاة: {count}",
+      "keptDuration": "المدة بعد المونتاج: {seconds, number} ثانية",
+      "removedFillers": "حشو: {count, number}",
+      "removedSilence": "صمت: {count, number}",
+      "removedBadTakes": "لقطات مكررة: {count, number}",
+      "removedFalseStarts": "بدايات ملغاة: {count, number}",
       "legend": "الكلمات المشطوبة سيحذفها مِيراي من الفيديو النهائي — افتح المحرر لمراجعة كل قصّة وتعديلها."
     },
     "openEditor": "فتح المحرر"
   },
   "editor": {
-    "versionLabel": "النسخة {version}",
+    "versionLabel": "النسخة {version, number}",
     "undo": "تراجع",
     "redo": "إعادة",
     "save": "حفظ",
@@ -154,7 +154,8 @@
     },
     "transcriptTitle": "التحرير بالنص",
     "transcriptHint": "اضغط كلمة للانتقال إليها، و Shift+ضغطة لتحديد نطاق ثم احذفه. اضغط الكلمات المشطوبة لمعرفة سبب الحذف أو لاستعادتها.",
-    "deleteSelected": "حذف المحدد ({count})",
+    "deleteSelected": "حذف المحدد ({count, number})",
+    "deleteSelectedNone": "حذف المحدد",
     "restore": "استعادة",
     "timelineTitle": "الخط الزمني",
     "timelineHint": "اسحب الحواف للقص، اسحب المقطع لإعادة الترتيب، والعلامات الحمراء محتوى محذوف",
@@ -170,8 +171,8 @@
     "aiCard": {
       "title": "قرار المحرّر الذكي",
       "userTitle": "تعديلك",
-      "durationCut": "{seconds} ث محذوفة",
-      "confidence": "ثقة {percent}٪"
+      "durationCut": "{seconds, number} ث محذوفة",
+      "confidence": "ثقة {percent, number}٪"
     },
     "reasonExplainers": {
       "filler": "كلمة حشو لا تضيف معنى — حذفها يجعل الإيقاع أسرع.",
@@ -210,7 +211,7 @@
     "start": "تصدير الفيديو",
     "stages": {
       "pending": "في الطابور — نبدأ خلال لحظات…",
-      "rendering": "نجهّز فيديوك النهائي… {percent}%"
+      "rendering": "نجهّز فيديوك النهائي… {percent, number}%"
     },
     "serverNote": "يمكنك مغادرة الصفحة — سنكمل التصدير على الخادم",
     "done": "اكتمل التصدير — الفيديو جاهز للنشر!",

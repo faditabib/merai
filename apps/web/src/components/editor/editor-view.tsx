@@ -208,7 +208,13 @@ export function EditorView(props: EditorViewProps) {
       } else if (event.key === " ") {
         event.preventDefault();
         togglePlay();
-      } else if (event.key === "?" || event.key === "؟") {
+      } else if (
+        event.key === "?" ||
+        event.key === "؟" ||
+        // Physical Shift+/ regardless of layout — Arabic layouts emit ؟ from
+        // this key, and some browsers/layouts report only the code (QA bug #2).
+        (event.shiftKey && event.code === "Slash")
+      ) {
         event.preventDefault();
         setShortcutsOpen((open) => !open);
       } else if (event.key === "Escape") {

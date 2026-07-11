@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 
 const STEP_KEYS = ["upload", "analyze", "review", "export"] as const;
@@ -14,12 +14,13 @@ const STEP_KEYS = ["upload", "analyze", "review", "export"] as const;
  */
 export function WorkflowSteps() {
   const t = useTranslations("dashboard.onboarding");
+  const format = useFormatter();
   return (
     <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {STEP_KEYS.map((key, index) => (
         <li key={key} className="flex items-start gap-3">
           <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent">
-            {index + 1}
+            {format.number(index + 1)}
           </span>
           <span className="min-w-0">
             <span className="block font-semibold">{t(`steps.${key}.title`)}</span>

@@ -20,7 +20,10 @@ export function AiDecisionCard(props: {
 }) {
   const t = useTranslations("editor");
   const { segment } = props;
-  const seconds = ((segment.sourceOutMs - segment.sourceInMs) / 1000).toFixed(1);
+  // A number (one decimal), not a string — the ICU {seconds, number} format
+  // localizes digits per locale (Arabic-Indic in ar — QA numeral policy).
+  const seconds =
+    Math.round((segment.sourceOutMs - segment.sourceInMs) / 100) / 10;
   const byUser = segment.reason === "user";
 
   return (

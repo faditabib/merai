@@ -30,7 +30,10 @@ export default async function DashboardPage({
 
   const t = await getTranslations("dashboard");
   const format = await getFormatter();
-  const name = user?.user_metadata?.display_name ?? user?.email ?? "";
+  // Greeting: display name, else the mailbox part of the email — a raw
+  // address reads developer-ish on an otherwise warm dashboard (QA #5).
+  const name =
+    user?.user_metadata?.display_name ?? user?.email?.split("@")[0] ?? "";
 
   const { data: projects } = await supabase
     .from("projects")

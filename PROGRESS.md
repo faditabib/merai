@@ -1,5 +1,25 @@
 # Merai — Progress Log
 
+## Build 6A.1 — Visual QA fixes + production redeploy (2026-07-11)
+
+All BUILD_6A_VISUAL_QA.md bugs fixed and re-verified by the same
+headless-Chrome screenshot method (94 tests green, next build ✓):
+- AI decision card viewport-pinned (was clipped by the transcript's
+  overflow — restore button unreachable); closes on scroll/resize.
+- Shortcut help also matches physical Shift+Slash (Arabic layouts);
+  both event shapes probe-verified.
+- Greeting uses the mailbox name; delete button hides the (0); timeline
+  ghost tap target ~20px (visual unchanged).
+- Haiku notes now written in the transcript's language (prompt rule 7) —
+  live probe: 3/3 Arabic notes, 1,728in/207out tokens. Old stored
+  analyses keep English notes until re-analyzed.
+- Numeric interpolations moved to ICU {n, number}: digit style is now
+  locale-driven from one point; ar currently renders Latin digits
+  (runtime default) — flipping to nu-arab is an owner taste decision.
+- Redeployed: worker → Railway (Build 5+6A.1 code), web → Vercel.
+
+---
+
 ## Build 6A — Creator experience layer (2026-07-11)
 
 94 tests green (37 core + 45 worker + 12 web) · next build ✓ · ar/en key

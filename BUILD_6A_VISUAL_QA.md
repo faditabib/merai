@@ -1,5 +1,21 @@
 # Build 6A — Visual QA Report
 
+> **Fix addendum (2026-07-11, same day):** items below were fixed and
+> re-verified against the production build with the same headless-Chrome
+> method — #1/#3 the AI card is now viewport-pinned (full card + restore
+> button screenshot-verified, closes on scroll/resize), #2 the handler now
+> also matches physical Shift+Slash (both the Arabic-layout event shape and
+> the physical press open the dialog in probes), #5 greeting shows the
+> mailbox name ("أهلًا، smoke-e2e"), #7 the (0) count is hidden when nothing
+> is selected, #9 ghost tap target widened to ~20px (visual unchanged), and
+> #4 the Haiku prompt now requires notes in the transcript's language —
+> live-probed: 3/3 Arabic notes on an Arabic transcript. #6 partially:
+> numeric interpolations now go through ICU `{n, number}` so digit style is
+> locale-driven from one config point; this runtime's `ar` default is Latin
+> digits, and flipping to Arabic-Indic (`nu-arab`) is left as an owner taste
+> decision. Existing stored analyses keep their old English notes until
+> re-analyzed. Remaining open: #8, #10–#13.
+
 Date: 2026-07-11 · Method: manual review of 19 screenshots captured by
 headless Chrome (Playwright) against the production build (`next start`,
 live Supabase data, real project with AI cuts) — desktop 1440×900 and
