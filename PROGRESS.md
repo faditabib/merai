@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Build 5.6 — AI Brain UX polish + feedback loop (2026-07-11)
+
+113 tests green (47 core + 54 worker + 12 web) · next build ✓ · migration 8
+live · live E2E on production Railway worker PASSED with DB-verified
+persistence (BUILD_5_6_ANALYSIS.md + BUILD_5_6_REPORT.md).
+
+- Recommendation cards: per-change title/action/target/why/benefit —
+  numbers derived from the EDL, qualitative text from the model in the
+  transcript's language; 5-category enum chips (hook/pacing/clarity/
+  style/platform), backward compatible.
+- Apply preview: real derived counts + "original stays safe" note +
+  Apply/Review/Dismiss; post-apply card keeps feedback available.
+- Feedback: 👍/👎 + 4 optional reasons on the suggestion row (existing
+  owner RLS); real RLS enforcement now unit-tested via role switching.
+- Intent memory without profiling: explicit visible preference stored;
+  auto derives per-request from APPLIED goals, stores nothing.
+- Live finding #2 fixed: model re-proposing existing edits (segments) —
+  normalization absorbs the whole already-satisfied class now.
+- Cost: ~$0.005/suggestion measured (2,444in/551out, Haiku only).
+
+---
+
 ## Build 5.5 — AI Editing Brain v1 (2026-07-11)
 
 105 tests green (43 core + 50 worker + 12 web) · next build ✓ · migration 7
