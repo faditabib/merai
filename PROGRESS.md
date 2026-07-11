@@ -1,5 +1,28 @@
 # Merai — Progress Log
 
+## Build 5.5 — AI Editing Brain v1 (2026-07-11)
+
+105 tests green (43 core + 50 worker + 12 web) · next build ✓ · migration 7
+live · live E2E through the production Railway worker PASSED (details:
+BUILD_5_5_ANALYSIS.md + BUILD_5_5_REPORT.md).
+
+- Intent → plan: HaikuEditBrain (one forced tool-use call, temp 0) turns a
+  creator instruction into an edit-command plan + explanation in the
+  transcript's language; runs in the reserved generate_edl worker slot.
+- The gate: type allowlist (5 safe commands) → referential checks → full
+  dry-run through applyEditCommands; ready suggestions store the
+  normalized batch the dry-run applied. Brain writes ai_suggestions ONLY.
+- Editor assistant panel: presets + free text, pins the saved version
+  (auto-save first), polls, Apply = one undo snapshot via the Build 5
+  dispatcher, staleness guard, dismiss/applied persisted.
+- Live finding fixed same-day: model re-removing already-cut fillers →
+  prompt marks words kept/REMOVED + validator dedupes satisfied intents
+  (hallucinated ids still reject the whole plan).
+- E2E: TikTok preset → Arabic explanation → Apply switched caption style
+  (screenshot) → single Undo reverted. ~$0.003/request measured.
+
+---
+
 ## Build 6A.1 — Visual QA fixes + production redeploy (2026-07-11)
 
 All BUILD_6A_VISUAL_QA.md bugs fixed and re-verified by the same
