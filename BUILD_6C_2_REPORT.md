@@ -72,6 +72,16 @@ lower-third name/title/subtitle; `logo_path` untouched).
 - Onboarding wizard that picks a style as step one (6C.4 — reuses this apply
   flow) · Overlay Studio logo layer (6C.3) · a saved custom-style library.
 
-## 8. Production
-- No migration. Web deploy + a render E2E confirming a style's caption + gradient
-  render through the deployed worker are recorded below.
+## 8. Production — deployed & verified (2026-07-12)
+- **Vercel web deployed** (`READY`, `merai-web-pi.vercel.app`); no migration,
+  worker untouched.
+- **Render E2E through the deployed worker** (throwaway user + synthetic clip,
+  cleaned up, 0 leftovers): the **Founder Bold** style's resolved look —
+  `bold-impact` caption (scale 1.3, low-center, outlined) + its gradient — was
+  snapshotted to `caption_config` + `exports.brand` and **frame-verified**:
+  large white outlined caption over the bottom readability gradient, one
+  cohesive branded frame. Confirms a Creator Style flows to a coherent export
+  through the existing pipeline with no new render code.
+- Dashboard/Brand-Kit apply UX is behind auth (not agent-driveable); its
+  correctness rests on `next build`, the core catalog/patch tests, and the
+  form's live-state apply.
