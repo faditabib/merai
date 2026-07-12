@@ -285,6 +285,39 @@
       }
     }
   },
+  "creatorStyles": {
+    "title": "Creator styles",
+    "subtitle": "Apply a full look in one tap.",
+    "sample": "Caption text",
+    "apply": "Apply style",
+    "applied": "Applied",
+    "applyHint": "Updates colors, caption style and gradient — Save to keep the changes.",
+    "yourStyle": "Your style: {name}",
+    "names": {
+      "founder-bold": "Founder Bold",
+      "educational-clean": "Educational Clean",
+      "podcast-classic": "Podcast Classic",
+      "medical-trust": "Medical Trust",
+      "luxury-minimal": "Luxury Minimal",
+      "high-energy": "High Energy"
+    },
+    "taglines": {
+      "founder-bold": "High contrast, large captions, bold emphasis.",
+      "educational-clean": "Minimal, readable, calm pacing.",
+      "podcast-classic": "Subtitles and professional lower thirds.",
+      "medical-trust": "Clean, credible, in your brand color.",
+      "luxury-minimal": "Premium spacing, elegant colors.",
+      "high-energy": "Dynamic, built for retention."
+    },
+    "useCases": {
+      "coaching": "Coaches & founders",
+      "tutorials": "Tutorials",
+      "podcast": "Podcasts",
+      "medical": "Doctors & clinics",
+      "premium": "Premium brands",
+      "shortform": "Short-form"
+    }
+  },
   "captionStudio": {
     "sample": "Caption text",
     "sampleLong": "This is how your captions will look",

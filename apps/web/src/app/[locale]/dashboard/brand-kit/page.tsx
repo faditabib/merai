@@ -1,5 +1,9 @@
 import { getTranslations } from "next-intl/server";
-import { brandKitRowSchema, type BrandKitRow } from "@merai/core";
+import {
+  brandKitRowSchema,
+  type BrandKitRow,
+  type CreatorStyleId,
+} from "@merai/core";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -74,7 +78,14 @@ export default async function BrandKitPage({
             {t("loadError")}
           </p>
         ) : (
-          <BrandKitForm ownerId={user!.id} initialKit={kit} initialLogoUrl={logoUrl} />
+          <BrandKitForm
+            ownerId={user!.id}
+            initialKit={kit}
+            initialLogoUrl={logoUrl}
+            initialStyleId={
+              (user!.user_metadata?.creator_style as CreatorStyleId | undefined) ?? null
+            }
+          />
         )}
       </main>
     </div>

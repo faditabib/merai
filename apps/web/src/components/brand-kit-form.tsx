@@ -8,9 +8,12 @@ import {
   gradientOverlayConfigSchema,
   type BrandKitRow,
   type CaptionStyleSpec,
+  type CreatorStyle,
+  type CreatorStyleId,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
 import { CaptionStudio } from "@/components/caption-studio";
+import { CreatorStyles } from "@/components/creator-styles";
 
 const BRAND_BUCKET = "brand-assets";
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
@@ -23,6 +26,8 @@ export interface BrandKitFormProps {
   initialKit: BrandKitRow | null;
   /** Signed URL for the stored logo, when one exists. */
   initialLogoUrl: string | null;
+  /** The creator's previously-applied style id (user_metadata), for highlight. */
+  initialStyleId: CreatorStyleId | null;
 }
 
 /**
@@ -46,6 +51,28 @@ export function BrandKitForm(props: BrandKitFormProps) {
     kit?.caption_default_config ??
       CAPTION_STYLE_SPECS[kit?.caption_style_default ?? DEFAULT_CAPTION_STYLE],
   );
+  const [appliedStyleId, setAppliedStyleId] = useState<CreatorStyleId | null>(
+    props.initialStyleId,
+  );
+
+  // One-click Creator Style: seed the form's live state so the whole preview
+  // transforms instantly. Colors + caption + gradient (the visible look);
+  // identity fields (logo, lower-third name) are preserved. Saving persists it.
+  const applyStyle = (style: CreatorStyle) => {
+    setPrimary(style.colors.primary);
+    setSecondary(style.colors.secondary);
+    setAccent(style.colors.accent);
+    setCaptionSpec(style.caption);
+    if (style.overlay) {
+      setGradientOn(true);
+      setGradientOpacity(style.overlay.opacity);
+      setGradientHeight(style.overlay.heightPct);
+    } else {
+      setGradientOn(false);
+    }
+    setAppliedStyleId(style.id);
+    setSaved(false);
+  };
 
   const [gradientOn, setGradientOn] = useState(kit?.overlay_default != null);
   const [gradientOpacity, setGradientOpacity] = useState(
@@ -125,6 +152,10 @@ export function BrandKitForm(props: BrandKitFormProps) {
         { onConflict: "owner_id" },
       );
       if (error) throw error;
+      // Persist the explicitly-chosen style id (dashboard chip + highlight).
+      if (appliedStyleId) {
+        void supabase.auth.updateUser({ data: { creator_style: appliedStyleId } });
+      }
       setSaved(true);
     } catch (err) {
       console.error("brand kit save failed", err);
@@ -156,7 +187,13 @@ export function BrandKitForm(props: BrandKitFormProps) {
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
+    <div className="flex flex-col gap-6">
+      {/* Creator Styles (Build 6C.2): one-tap creative identities. */}
+      <section className="rounded-2xl border border-border bg-card p-5">
+        <CreatorStyles selectedId={appliedStyleId} onApply={applyStyle} />
+      </section>
+
+      <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
       <div className="flex flex-col gap-6">
         {/* Identity */}
         <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
@@ -363,6 +400,7 @@ export function BrandKitForm(props: BrandKitFormProps) {
         </div>
         <p className="text-xs leading-relaxed text-muted">{t("previewNote")}</p>
       </aside>
+      </div>
     </div>
   );
 }

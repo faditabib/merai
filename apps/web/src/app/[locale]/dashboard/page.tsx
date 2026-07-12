@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { CREATOR_STYLE_IDS } from "@merai/core";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
@@ -33,9 +34,17 @@ export default async function DashboardPage({
   }
 
   const t = await getTranslations("dashboard");
+  const tc = await getTranslations("creatorStyles");
   // Greeting: display name, else the mailbox part of the email.
   const name =
     user?.user_metadata?.display_name ?? user?.email?.split("@")[0] ?? "";
+
+  // "Your style" chip — only when the creator has explicitly applied one.
+  const styleId = user?.user_metadata?.creator_style as string | undefined;
+  const validStyleId =
+    styleId && (CREATOR_STYLE_IDS as readonly string[]).includes(styleId)
+      ? styleId
+      : null;
 
   // Two bounded reads alongside projects: the Brand Kit (for the setup nudge)
   // and the latest ready upload per project (for client thumbnails). Deduped
@@ -77,9 +86,19 @@ export default async function DashboardPage({
       <main className="flex flex-1 flex-col gap-8 px-6 py-10">
         {/* Hero + quick actions */}
         <div className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">{t("greeting", { name })}</h1>
-            <p className="mt-1 text-muted">{t("heroSubtitle")}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <div>
+              <h1 className="text-2xl font-bold">{t("greeting", { name })}</h1>
+              <p className="mt-1 text-muted">{t("heroSubtitle")}</p>
+            </div>
+            {validStyleId && (
+              <Link
+                href="/dashboard/brand-kit"
+                className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-sm text-accent"
+              >
+                {tc("yourStyle", { name: tc(`names.${validStyleId}`) })}
+              </Link>
+            )}
           </div>
           <QuickActions />
         </div>

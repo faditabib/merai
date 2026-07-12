@@ -285,6 +285,39 @@
       }
     }
   },
+  "creatorStyles": {
+    "title": "أنماط المبدعين",
+    "subtitle": "طبّق هوية بصرية كاملة بضغطة واحدة.",
+    "sample": "نص الترجمة",
+    "apply": "طبّق النمط",
+    "applied": "مُطبّق",
+    "applyHint": "يحدّث الألوان ونمط الترجمة والتدرّج — احفظ لتثبيت التغييرات.",
+    "yourStyle": "نمطك: {name}",
+    "names": {
+      "founder-bold": "المؤسّس الجريء",
+      "educational-clean": "تعليمي نظيف",
+      "podcast-classic": "بودكاست كلاسيكي",
+      "medical-trust": "ثقة طبية",
+      "luxury-minimal": "فخامة بسيطة",
+      "high-energy": "طاقة عالية"
+    },
+    "taglines": {
+      "founder-bold": "تباين قوي وترجمات كبيرة وتأكيد جريء.",
+      "educational-clean": "بسيط وواضح وإيقاع هادئ.",
+      "podcast-classic": "ترجمات وشريط تعريفي احترافي.",
+      "medical-trust": "نظيف وموثوق وبلون علامتك.",
+      "luxury-minimal": "مسافات فاخرة وألوان أنيقة.",
+      "high-energy": "ديناميكي ومصمّم لجذب الانتباه."
+    },
+    "useCases": {
+      "coaching": "المدرّبون والمؤسّسون",
+      "tutorials": "الشروحات",
+      "podcast": "البودكاست",
+      "medical": "الأطباء والعيادات",
+      "premium": "العلامات الفاخرة",
+      "shortform": "المقاطع القصيرة"
+    }
+  },
   "captionStudio": {
     "sample": "نص الترجمة",
     "sampleLong": "هكذا ستظهر ترجماتك في الفيديو",
