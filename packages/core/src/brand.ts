@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { CAPTION_STYLE_TOKENS, DEFAULT_CAPTION_STYLE } from "./captions";
+import {
+  captionStyleSpecSchema,
+  CAPTION_STYLE_TOKENS,
+  DEFAULT_CAPTION_STYLE,
+} from "./captions";
 
 /**
  * Creator branding (Build 6B.1). Two distinct shapes live here:
@@ -75,5 +79,8 @@ export const brandKitRowSchema = z.object({
   lower_third_default: lowerThirdConfigSchema.omit({ name: true })
     .extend({ name: z.string().max(80).default("") })
     .nullable(),
+  // Build 6B.3: the creator's single default caption spec (null = use the
+  // caption_style_default token). Tolerant of absence for older selects.
+  caption_default_config: captionStyleSpecSchema.nullish().catch(null),
 });
 export type BrandKitRow = z.infer<typeof brandKitRowSchema>;

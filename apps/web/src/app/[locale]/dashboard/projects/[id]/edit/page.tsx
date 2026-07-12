@@ -4,6 +4,7 @@ import {
   edlV1ViewOf,
   type BrandExportConfig,
   type CaptionBrandColors,
+  type CaptionStyleSpec,
   type TranscriptWord,
 } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
@@ -61,7 +62,7 @@ export default async function EditorPage({
       supabase
         .from("brand_kits")
         .select(
-          "id, owner_id, name, logo_path, primary_color, secondary_color, accent_color, caption_style_default, overlay_default, lower_third_default",
+          "id, owner_id, name, logo_path, primary_color, secondary_color, accent_color, caption_style_default, overlay_default, lower_third_default, caption_default_config",
         )
         .eq("owner_id", user!.id)
         .maybeSingle(),
@@ -85,11 +86,15 @@ export default async function EditorPage({
   // is, brandConfig is null and the export panel shows the "set up" prompt.
   let brandConfig: BrandExportConfig | null = null;
   let brandColors: CaptionBrandColors | null = null;
+  let captionDefaultConfig: CaptionStyleSpec | null = null;
+  let brandName: string | null = null;
   if (kitRow) {
     const parsedKit = brandKitRowSchema.safeParse(kitRow);
     if (parsedKit.success) {
       const kit = parsedKit.data;
       brandColors = { primary: kit.primary_color, accent: kit.accent_color };
+      captionDefaultConfig = kit.caption_default_config ?? null;
+      brandName = kit.name.trim() || null;
       const config: BrandExportConfig = {};
       if (kit.overlay_default) config.gradient = kit.overlay_default;
       if (kit.lower_third_default?.name.trim()) {
@@ -118,6 +123,8 @@ export default async function EditorPage({
         sourceDurationMs={Math.round(Number(upload!.duration_seconds ?? 0) * 1000)}
         brandConfig={brandConfig}
         brandColors={brandColors}
+        captionDefaultConfig={captionDefaultConfig}
+        brandName={brandName}
       />
     </div>
   );

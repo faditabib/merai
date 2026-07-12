@@ -3,13 +3,14 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
+  CAPTION_STYLE_SPECS,
   DEFAULT_CAPTION_STYLE,
   gradientOverlayConfigSchema,
   type BrandKitRow,
-  type CaptionStyleToken,
+  type CaptionStyleSpec,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
-import { CaptionStylePicker } from "@/components/caption-style-picker";
+import { CaptionStudio } from "@/components/caption-studio";
 
 const BRAND_BUCKET = "brand-assets";
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
@@ -39,8 +40,11 @@ export function BrandKitForm(props: BrandKitFormProps) {
   const [primary, setPrimary] = useState(kit?.primary_color ?? "#7C3AED");
   const [secondary, setSecondary] = useState(kit?.secondary_color ?? "#0EA5E9");
   const [accent, setAccent] = useState(kit?.accent_color ?? "#F59E0B");
-  const [captionStyle, setCaptionStyle] = useState<CaptionStyleToken | string>(
-    kit?.caption_style_default ?? DEFAULT_CAPTION_STYLE,
+  // The working caption spec for the studio: the saved default config if
+  // present, else the default-token's base spec.
+  const [captionSpec, setCaptionSpec] = useState<CaptionStyleSpec>(
+    kit?.caption_default_config ??
+      CAPTION_STYLE_SPECS[kit?.caption_style_default ?? DEFAULT_CAPTION_STYLE],
   );
 
   const [gradientOn, setGradientOn] = useState(kit?.overlay_default != null);
@@ -111,7 +115,10 @@ export function BrandKitForm(props: BrandKitFormProps) {
           primary_color: primary,
           secondary_color: secondary,
           accent_color: accent,
-          caption_style_default: captionStyle,
+          // The default preset token (for display/back-compat) + the full
+          // crafted default spec (Build 6B.3, single default preference).
+          caption_style_default: captionSpec.token,
+          caption_default_config: captionSpec,
           overlay_default,
           lower_third_default,
         },
@@ -213,10 +220,10 @@ export function BrandKitForm(props: BrandKitFormProps) {
         <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
           <h2 className="font-semibold">{t("captionTitle")}</h2>
           <p className="text-sm text-muted">{t("captionHint")}</p>
-          <CaptionStylePicker
-            value={captionStyle}
+          <CaptionStudio
+            spec={captionSpec}
+            onChange={setCaptionSpec}
             brandColors={{ primary, accent }}
-            onChange={setCaptionStyle}
           />
         </section>
 

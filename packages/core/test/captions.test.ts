@@ -7,9 +7,12 @@ import {
   captionStyleSpecSchema,
   CAPTION_BREAK_GAP_MS,
   CAPTION_MAX_LINE_CHARS,
+  CAPTION_PRESETS,
+  CAPTION_PRESET_IDS,
   CAPTION_STYLE_SPECS,
   CAPTION_STYLE_TOKENS,
   hexToRgba,
+  hueName,
   type TranscriptWord,
 } from "../src/index";
 
@@ -108,6 +111,40 @@ describe("caption studio presets & brand resolution (Build 6B.2)", () => {
 
   it("unknown token falls back to the default spec, no throw", () => {
     expect(captionConfigForExport("does-not-exist", { primary: "#000000", accent: "#ffffff" })).toBeNull();
+  });
+});
+
+describe("caption preset catalog (Build 6B.3)", () => {
+  it("exposes 8 creator presets, each with a resolvable, schema-valid spec", () => {
+    expect(CAPTION_PRESETS).toHaveLength(8);
+    for (const preset of CAPTION_PRESETS) {
+      const spec = CAPTION_STYLE_SPECS[preset.id];
+      expect(spec, preset.id).toBeDefined();
+      expect(spec.token).toBe(preset.id);
+      expect(captionStyleSpecSchema.safeParse(spec).success).toBe(true);
+      expect(["pop", "fade", "static"]).toContain(preset.animation);
+      expect(preset.useCaseKey.length).toBeGreaterThan(0);
+    }
+    // Catalog order matches the id list.
+    expect(CAPTION_PRESETS.map((p) => p.id)).toEqual([...CAPTION_PRESET_IDS]);
+  });
+
+  it("keeps the pre-6B.3 developer tokens resolvable (backward compatible)", () => {
+    for (const token of ["minimal-white-bottom", "karaoke-highlight", "brand-box"]) {
+      expect(CAPTION_STYLE_SPECS[token as keyof typeof CAPTION_STYLE_SPECS]).toBeDefined();
+    }
+    // Preset ids are additive members of the token union.
+    for (const id of CAPTION_PRESET_IDS) expect(CAPTION_STYLE_TOKENS).toContain(id);
+  });
+
+  it("maps hex colors to a coarse color-word key for the export card", () => {
+    expect(hueName("#F59E0B")).toBe("orange");
+    expect(hueName("#E11D48")).toBe("red");
+    expect(hueName("#7C3AED")).toBe("purple");
+    expect(hueName("#0EA5E9")).toBe("blue");
+    expect(hueName("#000000")).toBe("black");
+    expect(hueName("#FFFFFF")).toBe("white");
+    expect(hueName("#808080")).toBe("gray");
   });
 });
 

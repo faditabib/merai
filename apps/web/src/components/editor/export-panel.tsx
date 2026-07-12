@@ -3,10 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  captionConfigForExport,
+  hueName,
+  resolveCaptionSpec,
+  CAPTION_PRESET_IDS,
   type AspectRatio,
   type BrandExportConfig,
   type CaptionBrandColors,
+  type CaptionStyleSpec,
   type EdlV1,
 } from "@merai/core";
 import { requestExportRender } from "@/app/actions/projects";
@@ -37,10 +40,14 @@ export interface ExportPanelProps {
   projectId: string;
   ownerId: string;
   edl: EdlV1;
+  /** The working caption spec to render (Build 6B.3). */
+  captionSpec: CaptionStyleSpec;
   /** Owner's Brand Kit as an export snapshot; null = nothing to apply. */
   brandConfig: BrandExportConfig | null;
   /** Brand colors for brand-* caption presets; null = no kit. */
   brandColors: CaptionBrandColors | null;
+  /** Brand kit name for the "your video style" card; null = no kit. */
+  brandName: string | null;
   onChangeAspect: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
@@ -54,6 +61,7 @@ export interface ExportPanelProps {
  */
 export function ExportPanel(props: ExportPanelProps) {
   const t = useTranslations("export");
+  const tc = useTranslations("captionStudio");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [active, setActive] = useState<ExportRow | null>(null);
   const [starting, setStarting] = useState(false);
@@ -121,16 +129,16 @@ export function ExportPanel(props: ExportPanelProps) {
           owner_id: props.ownerId,
           edl_version_id: versionId,
           aspect_ratio: props.edl.aspectRatio,
-          caption_style: props.edl.captionStyle,
+          caption_style: props.captionSpec.token,
           // Snapshot the branding so later Brand Kit edits never change a
           // render that already happened (same as aspect/caption columns).
           brand: applyBranding ? props.brandConfig : null,
-          // Brand-colored caption presets resolve to a spec snapshot (6B.2);
-          // null for plain presets → the token render path, unchanged.
-          caption_config:
-            applyBranding && props.brandColors
-              ? captionConfigForExport(props.edl.captionStyle, props.brandColors)
-              : null,
+          // Snapshot the resolved working caption spec (Build 6B.3) — carries
+          // studio tweaks + brand color; the worker renders it verbatim.
+          caption_config: resolveCaptionSpec(
+            props.captionSpec,
+            applyBranding ? props.brandColors : null,
+          ),
           status: "pending",
         })
         .select(EXPORT_ROW_COLUMNS)
@@ -201,6 +209,12 @@ export function ExportPanel(props: ExportPanelProps) {
 
   const busy = starting || activeId !== null;
   const progressPct = active ? Math.round(Number(active.progress) * 100) : 0;
+  const isPreset = (CAPTION_PRESET_IDS as readonly string[]).includes(
+    props.captionSpec.token,
+  );
+  const captionLabel = isPreset
+    ? tc(`presets.${props.captionSpec.token}`)
+    : t("styleCard.customCaption");
 
   return (
     <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
@@ -258,6 +272,39 @@ export function ExportPanel(props: ExportPanelProps) {
             </Link>
           </span>
         )}
+      </div>
+
+      {/* "Your video style" card (Build 6B.3): confidence before rendering. */}
+      <div className="flex flex-col gap-2 rounded-xl border border-border bg-background/40 p-3">
+        <span className="text-xs font-medium text-muted">{t("styleCard.title")}</span>
+        <div className="grid grid-cols-3 gap-3 text-sm">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-xs text-muted">{t("styleCard.caption")}</span>
+            <span className="truncate font-medium">{captionLabel}</span>
+          </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-xs text-muted">{t("styleCard.brand")}</span>
+            {applyBranding && props.brandName && props.brandColors ? (
+              <span className="flex items-center gap-1.5 truncate font-medium">
+                <span
+                  className="h-3 w-3 shrink-0 rounded-full border border-border"
+                  style={{ backgroundColor: props.brandColors.accent }}
+                />
+                <span className="truncate">
+                  {props.brandName} {tc(`colorNames.${hueName(props.brandColors.accent)}`)}
+                </span>
+              </span>
+            ) : (
+              <span className="text-muted">{t("styleCard.noBrand")}</span>
+            )}
+          </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-xs text-muted">{t("styleCard.format")}</span>
+            <span className="font-medium tabular-nums" dir="ltr">
+              {props.edl.aspectRatio}
+            </span>
+          </div>
+        </div>
       </div>
 
       {busy && active && (

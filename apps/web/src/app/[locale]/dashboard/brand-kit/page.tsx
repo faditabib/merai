@@ -30,7 +30,7 @@ export default async function BrandKitPage({
   const { data: row, error } = await supabase
     .from("brand_kits")
     .select(
-      "id, owner_id, name, logo_path, primary_color, secondary_color, accent_color, caption_style_default, overlay_default, lower_third_default",
+      "id, owner_id, name, logo_path, primary_color, secondary_color, accent_color, caption_style_default, overlay_default, lower_third_default, caption_default_config",
     )
     .eq("owner_id", user!.id)
     .maybeSingle();

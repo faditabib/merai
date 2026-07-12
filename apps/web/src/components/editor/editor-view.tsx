@@ -9,15 +9,17 @@ import {
   nextSegmentAfterSource,
   edlOutputDurationMs,
   sourceToOutputMs,
+  CAPTION_STYLE_SPECS,
+  DEFAULT_CAPTION_STYLE,
   type BrandExportConfig,
   type CaptionBrandColors,
-  type CaptionStyleToken,
+  type CaptionStyleSpec,
   type EditCommand,
   type EdlV1,
   type TranscriptWord,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
-import { CaptionStylePicker } from "@/components/caption-style-picker";
+import { CaptionStudio } from "@/components/caption-studio";
 import { AiAssistantPanel } from "./ai-assistant-panel";
 import { CaptionOverlay } from "./caption-overlay";
 import { ExportPanel } from "./export-panel";
@@ -42,6 +44,10 @@ export interface EditorViewProps {
   brandConfig: BrandExportConfig | null;
   /** Owner's brand colors for brand-* caption presets; null = no kit. */
   brandColors: CaptionBrandColors | null;
+  /** Creator's saved default caption spec (Caption Studio); null = none. */
+  captionDefaultConfig: CaptionStyleSpec | null;
+  /** Brand kit name for the export "your video style" card; null = no kit. */
+  brandName: string | null;
 }
 
 /**
@@ -70,6 +76,29 @@ export function EditorView(props: EditorViewProps) {
   const [sourceMs, setSourceMs] = useState(0);
   const [previewEdit, setPreviewEdit] = useState(true);
   const [selectedWordIds, setSelectedWordIds] = useState<string[]>([]);
+
+  // Working caption spec (Build 6B.3): the creator's saved default, else the
+  // EDL preset's base spec. Preset picks sync the EDL token (back-compat);
+  // control tweaks live only in the spec and ride caption_config at export.
+  const [captionSpec, setCaptionSpec] = useState<CaptionStyleSpec>(
+    props.captionDefaultConfig ??
+      CAPTION_STYLE_SPECS[
+        (props.initialEdl.captionStyle as keyof typeof CAPTION_STYLE_SPECS) in
+        CAPTION_STYLE_SPECS
+          ? (props.initialEdl.captionStyle as keyof typeof CAPTION_STYLE_SPECS)
+          : DEFAULT_CAPTION_STYLE
+      ],
+  );
+  // Plain function (not memoized): always closes over the current runCommand,
+  // called only at event time. Keeps the EDL's caption token in sync when the
+  // preset changes (saved versions + the token path stay correct); control
+  // tweaks live only in the spec and ride caption_config at export.
+  const onChangeCaptionSpec = (next: CaptionStyleSpec) => {
+    setCaptionSpec(next);
+    if (next.token !== edl.captionStyle) {
+      runCommand({ type: "set-caption-style", styleToken: next.token });
+    }
+  };
 
   // --- media -----------------------------------------------------------------
   useEffect(() => {
@@ -330,7 +359,7 @@ export function EditorView(props: EditorViewProps) {
               edl={edl}
               words={props.words}
               sourceMs={sourceMs}
-              styleToken={edl.captionStyle as CaptionStyleToken}
+              spec={captionSpec}
               brandColors={props.brandColors}
             />
           </div>
@@ -358,15 +387,15 @@ export function EditorView(props: EditorViewProps) {
             </label>
           </div>
 
-          {/* Caption preset picker (Build 6B.1: visual selector) */}
+          {/* Caption Studio (Build 6B.3): gallery + live controls. The live
+              preview shows over the video above, so compact hides the extra. */}
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium">{t("captionStyle")}</span>
-            <CaptionStylePicker
-              value={edl.captionStyle}
+            <CaptionStudio
+              spec={captionSpec}
+              onChange={onChangeCaptionSpec}
               brandColors={props.brandColors}
-              onChange={(token) =>
-                runCommand({ type: "set-caption-style", styleToken: token })
-              }
+              compact
             />
           </div>
         </section>
@@ -424,8 +453,10 @@ export function EditorView(props: EditorViewProps) {
         projectId={props.projectId}
         ownerId={props.ownerId}
         edl={edl}
+        captionSpec={captionSpec}
         brandConfig={props.brandConfig}
         brandColors={props.brandColors}
+        brandName={props.brandName}
         onChangeAspect={(ratio) =>
           runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
         }

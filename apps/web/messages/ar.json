@@ -273,8 +273,22 @@
   },
   "captionStudio": {
     "sample": "نص الترجمة",
+    "sampleLong": "هكذا ستظهر ترجماتك في الفيديو",
     "sampleHighlighted": "كلمة",
     "sampleRest": "مميّزة",
+    "galleryTitle": "اختر أسلوب الترجمة",
+    "previewTitle": "معاينة مباشرة",
+    "controlsTitle": "تخصيص",
+    "position": "الموضع",
+    "positions": { "top": "أعلى", "center": "وسط", "bottom": "أسفل" },
+    "fontScale": "حجم الخط: {percent, number}٪",
+    "textColor": "لون النص",
+    "useBrandColor": "استخدم ألوان علامتي",
+    "outline": "حدود",
+    "backgroundBox": "خلفية خلف النص",
+    "setDefault": "اجعله الافتراضي",
+    "saving": "جارٍ الحفظ…",
+    "defaultSaved": "حُفظ كأسلوب افتراضي",
     "presets": {
       "bold-yellow-centered": "أصفر جريء — وسط",
       "minimal-white-bottom": "أبيض بسيط — أسفل",
@@ -283,7 +297,39 @@
       "bold-impact": "ضخم بحدود — للمقاطع القصيرة",
       "outline-clean": "أبيض محدّد — بلا خلفية",
       "brand-box": "خلفية بلون علامتك",
-      "brand-accent": "نص بلون علامتك"
+      "brand-accent": "نص بلون علامتك",
+      "viral": "فايرال",
+      "podcast": "بودكاست",
+      "educational": "تعليمي",
+      "medical": "طبّي",
+      "luxury": "فاخر",
+      "minimal": "بسيط",
+      "high-energy": "طاقة عالية",
+      "professional": "احترافي"
+    },
+    "animations": { "pop": "نبض", "fade": "تلاشٍ", "static": "ثابت" },
+    "useCases": {
+      "shortform": "المقاطع القصيرة",
+      "talkingHead": "الحلقات الحوارية",
+      "tutorials": "الشروحات",
+      "clinical": "الأطباء والعيادات",
+      "premium": "المحتوى الفاخر",
+      "vlogs": "الفلوجات",
+      "promos": "الإعلانات الترويجية",
+      "business": "روّاد الأعمال"
+    },
+    "colorNames": {
+      "red": "أحمر",
+      "orange": "برتقالي",
+      "yellow": "أصفر",
+      "green": "أخضر",
+      "teal": "فيروزي",
+      "blue": "أزرق",
+      "purple": "بنفسجي",
+      "pink": "وردي",
+      "gray": "رمادي",
+      "black": "أسود",
+      "white": "أبيض"
     }
   },
   "brandKit": {
@@ -335,6 +381,14 @@
     "brandingHint": "يضيف التدرّج السفلي والشريط التعريفي من هويتك البصرية.",
     "brandingNone": "لم تُعدّ هوية بصرية بعد.",
     "brandingSetup": "أنشئ هويتك البصرية",
+    "styleCard": {
+      "title": "أسلوب فيديوك",
+      "caption": "الترجمة",
+      "brand": "العلامة",
+      "format": "الصيغة",
+      "noBrand": "بدون علامة",
+      "customCaption": "مخصّص"
+    },
     "start": "تصدير الفيديو",
     "stages": {
       "pending": "في الطابور — نبدأ خلال لحظات…",

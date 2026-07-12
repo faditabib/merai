@@ -273,8 +273,22 @@
   },
   "captionStudio": {
     "sample": "Caption text",
+    "sampleLong": "This is how your captions will look",
     "sampleHighlighted": "Word",
     "sampleRest": "styled",
+    "galleryTitle": "Choose a caption style",
+    "previewTitle": "Live preview",
+    "controlsTitle": "Customize",
+    "position": "Position",
+    "positions": { "top": "Top", "center": "Center", "bottom": "Bottom" },
+    "fontScale": "Font size: {percent, number}%",
+    "textColor": "Text color",
+    "useBrandColor": "Use my brand colors",
+    "outline": "Outline",
+    "backgroundBox": "Background box",
+    "setDefault": "Set as default",
+    "saving": "Saving…",
+    "defaultSaved": "Saved as your default",
     "presets": {
       "bold-yellow-centered": "Bold yellow — centered",
       "minimal-white-bottom": "Minimal white — bottom",
@@ -283,7 +297,39 @@
       "bold-impact": "Bold impact — outlined",
       "outline-clean": "Outlined white — no box",
       "brand-box": "Box in your brand color",
-      "brand-accent": "Text in your brand color"
+      "brand-accent": "Text in your brand color",
+      "viral": "Viral",
+      "podcast": "Podcast",
+      "educational": "Educational",
+      "medical": "Medical",
+      "luxury": "Luxury",
+      "minimal": "Minimal",
+      "high-energy": "High Energy",
+      "professional": "Professional"
+    },
+    "animations": { "pop": "Pop", "fade": "Fade", "static": "Static" },
+    "useCases": {
+      "shortform": "Short-form hooks",
+      "talkingHead": "Talking-head episodes",
+      "tutorials": "Tutorials & explainers",
+      "clinical": "Doctors & clinics",
+      "premium": "Premium / brand films",
+      "vlogs": "Clean vlogs",
+      "promos": "Hype & promos",
+      "business": "Founders & business"
+    },
+    "colorNames": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "teal": "Teal",
+      "blue": "Blue",
+      "purple": "Purple",
+      "pink": "Pink",
+      "gray": "Gray",
+      "black": "Black",
+      "white": "White"
     }
   },
   "brandKit": {
@@ -335,6 +381,14 @@
     "brandingHint": "Adds the bottom gradient and lower third from your Brand Kit.",
     "brandingNone": "No Brand Kit set up yet.",
     "brandingSetup": "Create your Brand Kit",
+    "styleCard": {
+      "title": "Your video style",
+      "caption": "Caption",
+      "brand": "Brand",
+      "format": "Format",
+      "noBrand": "No brand",
+      "customCaption": "Custom"
+    },
     "start": "Export video",
     "stages": {
       "pending": "Queued — starting in a moment…",
