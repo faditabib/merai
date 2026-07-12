@@ -74,6 +74,16 @@ Turns the developer-oriented dashboard into a premium creator home, adopts the
   (6C.4); worker-generated thumbnails; recording suite (Build 7 — the "Record"
   chip is a routed placeholder only).
 
-## 8. Production
-- No migration to apply. Web deploy + a public-page font check + dashboard UX
-  check recorded in the production section below.
+## 8. Production — deployed & verified (2026-07-12)
+- **Vercel web deployed** (`READY`, `merai-web-pi.vercel.app`); no migration,
+  worker untouched.
+- **Font verified in production** via computed styles on the public landing
+  page: `body` and `h1` resolve to **Tajawal** (`Tajawal, "Tajawal Fallback",
+  …`), and **`--font-caption` resolves to `"IBM Plex Sans Arabic"`** — so the
+  UI is Tajawal while the caption preview stays pinned to the export font. The
+  one real risk of the swap is confirmed closed.
+- Landing page renders correctly in Arabic RTL.
+- **Not driveable by the agent:** the dashboard + thumbnails are behind auth
+  (no login). Their correctness rests on `next build`, the existing-table reads
+  with graceful fallbacks, and the client thumbnail's placeholder-on-failure
+  design; a logged-in visual pass is the first item for the next live session.
