@@ -1,17 +1,21 @@
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
 import { OnboardingCallout, WorkflowSteps } from "@/components/onboarding-callout";
+import { QuickActions } from "@/components/dashboard/quick-actions";
+import { ProjectCard } from "@/components/dashboard/project-card";
+import { BrandSetupNudge } from "@/components/dashboard/brand-setup-nudge";
 
 // Per-user page — always rendered at request time, never prerendered.
 export const dynamic = "force-dynamic";
 
-const STATUS_STYLES: Record<string, string> = {
-  ready: "bg-emerald-500/15 text-emerald-600",
-  error: "bg-red-500/15 text-red-500",
-  draft: "bg-border/40 text-muted",
-};
+interface ProjectRow {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+}
 
 export default async function DashboardPage({
   params,
@@ -29,74 +33,77 @@ export default async function DashboardPage({
   }
 
   const t = await getTranslations("dashboard");
-  const format = await getFormatter();
-  // Greeting: display name, else the mailbox part of the email — a raw
-  // address reads developer-ish on an otherwise warm dashboard (QA #5).
+  // Greeting: display name, else the mailbox part of the email.
   const name =
     user?.user_metadata?.display_name ?? user?.email?.split("@")[0] ?? "";
 
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("id, title, status, created_at")
-    .order("created_at", { ascending: false });
+  // Two bounded reads alongside projects: the Brand Kit (for the setup nudge)
+  // and the latest ready upload per project (for client thumbnails). Deduped
+  // in JS — no N+1, no SQL group tricks, no schema change.
+  const [{ data: projects }, { data: kit }, { data: uploads }] = await Promise.all([
+    supabase
+      .from("projects")
+      .select("id, title, status, created_at")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("brand_kits")
+      .select("logo_path, caption_default_config")
+      .eq("owner_id", user!.id)
+      .maybeSingle(),
+    supabase
+      .from("video_uploads")
+      .select("project_id, storage_path, created_at")
+      .eq("status", "uploaded")
+      .order("created_at", { ascending: false }),
+  ]);
 
-  // First-time onboarding: per-user flag in auth metadata (Build 6A) — the
-  // user object is already loaded, so this costs zero extra queries. The
-  // empty state tells the workflow story itself, so the callout only adds
-  // value once projects exist.
+  const latestUpload = new Map<string, string>();
+  for (const u of (uploads as { project_id: string; storage_path: string }[] | null) ?? []) {
+    if (!latestUpload.has(u.project_id)) latestUpload.set(u.project_id, u.storage_path);
+  }
+
+  const rows = (projects as ProjectRow[] | null) ?? [];
+  const hasProjects = rows.length > 0;
+  // Incomplete = no kit, or neither a logo nor a crafted caption default.
+  const brandIncomplete = !kit || (!kit.logo_path && !kit.caption_default_config);
+
   const showOnboarding =
-    !user?.user_metadata?.onboarding_dismissed_at &&
-    (projects?.length ?? 0) > 0;
+    !user?.user_metadata?.onboarding_dismissed_at && hasProjects;
 
   return (
     <div className="flex min-h-screen flex-col">
       <AppHeader />
 
       <main className="flex flex-1 flex-col gap-8 px-6 py-10">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        {/* Hero + quick actions */}
+        <div className="flex flex-col gap-4">
           <div>
-            <h1 className="text-2xl font-bold">{t("title")}</h1>
-            <p className="mt-1 text-muted">{t("greeting", { name })}</p>
+            <h1 className="text-2xl font-bold">{t("greeting", { name })}</h1>
+            <p className="mt-1 text-muted">{t("heroSubtitle")}</p>
           </div>
-          <Link
-            href="/dashboard/new"
-            className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
-          >
-            {t("newProject")}
-          </Link>
+          <QuickActions />
         </div>
 
+        {brandIncomplete && <BrandSetupNudge />}
         {showOnboarding && <OnboardingCallout />}
 
-        {projects && projects.length > 0 ? (
-          <ul className="flex flex-col gap-3">
-            {projects.map((project) => (
-              <li key={project.id}>
-                <Link
-                  href={`/dashboard/projects/${project.id}`}
-                  className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-accent"
-                >
-                  <div className="min-w-0">
-                    <h2 className="truncate font-semibold">{project.title}</h2>
-                    <p className="mt-1 text-sm text-muted">
-                      {format.dateTime(new Date(project.created_at), {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
-                    </p>
-                  </div>
-                  <span
-                    className={`shrink-0 rounded-full px-3 py-1 text-sm ${
-                      STATUS_STYLES[project.status] ??
-                      "animate-pulse bg-accent/15 text-accent"
-                    }`}
-                  >
-                    {t(`statuses.${project.status}`)}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {hasProjects ? (
+          <section className="flex flex-col gap-4">
+            <h2 className="text-lg font-semibold">{t("recentTitle")}</h2>
+            <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {rows.map((project) => (
+                <li key={project.id}>
+                  <ProjectCard
+                    id={project.id}
+                    title={project.title}
+                    status={project.status}
+                    createdAt={project.created_at}
+                    storagePath={latestUpload.get(project.id) ?? null}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
         ) : (
           <section className="flex flex-1 flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-border p-8 text-center sm:p-12">
             <div className="flex flex-col items-center gap-3">
@@ -111,7 +118,6 @@ export default async function DashboardPage({
                 {t("newProject")}
               </Link>
             </div>
-            {/* The workflow story doubles as the empty state (Build 6A). */}
             <div className="w-full max-w-3xl border-t border-border pt-6 text-start">
               <WorkflowSteps />
             </div>

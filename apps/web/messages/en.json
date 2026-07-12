@@ -43,6 +43,20 @@
   "dashboard": {
     "title": "Dashboard",
     "greeting": "Hello, {name}",
+    "heroSubtitle": "Your video studio — upload, let AI edit, and publish in your brand.",
+    "recentTitle": "Recent videos",
+    "quickActions": {
+      "newVideo": "New video",
+      "brandKit": "Brand Kit",
+      "captionStudio": "Caption Studio",
+      "record": "Record",
+      "recordSoon": "Soon"
+    },
+    "brandNudge": {
+      "title": "Finish your Brand Kit",
+      "body": "Add your logo, colors and caption style so every video carries your brand automatically.",
+      "cta": "Set up brand"
+    },
     "emptyTitle": "Ready for your first video?",
     "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
     "newProject": "New project",

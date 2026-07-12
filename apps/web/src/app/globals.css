@@ -30,11 +30,19 @@
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-border: var(--border);
-  --font-sans: var(--font-plex-arabic);
+  /* UI font (6C.1): Tajawal. Captions use --font-caption (Plex) to match export. */
+  --font-sans: var(--font-tajawal);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Caption family, pinned to the same font the worker rasterizes (vendored IBM
+   Plex Sans Arabic), so the live caption preview keeps matching the export
+   regardless of the UI font. */
+:root {
+  --font-caption: var(--font-plex-arabic), "IBM Plex Sans Arabic", sans-serif;
 }

@@ -16,7 +16,10 @@ import {
 export function captionSpanStyle(spec: CaptionStyleSpec, fontPx: number): CSSProperties {
   const scaled = fontPx * (spec.fontScale ?? 1);
   return {
-    fontFamily: `${spec.fontFamily}, sans-serif`,
+    // Resolve via --font-caption (Plex, loaded by the layout) so the preview
+    // uses the SAME font the worker rasterizes even though the UI is Tajawal.
+    // spec.fontFamily is retained as the record/worker family + a fallback.
+    fontFamily: `var(--font-caption), ${spec.fontFamily}, sans-serif`,
     fontSize: `${scaled}px`,
     fontWeight: spec.fontWeight,
     color: spec.textColor,
