@@ -89,7 +89,18 @@ keeping the renderer dumb — the same philosophy as `exports.brand` (6B.1).
 - **Auto keyword highlighting** — needs the AI Brain.
 - **Custom fonts** — licensing/vendoring.
 
-## 8. Pending owner action
-- Apply migration 10 + deploy (worker + web) + a frame-verified live E2E of a
-  brand-colored caption — done in the production pass (see the production
-  report once complete).
+## 8. Production — deployed & verified (2026-07-12)
+- **Migration 10 applied live** (`exports.caption_config` present; the
+  `caption_style_default` CHECK dropped — both verified by schema query).
+- **Deployed:** Railway worker (`14ad620d`) + Vercel web (`READY`,
+  `merai-web-pi.vercel.app`).
+- **Live E2E through the deployed worker** (throwaway user + synthetic clip,
+  cleaned up, 0 leftovers): two captions rendered and **frame-verified**:
+  - `brand-box` via a `caption_config` snapshot → the box drew in the
+    creator's brand color (crimson `#E11D48`), confirming the brand-color
+    snapshot path end-to-end.
+  - `bold-impact` via the token path (`caption_config` null) → large white
+    text with a black outline, confirming the new `outline` + `fontScale`
+    rasterizer fields.
+- No live findings this pass (the caption/lower-third collision was the 6B.1
+  finding and remains fixed).
