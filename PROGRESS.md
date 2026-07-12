@@ -1,5 +1,26 @@
 # Merai — Progress Log
 
+## Build 6B.2 — Caption Studio (2026-07-12)
+
+141 tests green (62 core + 67 worker + 12 web) · next build ✓ · ar/en parity
+278 = 278 · migration 10 written (BUILD_6B_2_ANALYSIS.md + BUILD_6B_2_REPORT.md).
+Scope: brand-aware caption presets, no saved custom presets (→ 6B.3).
+
+- Captions become a brand-aware preset system, within the hard constraints
+  (no EDL, no AI Brain, no render architecture).
+- 4 new tokens (bold-impact, outline-clean, brand-box, brand-accent);
+  CaptionStyleSpec gains outline / fontScale / useBrandColor (additive-optional).
+- captionConfigForExport resolves brand-color presets to a concrete spec,
+  snapshotted to a nullable exports.caption_config (null = token path,
+  byte-identical to pre-6B.2). Rasterizer + live preview both honor the new
+  fields (preview/export parity, gap G4).
+- Decision: caption_config snapshot not an EDL field; dropped the
+  caption_style_default CHECK (app zod validates); renderer stays dumb.
+- Deferred: saved custom presets + Caption Studio tab (6B.3); karaoke export
+  (needs render architecture); auto keyword highlighting (needs AI Brain).
+
+---
+
 ## Build 6B.1 — Creator Identity Layer (2026-07-11)
 
 129 tests green (56 core + 61 worker + 12 web) · next build ✓ · ar/en parity
