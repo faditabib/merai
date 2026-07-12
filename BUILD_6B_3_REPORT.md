@@ -101,8 +101,17 @@ color — is snapshotted to `exports.caption_config` (the 6B.2 channel).
 - **Per-video persisted styling in the EDL** / **custom fonts**.
 
 ## 9. Production — deployed & verified (2026-07-12)
-- **Migration 11 applied live** (`caption_default_config` present).
-- **Vercel web deployed**; the **worker was not redeployed** (unchanged — it
-  already renders `caption_config`).
-- **Live E2E through the deployed worker** frame-verified a studio caption
-  (see the production section appended below).
+- **Migration 11 applied live** (`caption_default_config` present — verified).
+- **Vercel web deployed** (`READY`, `merai-web-pi.vercel.app`); the **worker was
+  NOT redeployed** (unchanged — it already renders `caption_config` from 6B.2).
+- **Live E2E through the deployed worker** (throwaway user + synthetic clip,
+  cleaned up, 0 leftovers) — two Caption Studio working specs snapshotted to
+  `caption_config` and **frame-verified**:
+  - `high-energy` → large yellow text, thick black outline, centered
+    (fontScale 1.4) — confirms scale + outline + position + color.
+  - `viral` + "use my brand colors" → text in the brand accent (orange
+    `#F59E0B`), outlined, low-center (fontScale 1.3) — confirms a customized
+    studio spec with brand resolution renders verbatim.
+- Preview/export consistency holds by construction (one shared renderer); the
+  frames match the studio's live preview.
+- No live findings this pass.
