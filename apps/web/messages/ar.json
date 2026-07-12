@@ -285,6 +285,20 @@
       }
     }
   },
+  "overlayStudio": {
+    "title": "الشعار والعلامة المائية",
+    "hint": "ضع شعارك في إحدى الزوايا ليظهر على كل فيديو تصدّره.",
+    "uploadFirst": "ارفع شعارك أولًا من قسم الهوية أعلاه.",
+    "position": "الموضع",
+    "positions": {
+      "top-start": "أعلى البداية",
+      "top-end": "أعلى النهاية",
+      "bottom-start": "أسفل البداية",
+      "bottom-end": "أسفل النهاية"
+    },
+    "opacity": "الشفافية: {percent, number}٪",
+    "size": "الحجم: {percent, number}٪"
+  },
   "creatorStyles": {
     "title": "أنماط المبدعين",
     "subtitle": "طبّق هوية بصرية كاملة بضغطة واحدة.",
@@ -407,6 +421,15 @@
     "lowerThirdRole": "الصفة",
     "lowerThirdRolePlaceholder": "مثال: استشاري قلب",
     "lowerThirdSubtitle": "سطر إضافي",
+    "lowerThirdShape": "الخلفية",
+    "lowerThirdShapes": { "bar": "شريط", "box": "صندوق", "none": "بلا" },
+    "lowerThirdPosition": "الموضع",
+    "overlayPositions": {
+      "top-start": "أعلى البداية",
+      "top-end": "أعلى النهاية",
+      "bottom-start": "أسفل البداية",
+      "bottom-end": "أسفل النهاية"
+    },
     "saving": "جارٍ الحفظ…",
     "save": "حفظ الهوية",
     "savedNote": "حُفظت الهوية البصرية.",

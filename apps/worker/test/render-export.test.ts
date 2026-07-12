@@ -403,6 +403,36 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
     expect(rows[0]!.status).toBe("uploaded");
   });
 
+  it("skips an unavailable logo gracefully (still uploads, no logo layer) — Build 6C.3", async () => {
+    const ids = await seedExport({
+      words: [{ id: "w0", text: "مرحبا", startMs: 200, endMs: 900, confidence: 0.96 }],
+      brand: {
+        logo: {
+          storagePath: "brand-assets/owner/missing.png",
+          position: "bottom-end",
+          opacity: 0.9,
+          widthPct: 0.18,
+        },
+      },
+    });
+    let brandImages: string[] = [];
+    const engine: RenderEngine = {
+      name: "stub",
+      async render(request: RenderRequest) {
+        brandImages = request.plan.brandImages;
+        return new Uint8Array([1, 2, 3, 4]);
+      },
+    };
+    await renderExportWithEngine(jobFor(ids), engine, stubDeps());
+    // The undownloadable logo was dropped from the plan — render still succeeds.
+    expect(brandImages).not.toContain("brand-logo.png");
+    const { rows } = await db.query<{ status: string }>(
+      "select status from public.exports where id = $1",
+      [ids.exportId],
+    );
+    expect(rows[0]!.status).toBe("uploaded");
+  });
+
   it("fails safely (permanent) on a malformed caption_config", async () => {
     // fontScale out of the schema's safe band.
     const ids = await seedExport({ captionConfig: { token: "x", fontScale: 99 } });

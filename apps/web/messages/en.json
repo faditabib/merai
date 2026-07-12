@@ -285,6 +285,20 @@
       }
     }
   },
+  "overlayStudio": {
+    "title": "Logo & watermark",
+    "hint": "Place your logo in a corner so it appears on every video you export.",
+    "uploadFirst": "Upload your logo first in the Identity section above.",
+    "position": "Position",
+    "positions": {
+      "top-start": "Top start",
+      "top-end": "Top end",
+      "bottom-start": "Bottom start",
+      "bottom-end": "Bottom end"
+    },
+    "opacity": "Opacity: {percent, number}%",
+    "size": "Size: {percent, number}%"
+  },
   "creatorStyles": {
     "title": "Creator styles",
     "subtitle": "Apply a full look in one tap.",
@@ -407,6 +421,15 @@
     "lowerThirdRole": "Title",
     "lowerThirdRolePlaceholder": "e.g. Cardiologist",
     "lowerThirdSubtitle": "Extra line",
+    "lowerThirdShape": "Background",
+    "lowerThirdShapes": { "bar": "Bar", "box": "Box", "none": "None" },
+    "lowerThirdPosition": "Position",
+    "overlayPositions": {
+      "top-start": "Top start",
+      "top-end": "Top end",
+      "bottom-start": "Bottom start",
+      "bottom-end": "Bottom end"
+    },
     "saving": "Saving…",
     "save": "Save Brand Kit",
     "savedNote": "Brand Kit saved.",

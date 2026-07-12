@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import {
   brandKitRowSchema,
   edlV1ViewOf,
+  logoOverlayPrefSchema,
   type BrandExportConfig,
   type CaptionBrandColors,
   type CaptionStyleSpec,
@@ -103,7 +104,18 @@ export default async function EditorPage({
           name: kit.lower_third_default.name.trim(),
         };
       }
-      if (config.gradient || config.lowerThird) brandConfig = config;
+      // Logo/watermark (6C.3): compose from the kit's logo + the creator's
+      // placement pref (user_metadata). Only when enabled and a logo exists.
+      const logoPref = logoOverlayPrefSchema.safeParse(user!.user_metadata?.logo_overlay);
+      if (logoPref.success && logoPref.data.enabled && kit.logo_path) {
+        config.logo = {
+          storagePath: kit.logo_path,
+          position: logoPref.data.position,
+          opacity: logoPref.data.opacity,
+          widthPct: logoPref.data.widthPct,
+        };
+      }
+      if (config.gradient || config.lowerThird || config.logo) brandConfig = config;
     }
   }
 

@@ -3,9 +3,12 @@ import {
   brandExportConfigSchema,
   buildExportPlan,
   BRAND_GRADIENT_IMAGE,
+  BRAND_LOGO_IMAGE,
   BRAND_LOWER_THIRD_IMAGE,
   gradientOverlayConfigSchema,
+  logoBox,
   lowerThirdConfigSchema,
+  OVERLAY_MARGIN_PCT,
   type BrandExportConfig,
   type EdlV1,
   type TranscriptWord,
@@ -92,22 +95,21 @@ describe("buildExportPlan brand layers", () => {
     }
   });
 
-  it("composites gradient UNDER captions and lower third ON TOP (binding order)", () => {
+  it("composites in canonical z-order: gradient → lower third → captions (Build 6C.3)", () => {
     const plan = buildExportPlan({ edl, words, brand: fullBrand });
     expect(plan.brandImages).toEqual([BRAND_GRADIENT_IMAGE, BRAND_LOWER_THIRD_IMAGE]);
 
     for (const step of plan.segments) {
       const filter = filterOf(step);
-      // Three overlays: gradient (input 2), captions (input 1), lower third (input 3).
+      // Three overlays; inputs: captions=1, gradient=2, lower third=3.
       expect(filter.match(/overlay/g)).toHaveLength(3);
       const gradientAt = filter.indexOf("[2:v]overlay");
       const captionAt = filter.indexOf("[1:v]overlay");
       const lowerThirdAt = filter.indexOf("[3:v]overlay");
       expect(gradientAt).toBeGreaterThanOrEqual(0);
-      expect(gradientAt).toBeLessThan(captionAt); // gradient under captions
-      expect(captionAt).toBeLessThan(lowerThirdAt); // lower third on top
+      expect(gradientAt).toBeLessThan(lowerThirdAt); // gradient under the lower third
+      expect(lowerThirdAt).toBeLessThan(captionAt); // captions are the top readability layer
 
-      // Static brand PNGs are extra inputs after input.mp4 + the caption concat.
       const joined = step.args.join(" ");
       expect(joined).toContain(`-i ${BRAND_GRADIENT_IMAGE}`);
       expect(joined).toContain(`-i ${BRAND_LOWER_THIRD_IMAGE}`);
@@ -145,5 +147,69 @@ describe("buildExportPlan brand layers", () => {
       expect(filterOf(step).match(/overlay/g)).toHaveLength(1);
       expect(filterOf(step)).toContain("[1:v]overlay");
     }
+  });
+});
+
+describe("logo / watermark layer (Build 6C.3)", () => {
+  const logo = {
+    storagePath: "brand-assets/owner/logo.png",
+    position: "bottom-end" as const,
+    opacity: 0.9,
+    widthPct: 0.18,
+  };
+
+  it("adds the logo as the TOP overlay, after captions", () => {
+    const plan = buildExportPlan({ edl, words, brand: { ...fullBrand, logo } });
+    expect(plan.brandImages).toEqual([
+      BRAND_GRADIENT_IMAGE,
+      BRAND_LOWER_THIRD_IMAGE,
+      BRAND_LOGO_IMAGE,
+    ]);
+    for (const step of plan.segments) {
+      const filter = filterOf(step);
+      // 4 overlays; logo is input 4 (after captions=1, gradient=2, lower=3).
+      expect(filter.match(/overlay/g)).toHaveLength(4);
+      const captionAt = filter.indexOf("[1:v]overlay");
+      const logoAt = filter.indexOf("[4:v]overlay");
+      expect(logoAt).toBeGreaterThan(captionAt); // logo on top of everything
+      expect(step.args.join(" ")).toContain(`-i ${BRAND_LOGO_IMAGE}`);
+    }
+  });
+
+  it("supports a logo-only brand (one overlay on a caption-less segment)", () => {
+    const noCaptions: EdlV1 = { ...edl, timeline: edl.timeline.map((s) => ({ ...s, wordIds: [] })) };
+    const plan = buildExportPlan({ edl: noCaptions, words, brand: { logo } });
+    expect(plan.brandImages).toEqual([BRAND_LOGO_IMAGE]);
+    for (const step of plan.segments) {
+      expect(filterOf(step).match(/overlay/g)).toHaveLength(1);
+      expect(filterOf(step)).toContain("[1:v]overlay"); // logo is the only extra input
+    }
+  });
+
+  it("validates the logo config and clamps widthPct/opacity ranges", () => {
+    expect(brandExportConfigSchema.safeParse({ logo }).success).toBe(true);
+    expect(brandExportConfigSchema.safeParse({ logo: { ...logo, widthPct: 0.9 } }).success).toBe(false);
+    expect(brandExportConfigSchema.safeParse({ logo: { ...logo, opacity: 0 } }).success).toBe(false);
+    expect(brandExportConfigSchema.safeParse({ logo: { storagePath: "" } }).success).toBe(false);
+  });
+});
+
+describe("logoBox geometry (shared by worker + preview)", () => {
+  it("places each corner with a margin, sized by frame width and aspect", () => {
+    const W = 720, H = 1280;
+    const aspect = 0.5; // logo h/w
+    const w = Math.round(W * 0.2); // 144
+    const margin = Math.round(Math.min(W, H) * OVERLAY_MARGIN_PCT); // 36
+    const h = Math.round(w * aspect); // 72
+
+    const br = logoBox("bottom-end", 0.2, aspect, W, H);
+    expect(br).toEqual({ x: W - margin - w, y: H - margin - h, w, h });
+
+    const tl = logoBox("top-start", 0.2, aspect, W, H);
+    expect(tl).toEqual({ x: margin, y: margin, w, h });
+
+    // bottom-start hugs the left edge; top-end hugs the right-top.
+    expect(logoBox("bottom-start", 0.2, aspect, W, H).x).toBe(margin);
+    expect(logoBox("top-end", 0.2, aspect, W, H).y).toBe(margin);
   });
 });

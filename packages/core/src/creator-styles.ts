@@ -1,4 +1,9 @@
-import type { GradientOverlayConfig, LowerThirdConfig } from "./brand";
+import type {
+  GradientOverlayConfig,
+  LowerThirdConfig,
+  LowerThirdShape,
+  OverlayPosition,
+} from "./brand";
 import { CAPTION_STYLE_SPECS, type CaptionStyleSpec } from "./captions";
 import type { AspectRatio } from "./edl";
 
@@ -37,8 +42,17 @@ export interface CreatorStyle {
   colors: CreatorStyleColors;
   /** Gradient readability overlay default (null = none). */
   overlay: GradientOverlayConfig | null;
-  /** Lower-third band colors the style sets (identity text stays the creator's). */
-  lowerThird: { accentColor: string; textColor: string };
+  /** Lower-third treatment the style sets — colors + optional shape/position
+   *  (identity text stays the creator's). */
+  lowerThird: {
+    accentColor: string;
+    textColor: string;
+    shape?: LowerThirdShape;
+    position?: OverlayPosition;
+  };
+  /** Optional logo/watermark placement the style suggests (the image stays the
+   *  creator's own upload). */
+  logo?: { position: OverlayPosition; opacity: number; widthPct: number };
   /** Recommended export format (a soft default). */
   aspectRatio: AspectRatio;
   /** i18n key under creatorStyles.useCases.* */
@@ -74,7 +88,8 @@ export const CREATOR_STYLES: readonly CreatorStyle[] = [
     caption: caption("podcast"),
     colors: { primary: "#1F2937", secondary: "#9CA3AF", accent: "#F59E0B" },
     overlay: { opacity: 0.5, heightPct: 0.35, color: "#000000" },
-    lowerThird: { accentColor: "#F59E0B", textColor: "#FFFFFF" },
+    lowerThird: { accentColor: "#F59E0B", textColor: "#FFFFFF", shape: "box", position: "bottom-start" },
+    logo: { position: "top-end", opacity: 0.85, widthPct: 0.16 },
     aspectRatio: "1:1",
     useCaseKey: "podcast",
   },
@@ -84,7 +99,8 @@ export const CREATOR_STYLES: readonly CreatorStyle[] = [
     caption: caption("brand-box"),
     colors: { primary: "#0EA5E9", secondary: "#E0F2FE", accent: "#0369A1" },
     overlay: { opacity: 0.4, heightPct: 0.3, color: "#000000" },
-    lowerThird: { accentColor: "#0EA5E9", textColor: "#FFFFFF" },
+    lowerThird: { accentColor: "#0EA5E9", textColor: "#FFFFFF", shape: "bar", position: "bottom-start" },
+    logo: { position: "bottom-end", opacity: 0.9, widthPct: 0.18 },
     aspectRatio: "9:16",
     useCaseKey: "medical",
   },
@@ -155,12 +171,14 @@ export function creatorStyleBrandKitPatch(
     caption_default_config: style.caption,
     overlay_default: style.overlay,
     lower_third_default: {
-      // Identity text preserved; only the band colors restyle.
+      // Identity text preserved; only the treatment restyles.
       name: lt?.name ?? "",
       ...(lt?.title ? { title: lt.title } : {}),
       ...(lt?.subtitle ? { subtitle: lt.subtitle } : {}),
       accentColor: style.lowerThird.accentColor,
       textColor: style.lowerThird.textColor,
+      ...(style.lowerThird.shape ? { shape: style.lowerThird.shape } : {}),
+      ...(style.lowerThird.position ? { position: style.lowerThird.position } : {}),
     },
   };
 }

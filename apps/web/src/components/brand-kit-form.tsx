@@ -10,10 +10,14 @@ import {
   type CaptionStyleSpec,
   type CreatorStyle,
   type CreatorStyleId,
+  type LogoOverlayPref,
+  type LowerThirdShape,
+  type OverlayPosition,
 } from "@merai/core";
 import { createClient } from "@/lib/supabase/client";
 import { CaptionStudio } from "@/components/caption-studio";
 import { CreatorStyles } from "@/components/creator-styles";
+import { OverlayStudio } from "@/components/overlay-studio";
 
 const BRAND_BUCKET = "brand-assets";
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
@@ -28,6 +32,8 @@ export interface BrandKitFormProps {
   initialLogoUrl: string | null;
   /** The creator's previously-applied style id (user_metadata), for highlight. */
   initialStyleId: CreatorStyleId | null;
+  /** Logo placement default (user_metadata.logo_overlay); null = defaults. */
+  initialLogoOverlay: LogoOverlayPref | null;
 }
 
 /**
@@ -70,6 +76,14 @@ export function BrandKitForm(props: BrandKitFormProps) {
     } else {
       setGradientOn(false);
     }
+    // 6C.3: lower-third treatment + logo placement (image stays the creator's).
+    if (style.lowerThird.shape) setLtShape(style.lowerThird.shape);
+    if (style.lowerThird.position) setLtPosition(style.lowerThird.position);
+    if (style.logo) {
+      setLogoPosition(style.logo.position);
+      setLogoOpacity(style.logo.opacity);
+      setLogoWidthPct(style.logo.widthPct);
+    }
     setAppliedStyleId(style.id);
     setSaved(false);
   };
@@ -87,11 +101,24 @@ export function BrandKitForm(props: BrandKitFormProps) {
   const [ltSubtitle, setLtSubtitle] = useState(
     kit?.lower_third_default?.subtitle ?? "",
   );
+  const [ltPosition, setLtPosition] = useState<OverlayPosition>(
+    kit?.lower_third_default?.position ?? "bottom-start",
+  );
+  const [ltShape, setLtShape] = useState<LowerThirdShape>(
+    kit?.lower_third_default?.shape ?? "bar",
+  );
 
   const [logoUrl, setLogoUrl] = useState<string | null>(props.initialLogoUrl);
   const [logoPath, setLogoPath] = useState<string | null>(kit?.logo_path ?? null);
   const [logoError, setLogoError] = useState(false);
   const logoInput = useRef<HTMLInputElement | null>(null);
+
+  // Overlay Studio (Build 6C.3): logo placement default (user_metadata).
+  const lp = props.initialLogoOverlay;
+  const [logoEnabled, setLogoEnabled] = useState(lp?.enabled ?? false);
+  const [logoPosition, setLogoPosition] = useState<OverlayPosition>(lp?.position ?? "bottom-end");
+  const [logoOpacity, setLogoOpacity] = useState(lp?.opacity ?? 0.9);
+  const [logoWidthPct, setLogoWidthPct] = useState(lp?.widthPct ?? 0.18);
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -131,6 +158,8 @@ export function BrandKitForm(props: BrandKitFormProps) {
             ...(ltSubtitle.trim() ? { subtitle: ltSubtitle.trim() } : {}),
             accentColor: primary,
             textColor: "#FFFFFF",
+            position: ltPosition,
+            shape: ltShape,
           }
         : null;
 
@@ -152,10 +181,19 @@ export function BrandKitForm(props: BrandKitFormProps) {
         { onConflict: "owner_id" },
       );
       if (error) throw error;
-      // Persist the explicitly-chosen style id (dashboard chip + highlight).
-      if (appliedStyleId) {
-        void supabase.auth.updateUser({ data: { creator_style: appliedStyleId } });
-      }
+      // Persist creator-level prefs (user_metadata, zero-migration): the chosen
+      // style id (dashboard chip) + the logo overlay placement default (6C.3).
+      await supabase.auth.updateUser({
+        data: {
+          ...(appliedStyleId ? { creator_style: appliedStyleId } : {}),
+          logo_overlay: {
+            enabled: logoEnabled,
+            position: logoPosition,
+            opacity: logoOpacity,
+            widthPct: logoWidthPct,
+          },
+        },
+      });
       setSaved(true);
     } catch (err) {
       console.error("brand kit save failed", err);
@@ -345,7 +383,63 @@ export function BrandKitForm(props: BrandKitFormProps) {
               />
             </label>
           </div>
+          {/* Lower Third Studio (6C.3): shape + position */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-muted">{t("lowerThirdShape")}</span>
+              <div className="flex gap-1.5">
+                {(["bar", "box", "none"] as LowerThirdShape[]).map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setLtShape(s)}
+                    className={`flex-1 rounded-lg border px-2 py-1.5 text-xs ${
+                      ltShape === s
+                        ? "border-accent bg-accent/15 text-accent"
+                        : "border-border text-muted hover:border-accent"
+                    }`}
+                  >
+                    {t(`lowerThirdShapes.${s}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-muted">{t("lowerThirdPosition")}</span>
+              <div className="grid grid-cols-2 gap-1.5">
+                {(["top-start", "top-end", "bottom-start", "bottom-end"] as OverlayPosition[]).map(
+                  (p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setLtPosition(p)}
+                      className={`rounded-lg border px-2 py-1.5 text-xs ${
+                        ltPosition === p
+                          ? "border-accent bg-accent/15 text-accent"
+                          : "border-border text-muted hover:border-accent"
+                      }`}
+                    >
+                      {t(`overlayPositions.${p}`)}
+                    </button>
+                  ),
+                )}
+              </div>
+            </div>
+          </div>
         </section>
+
+        {/* Overlay Studio (6C.3): logo / watermark placement */}
+        <OverlayStudio
+          logoUrl={logoUrl}
+          enabled={logoEnabled}
+          onToggle={setLogoEnabled}
+          position={logoPosition}
+          onPosition={setLogoPosition}
+          opacity={logoOpacity}
+          onOpacity={setLogoOpacity}
+          widthPct={logoWidthPct}
+          onWidthPct={setLogoWidthPct}
+        />
 
         <div className="flex items-center gap-3">
           <button

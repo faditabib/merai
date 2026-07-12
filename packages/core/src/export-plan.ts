@@ -1,5 +1,6 @@
 import {
   BRAND_GRADIENT_IMAGE,
+  BRAND_LOGO_IMAGE,
   BRAND_LOWER_THIRD_IMAGE,
   type BrandExportConfig,
 } from "./brand";
@@ -147,12 +148,14 @@ export function buildExportPlan(input: {
     captions.push({ file: `cap${index}.png`, line, startOutMs: start, endOutMs });
   });
 
-  // --- brand layers (Build 6B.1): static PNGs overlaid in every segment ---
-  // Layer order is binding (see brand.ts): gradient sits UNDER captions
-  // (readability layer), the lower third sits ON TOP of captions.
+  // --- brand layers: static full-frame PNGs overlaid in every segment ------
+  // Canonical z-order (Build 6C.3): video → gradient → lower third → captions
+  // → logo. Captions are the highest READABILITY layer (lifted clear of the
+  // lower-third band); the logo/watermark sits on top for branding.
   const gradientImage = brand?.gradient ? BRAND_GRADIENT_IMAGE : null;
   const lowerThirdImage = brand?.lowerThird ? BRAND_LOWER_THIRD_IMAGE : null;
-  const brandImages = [gradientImage, lowerThirdImage].filter(
+  const logoImage = brand?.logo ? BRAND_LOGO_IMAGE : null;
+  const brandImages = [gradientImage, lowerThirdImage, logoImage].filter(
     (f): f is string => f !== null,
   );
 
@@ -199,6 +202,7 @@ export function buildExportPlan(input: {
     let captionsInput = -1;
     let gradientInput = -1;
     let lowerThirdInput = -1;
+    let logoInput = -1;
     if (hasCaptions) {
       inputArgs.push("-f", "concat", "-safe", "0", "-i", captionsFile!);
       captionsInput = nextInput++;
@@ -211,8 +215,13 @@ export function buildExportPlan(input: {
       inputArgs.push("-i", lowerThirdImage);
       lowerThirdInput = nextInput++;
     }
+    if (logoImage) {
+      inputArgs.push("-i", logoImage);
+      logoInput = nextInput++;
+    }
 
-    // Chain overlays in layer order: gradient → captions → lower third.
+    // Chain overlays in canonical z-order (each a full-frame PNG at 0:0):
+    // gradient → lower third → captions → logo.
     const stages: string[] = [`[0:v]${scaleCrop}[vs]`];
     let label = "[vs]";
     let stage = 0;
@@ -221,8 +230,9 @@ export function buildExportPlan(input: {
       label = out;
     };
     if (gradientInput !== -1) overlayOnto(gradientInput, `[vb${stage++}]`);
-    if (captionsInput !== -1) overlayOnto(captionsInput, "[vo]");
     if (lowerThirdInput !== -1) overlayOnto(lowerThirdInput, `[vb${stage++}]`);
+    if (captionsInput !== -1) overlayOnto(captionsInput, "[vo]");
+    if (logoInput !== -1) overlayOnto(logoInput, `[vb${stage++}]`);
 
     segments.push({
       index,

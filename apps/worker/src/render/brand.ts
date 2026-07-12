@@ -1,9 +1,12 @@
-import { createCanvas } from "@napi-rs/canvas";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 import {
   BRAND_GRADIENT_IMAGE,
+  BRAND_LOGO_IMAGE,
   BRAND_LOWER_THIRD_IMAGE,
+  logoBox,
   type BrandExportConfig,
   type GradientOverlayConfig,
+  type LogoOverlayConfig,
   type LowerThirdConfig,
 } from "@merai/core";
 import { registerCaptionFonts, FONT_FAMILY } from "./captions";
@@ -52,10 +55,10 @@ export function renderGradientImage(
 }
 
 /**
- * Static lower third: accent bar + name (+ optional title/subtitle), anchored
- * to the start-side lower corner. "Start" follows the text's own direction:
- * Arabic names anchor to the RIGHT edge, Latin to the LEFT — mirroring how
- * the product treats chrome (logical) vs. timeline (physical).
+ * Static lower third: name (+ optional title/subtitle) with a background
+ * treatment (Build 6C.3: bar | box | none) at a chosen corner. "start" is
+ * logical — Arabic anchors RIGHT, Latin LEFT; "end" is the opposite edge; the
+ * default (bottom-start bar) reproduces the 6B.1 look exactly.
  */
 export function renderLowerThirdImage(
   config: LowerThirdConfig,
@@ -66,7 +69,14 @@ export function renderLowerThirdImage(
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
+  const position = config.position ?? "bottom-start";
+  const shape = config.shape ?? "bar";
+  const isTop = position === "top-start" || position === "top-end";
+  const isStartSide = position === "bottom-start" || position === "top-start";
+  // Physical right edge? "start" follows the name's reading direction.
   const rtl = ARABIC_CHARS.test(config.name);
+  const onRight = isStartSide ? rtl : !rtl;
+
   const nameSize = Math.round(height * 0.038);
   const subSize = Math.round(height * 0.026);
   const padX = Math.round(width * 0.05);
@@ -81,21 +91,43 @@ export function renderLowerThirdImage(
 
   const blockHeight =
     lines.reduce((sum, l) => sum + l.size, 0) + lineGap * (lines.length - 1);
-  // The block's bottom sits at ~92% height — the classic lower-third band.
-  const blockBottom = Math.round(height * 0.92);
-  const blockTop = blockBottom - blockHeight;
+  const blockTop = isTop
+    ? Math.round(height * 0.08)
+    : Math.round(height * 0.92) - blockHeight;
 
-  // Accent bar along the start edge of the text block.
-  const barX = rtl ? width - padX - barWidth : padX;
-  ctx.fillStyle = config.accentColor;
-  ctx.fillRect(barX, blockTop - lineGap, barWidth, blockHeight + lineGap * 2);
-
-  const textX = rtl ? width - padX - barWidth - lineGap * 2 : padX + barWidth + lineGap * 2;
-  ctx.textAlign = rtl ? "right" : "left";
+  // Measure the widest line for the box treatment.
   ctx.textBaseline = "top";
-  ctx.shadowColor = "rgba(0,0,0,0.7)";
-  ctx.shadowBlur = Math.round(subSize * 0.2);
-  ctx.shadowOffsetY = 1;
+  let textWidth = 0;
+  for (const line of lines) {
+    ctx.font = `${line.weight} ${line.size}px "${FONT_FAMILY}"`;
+    textWidth = Math.max(textWidth, ctx.measureText(line.text).width);
+  }
+  textWidth = Math.min(textWidth, width * 0.6);
+
+  const barGap = shape === "bar" ? barWidth + lineGap * 2 : 0;
+  const boxPad = shape === "box" ? Math.round(nameSize * 0.5) : 0;
+  const contentW = textWidth + barGap + boxPad * 2;
+  const startX = onRight ? width - padX - contentW : padX;
+
+  // Background treatment.
+  if (shape === "box") {
+    ctx.fillStyle = rgba(config.accentColor, 0.85);
+    ctx.beginPath();
+    ctx.roundRect(startX, blockTop - boxPad, contentW, blockHeight + boxPad * 2, Math.round(nameSize * 0.3));
+    ctx.fill();
+  } else if (shape === "bar") {
+    const barX = onRight ? width - padX - barWidth : padX;
+    ctx.fillStyle = config.accentColor;
+    ctx.fillRect(barX, blockTop - lineGap, barWidth, blockHeight + lineGap * 2);
+  }
+
+  const textX = onRight ? width - padX - barGap - boxPad : padX + barGap + boxPad;
+  ctx.textAlign = onRight ? "right" : "left";
+  if (shape !== "box") {
+    ctx.shadowColor = "rgba(0,0,0,0.7)";
+    ctx.shadowBlur = Math.round(subSize * 0.2);
+    ctx.shadowOffsetY = 1;
+  }
 
   let y = blockTop;
   const maxWidth = width * 0.6;
@@ -112,8 +144,36 @@ export function renderLowerThirdImage(
   };
 }
 
-/** All brand layer PNGs for an export's brand snapshot (order irrelevant —
- *  the plan's segment args decide compositing order). */
+/**
+ * Logo / watermark (Build 6C.3): decode the stored image and draw it into a
+ * corner box (sized by frame width, aspect preserved) at the chosen opacity,
+ * on a transparent full-frame PNG — so the plan overlays it at 0:0 like every
+ * other layer. Returns null for undecodable images (e.g. SVG, which
+ * @napi-rs/canvas can't rasterize) so the caller skips the layer, never fails.
+ */
+export async function renderLogoImage(
+  bytes: Uint8Array,
+  config: LogoOverlayConfig,
+  width: number,
+  height: number,
+): Promise<{ name: string; data: Uint8Array } | null> {
+  try {
+    const img = await loadImage(Buffer.from(bytes));
+    if (!img.width || !img.height) return null;
+    const aspect = img.height / img.width;
+    const { x, y, w, h } = logoBox(config.position, config.widthPct, aspect, width, height);
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+    ctx.globalAlpha = config.opacity;
+    ctx.drawImage(img, x, y, w, h);
+    return { name: BRAND_LOGO_IMAGE, data: new Uint8Array(canvas.toBuffer("image/png")) };
+  } catch {
+    return null;
+  }
+}
+
+/** Gradient + lower-third PNGs for a brand snapshot (the logo is staged
+ *  separately in render-export since it needs an async storage fetch). */
 export function renderBrandImages(
   brand: BrandExportConfig,
   width: number,

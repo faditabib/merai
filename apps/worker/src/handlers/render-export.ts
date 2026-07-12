@@ -3,6 +3,7 @@ import {
   buildExportPlan,
   captionStyleSpecSchema,
   downgradeEdlV2ToV1,
+  EXPORT_RESOLUTIONS,
   parseEdl,
   renderExportPayloadSchema,
   transcriptWordsSchema,
@@ -16,7 +17,7 @@ import { getDb } from "../db";
 import { PermanentJobError } from "../errors";
 import { log } from "../logger";
 import { createSignedMediaUrl, getServiceClient } from "../storage";
-import { renderBrandImages } from "../render/brand";
+import { renderBrandImages, renderLogoImage } from "../render/brand";
 import {
   captionSpecAboveLowerThird,
   renderBlankImage,
@@ -213,6 +214,39 @@ export async function renderExportWithEngine(
     baseCaptionSpec = resolveStyleSpec(exportRow.caption_style);
   }
 
+  // Logo/watermark (Build 6C.3): resolve BEFORE planning so the plan's layer
+  // set matches the staged images. An undecodable logo (e.g. SVG) or a missing
+  // object is SKIPPED — the layer is dropped, never a failed render.
+  let logoImage: { name: string; data: Uint8Array } | null = null;
+  if (brand?.logo) {
+    const { width, height } = EXPORT_RESOLUTIONS[edl.aspectRatio];
+    const path = brand.logo.storagePath;
+    const slash = path.indexOf("/");
+    try {
+      if (slash > 0) {
+        const { data, error } = await getServiceClient()
+          .storage.from(path.slice(0, slash))
+          .download(path.slice(slash + 1));
+        if (!error && data) {
+          logoImage = await renderLogoImage(
+            new Uint8Array(await data.arrayBuffer()),
+            brand.logo,
+            width,
+            height,
+          );
+        }
+      }
+    } catch {
+      logoImage = null; // any failure → skip the layer, never break the render
+    }
+    if (!logoImage) {
+      log.warn(
+        `render: export ${exportRow.id} logo unavailable/undecodable — skipping logo layer`,
+      );
+      brand = { ...brand, logo: undefined };
+    }
+  }
+
   const plan = buildExportPlan({ edl, words, brand });
   // A lower third owns the bottom band — lift bottom captions above it so the
   // two don't overprint (live E2E finding, Build 6B.1).
@@ -234,6 +268,8 @@ export async function renderExportWithEngine(
   if (brand) {
     captionImages.push(...renderBrandImages(brand, plan.width, plan.height));
   }
+  // The logo was rasterized above (async storage fetch); stage it too.
+  if (logoImage) captionImages.push(logoImage);
 
   let bytes: Uint8Array;
   try {

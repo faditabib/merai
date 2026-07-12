@@ -1,8 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import {
   brandKitRowSchema,
+  logoOverlayPrefSchema,
   type BrandKitRow,
   type CreatorStyleId,
+  type LogoOverlayPref,
 } from "@merai/core";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -84,6 +86,11 @@ export default async function BrandKitPage({
             initialLogoUrl={logoUrl}
             initialStyleId={
               (user!.user_metadata?.creator_style as CreatorStyleId | undefined) ?? null
+            }
+            initialLogoOverlay={
+              (logoOverlayPrefSchema.safeParse(user!.user_metadata?.logo_overlay).data as
+                | LogoOverlayPref
+                | undefined) ?? null
             }
           />
         )}
