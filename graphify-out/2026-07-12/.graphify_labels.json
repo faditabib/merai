@@ -127,5 +127,18 @@
   "125": "Phase 2 — AI analysis layer (BUILT, live-verified 2026-07-08)",
   "126": "Phase 1 — Upload & transcription pipeline (overnight 2026-07-08, mock-verified)",
   "127": "Phase 0 — Project scaffolding & architecture (2026-07-08)",
-  "128": "Phase 4.5 — Server-side rendering pivot (BUILT + live-verified 2026-07-10)"
+  "128": "Phase 4.5 — Server-side rendering pivot (BUILT + live-verified 2026-07-10)",
+  "129": "logger.ts",
+  "130": "render-export.test.ts",
+  "131": "generate-edl.test.ts",
+  "132": "transcribe.ts",
+  "133": "Build 6C.1 Report — Tajawal UI + Creator Dashboard + Thumbnails",
+  "134": "Build 6C.1 Analysis — Tajawal UI + Creator Dashboard + Thumbnails",
+  "135": "Build 6C.2 Analysis — Creator Styles System",
+  "136": "Build 6C.2 Report — Creator Styles System",
+  "137": "brand-kit-form.tsx",
+  "138": "creator-styles.tsx",
+  "139": "BUILD_6C_ANALYSIS.md",
+  "140": "limits.ts",
+  "141": "Railway worker deploy + production render test (2026-07-11)"
 }

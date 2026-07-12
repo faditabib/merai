@@ -1,5 +1,26 @@
 # Merai — Progress Log
 
+## Build 6C.3 — Overlay Studio (2026-07-12)
+
+160 tests green (75 core + 73 worker + 12 web) · next build ✓ · ar/en parity
+384 = 384 · **zero migrations** (BUILD_6C_3_ANALYSIS.md + BUILD_6C_3_REPORT.md).
+The one 6C sub-build with a render change — kept additive.
+
+- Logo/watermark layer: the logo composites as another full-frame PNG at 0:0
+  (like gradient/lower-third) — no architecture change. Worker renderLogoImage
+  (decode + corner + opacity; null on SVG/corrupt); render-export resolves it
+  before planning and skips gracefully on any failure. Canonical z-order now
+  video → gradient → lower third → captions → logo.
+- Lower Third Studio: additive position (4 corners) + shape (bar/box/none),
+  honored by the rasterizer.
+- Overlay Studio UI (enable/corner/opacity/size) with a preview mirroring the
+  shared core logoBox geometry (preview=export). Save persists lower-third
+  fields + logo_overlay pref to user_metadata; editor composes exports.brand.logo.
+- Creator Styles carry lower-third/logo treatment. Migration decision: ZERO —
+  exports.brand.logo + lower-third fields + user_metadata. Next: 6C.4 onboarding.
+
+---
+
 ## Build 6C.2 — Creator Styles System (2026-07-12)
 
 150 tests green (71 core + 67 worker + 12 web) · next build ✓ · ar/en parity
