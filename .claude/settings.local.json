@@ -27,7 +27,9 @@
       "Bash(railway up *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/dashboard/brand-kit)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/en/dashboard/brand-kit)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/en/dashboard/brand-kit)",
+      "Bash(ffmpeg -y -f lavfi -i color=c=0xE11D8F:s=220x130 -frames:v 1 C:/Users/utopi/AppData/Local/Temp/claude/D--Merai-app/83761fc0-0a67-48c9-8a83-fb6035b34ebc/scratchpad/e2e-logo.png)",
+      "Bash(awk '{print $5,$9}')"
     ]
   }
 }
