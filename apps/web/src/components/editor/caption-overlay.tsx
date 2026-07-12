@@ -5,7 +5,9 @@ import {
   activeCaptionIndex,
   activeWordIndex,
   buildCaptionLines,
+  captionConfigForExport,
   CAPTION_STYLE_SPECS,
+  type CaptionBrandColors,
   type CaptionStyleToken,
   type EdlV1,
   type TranscriptWord,
@@ -16,6 +18,8 @@ export interface CaptionOverlayProps {
   words: TranscriptWord[];
   sourceMs: number;
   styleToken: CaptionStyleToken;
+  /** Brand colors so brand-* presets preview with the creator's real colors. */
+  brandColors?: CaptionBrandColors | null;
 }
 
 /**
@@ -25,7 +29,9 @@ export interface CaptionOverlayProps {
  * the word currently being spoken.
  */
 export function CaptionOverlay(props: CaptionOverlayProps) {
-  const spec = CAPTION_STYLE_SPECS[props.styleToken] ?? CAPTION_STYLE_SPECS["minimal-white-bottom"];
+  const base = CAPTION_STYLE_SPECS[props.styleToken] ?? CAPTION_STYLE_SPECS["minimal-white-bottom"];
+  // Brand-* presets resolve the creator's color, mirroring the export (6B.2).
+  const spec = (props.brandColors && captionConfigForExport(props.styleToken, props.brandColors)) || base;
 
   const lines = useMemo(() => {
     const wordById = new Map(props.words.map((w) => [w.id, w]));
@@ -50,13 +56,18 @@ export function CaptionOverlay(props: CaptionOverlayProps) {
       style={{ top: `${spec.verticalAnchor * 100}%`, transform: "translateY(-50%)" }}
     >
       <span
-        className="max-w-[90%] rounded-lg px-3 py-1.5 text-center text-xl font-bold leading-snug"
+        className="max-w-[90%] rounded-lg px-3 py-1.5 text-center font-bold leading-snug"
         style={{
           fontFamily: `${spec.fontFamily}, sans-serif`,
+          fontSize: `${1.25 * (spec.fontScale ?? 1)}rem`,
           fontWeight: spec.fontWeight,
           color: spec.textColor,
           backgroundColor: spec.backgroundColor ?? "transparent",
-          textShadow: spec.backgroundColor ? undefined : "0 1px 3px rgba(0,0,0,0.9)",
+          WebkitTextStroke: spec.outline
+            ? `${Math.max(0.5, spec.outline.width * 14)}px ${spec.outline.color}`
+            : undefined,
+          textShadow:
+            spec.backgroundColor || spec.outline ? undefined : "0 1px 3px rgba(0,0,0,0.9)",
         }}
       >
         {spec.wordLevel

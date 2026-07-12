@@ -279,7 +279,11 @@
       "bold-yellow-centered": "أصفر جريء — وسط",
       "minimal-white-bottom": "أبيض بسيط — أسفل",
       "karaoke-highlight": "تمييز كلمة بكلمة",
-      "professional-clean": "احترافي أنيق — أسفل"
+      "professional-clean": "احترافي أنيق — أسفل",
+      "bold-impact": "ضخم بحدود — للمقاطع القصيرة",
+      "outline-clean": "أبيض محدّد — بلا خلفية",
+      "brand-box": "خلفية بلون علامتك",
+      "brand-accent": "نص بلون علامتك"
     }
   },
   "brandKit": {

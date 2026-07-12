@@ -279,7 +279,11 @@
       "bold-yellow-centered": "Bold yellow — centered",
       "minimal-white-bottom": "Minimal white — bottom",
       "karaoke-highlight": "Word-by-word highlight",
-      "professional-clean": "Professional clean — bottom"
+      "professional-clean": "Professional clean — bottom",
+      "bold-impact": "Bold impact — outlined",
+      "outline-clean": "Outlined white — no box",
+      "brand-box": "Box in your brand color",
+      "brand-accent": "Text in your brand color"
     }
   },
   "brandKit": {

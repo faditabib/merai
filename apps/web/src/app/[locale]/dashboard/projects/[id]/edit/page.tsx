@@ -3,6 +3,7 @@ import {
   brandKitRowSchema,
   edlV1ViewOf,
   type BrandExportConfig,
+  type CaptionBrandColors,
   type TranscriptWord,
 } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
@@ -83,10 +84,12 @@ export default async function EditorPage({
   // lower third). A layer is included only when configured; when neither
   // is, brandConfig is null and the export panel shows the "set up" prompt.
   let brandConfig: BrandExportConfig | null = null;
+  let brandColors: CaptionBrandColors | null = null;
   if (kitRow) {
     const parsedKit = brandKitRowSchema.safeParse(kitRow);
     if (parsedKit.success) {
       const kit = parsedKit.data;
+      brandColors = { primary: kit.primary_color, accent: kit.accent_color };
       const config: BrandExportConfig = {};
       if (kit.overlay_default) config.gradient = kit.overlay_default;
       if (kit.lower_third_default?.name.trim()) {
@@ -114,6 +117,7 @@ export default async function EditorPage({
         storagePath={upload!.storage_path as string}
         sourceDurationMs={Math.round(Number(upload!.duration_seconds ?? 0) * 1000)}
         brandConfig={brandConfig}
+        brandColors={brandColors}
       />
     </div>
   );

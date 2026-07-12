@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { AspectRatio, BrandExportConfig, EdlV1 } from "@merai/core";
+import {
+  captionConfigForExport,
+  type AspectRatio,
+  type BrandExportConfig,
+  type CaptionBrandColors,
+  type EdlV1,
+} from "@merai/core";
 import { requestExportRender } from "@/app/actions/projects";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -33,6 +39,8 @@ export interface ExportPanelProps {
   edl: EdlV1;
   /** Owner's Brand Kit as an export snapshot; null = nothing to apply. */
   brandConfig: BrandExportConfig | null;
+  /** Brand colors for brand-* caption presets; null = no kit. */
+  brandColors: CaptionBrandColors | null;
   onChangeAspect: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
@@ -56,8 +64,9 @@ export function ExportPanel(props: ExportPanelProps) {
   const [assembling, setAssembling] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState(false);
   const listStale = useRef(false);
-  // A kit exists only if it carries at least one renderable layer.
-  const hasBranding = props.brandConfig != null;
+  // "Branding" covers overlays (brandConfig) and brand-colored captions
+  // (brandColors) — offer the toggle if the kit provides either.
+  const hasBranding = props.brandConfig != null || props.brandColors != null;
   const [applyBranding, setApplyBranding] = useState(hasBranding);
 
   const refreshList = useCallback(async () => {
@@ -116,6 +125,12 @@ export function ExportPanel(props: ExportPanelProps) {
           // Snapshot the branding so later Brand Kit edits never change a
           // render that already happened (same as aspect/caption columns).
           brand: applyBranding ? props.brandConfig : null,
+          // Brand-colored caption presets resolve to a spec snapshot (6B.2);
+          // null for plain presets → the token render path, unchanged.
+          caption_config:
+            applyBranding && props.brandColors
+              ? captionConfigForExport(props.edl.captionStyle, props.brandColors)
+              : null,
           status: "pending",
         })
         .select(EXPORT_ROW_COLUMNS)

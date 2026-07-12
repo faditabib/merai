@@ -27,17 +27,22 @@ async function seedExport(
     edlJson?: (v1: EdlV1) => unknown;
     /** Branding snapshot written to exports.brand (Build 6B.1). */
     brand?: unknown;
+    /** Resolved caption spec snapshot written to exports.caption_config (6B.2). */
+    captionConfig?: unknown;
+    /** Transcript words so caption images actually rasterize. */
+    words?: { id: string; text: string; startMs: number; endMs: number; confidence: number }[];
   } = {},
 ) {
   const ownerId = await db.seedUser();
   const projectId = await db.seedProject(ownerId, "ready");
   const uploadId = await db.seedUpload(projectId, ownerId, "uploaded");
 
+  const words = overrides.words ?? [];
   const v1: EdlV1 = {
     version: 1,
     projectId,
     sourceUploadId: uploadId,
-    timeline: [{ id: "k0", sourceInMs: 0, sourceOutMs: 4000, wordIds: [] }],
+    timeline: [{ id: "k0", sourceInMs: 0, sourceOutMs: 4000, wordIds: words.map((w) => w.id) }],
     removed: [],
     aspectRatio: "9:16",
     captionStyle: "minimal-white-bottom",
@@ -50,13 +55,13 @@ async function seedExport(
   );
   await db.query(
     `insert into public.transcripts (upload_id, project_id, owner_id, provider, status, words)
-     values ($1, $2, $3, 'mock', 'completed', '[]'::jsonb)`,
-    [uploadId, projectId, ownerId],
+     values ($1, $2, $3, 'mock', 'completed', $4::jsonb)`,
+    [uploadId, projectId, ownerId, JSON.stringify(words)],
   );
   const { rows: exportRows } = await db.query<{ id: string }>(
     `insert into public.exports
-       (project_id, owner_id, edl_version_id, aspect_ratio, caption_style, status, cancel_requested, brand)
-     values ($1, $2, $3, '9:16', 'minimal-white-bottom', 'pending', $4, $5)
+       (project_id, owner_id, edl_version_id, aspect_ratio, caption_style, status, cancel_requested, brand, caption_config)
+     values ($1, $2, $3, '9:16', 'minimal-white-bottom', 'pending', $4, $5, $6)
      returning id`,
     [
       projectId,
@@ -64,6 +69,7 @@ async function seedExport(
       edlRows[0]!.id,
       overrides.cancelRequested ?? false,
       overrides.brand === undefined ? null : JSON.stringify(overrides.brand),
+      overrides.captionConfig === undefined ? null : JSON.stringify(overrides.captionConfig),
     ],
   );
   return { ownerId, projectId, exportId: exportRows[0]!.id };
@@ -352,6 +358,54 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
 
   it("fails safely (permanent) on a malformed brand snapshot", async () => {
     const ids = await seedExport({ brand: { gradient: { opacity: 5, color: "blue" } } });
+    await expect(
+      renderExportWithEngine(
+        jobFor(ids),
+        { name: "stub", render: async () => new Uint8Array([1]) },
+        stubDeps(),
+      ),
+    ).rejects.toBeInstanceOf(PermanentJobError);
+  });
+
+  it("renders a caption_config snapshot (brand-colored preset) — Build 6B.2", async () => {
+    const ids = await seedExport({
+      words: [
+        { id: "w0", text: "مرحبا", startMs: 200, endMs: 900, confidence: 0.96 },
+        { id: "w1", text: "بكم", startMs: 950, endMs: 1600, confidence: 0.96 },
+      ],
+      captionConfig: {
+        token: "brand-box",
+        fontFamily: "IBM Plex Sans Arabic",
+        fontWeight: 600,
+        verticalAnchor: 0.85,
+        textColor: "#FFFFFF",
+        backgroundColor: "rgba(124,58,237,0.85)",
+        uppercaseLatin: false,
+        wordLevel: false,
+        fontScale: 1.1,
+      },
+    });
+    let capCount = 0;
+    const engine: RenderEngine = {
+      name: "stub",
+      async render(request: RenderRequest) {
+        // The real canvas rasterizer ran with the custom spec → caption PNGs.
+        capCount = request.captionImages.length;
+        return new Uint8Array([1, 2, 3, 4]);
+      },
+    };
+    await renderExportWithEngine(jobFor(ids), engine, stubDeps());
+    expect(capCount).toBeGreaterThan(0);
+    const { rows } = await db.query<{ status: string }>(
+      "select status from public.exports where id = $1",
+      [ids.exportId],
+    );
+    expect(rows[0]!.status).toBe("uploaded");
+  });
+
+  it("fails safely (permanent) on a malformed caption_config", async () => {
+    // fontScale out of the schema's safe band.
+    const ids = await seedExport({ captionConfig: { token: "x", fontScale: 99 } });
     await expect(
       renderExportWithEngine(
         jobFor(ids),

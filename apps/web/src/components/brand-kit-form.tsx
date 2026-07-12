@@ -213,7 +213,11 @@ export function BrandKitForm(props: BrandKitFormProps) {
         <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
           <h2 className="font-semibold">{t("captionTitle")}</h2>
           <p className="text-sm text-muted">{t("captionHint")}</p>
-          <CaptionStylePicker value={captionStyle} onChange={setCaptionStyle} />
+          <CaptionStylePicker
+            value={captionStyle}
+            brandColors={{ primary, accent }}
+            onChange={setCaptionStyle}
+          />
         </section>
 
         {/* Gradient overlay defaults */}

@@ -3,8 +3,13 @@ import {
   activeCaptionIndex,
   activeWordIndex,
   buildCaptionLines,
+  captionConfigForExport,
+  captionStyleSpecSchema,
   CAPTION_BREAK_GAP_MS,
   CAPTION_MAX_LINE_CHARS,
+  CAPTION_STYLE_SPECS,
+  CAPTION_STYLE_TOKENS,
+  hexToRgba,
   type TranscriptWord,
 } from "../src/index";
 
@@ -61,6 +66,48 @@ describe("buildCaptionLines (timing-gap based — Phase 2 decision)", () => {
       word("w1", "نعم", 450, 700),
     ];
     expect(buildCaptionLines(words)).toHaveLength(2);
+  });
+});
+
+describe("caption studio presets & brand resolution (Build 6B.2)", () => {
+  it("every token has a spec, and each spec validates against the schema", () => {
+    for (const token of CAPTION_STYLE_TOKENS) {
+      const spec = CAPTION_STYLE_SPECS[token];
+      expect(spec).toBeDefined();
+      expect(spec.token).toBe(token);
+      // The built-in specs must be valid snapshot payloads.
+      expect(captionStyleSpecSchema.safeParse(spec).success).toBe(true);
+    }
+  });
+
+  it("returns null for a preset that needs no runtime brand data (token path)", () => {
+    expect(captionConfigForExport("minimal-white-bottom", { primary: "#7C3AED", accent: "#F59E0B" })).toBeNull();
+    // Brand-color preset but NO brand → still null (falls back to the token spec).
+    expect(captionConfigForExport("brand-box", null)).toBeNull();
+  });
+
+  it("resolves the brand color into the box for brand-box", () => {
+    const cfg = captionConfigForExport("brand-box", { primary: "#7C3AED", accent: "#F59E0B" });
+    expect(cfg).not.toBeNull();
+    expect(cfg!.backgroundColor).toBe(hexToRgba("#7C3AED", 0.85));
+    expect(cfg!.token).toBe("brand-box");
+    expect(captionStyleSpecSchema.safeParse(cfg).success).toBe(true);
+  });
+
+  it("resolves the accent color into the text for brand-accent", () => {
+    const cfg = captionConfigForExport("brand-accent", { primary: "#7C3AED", accent: "#F59E0B" });
+    expect(cfg!.textColor).toBe("#F59E0B");
+    expect(cfg!.useBrandColor).toBe("text");
+  });
+
+  it("clamps a hostile fontScale out of the schema's safe band", () => {
+    expect(captionStyleSpecSchema.safeParse({
+      ...CAPTION_STYLE_SPECS["bold-impact"], fontScale: 9,
+    }).success).toBe(false);
+  });
+
+  it("unknown token falls back to the default spec, no throw", () => {
+    expect(captionConfigForExport("does-not-exist", { primary: "#000000", accent: "#ffffff" })).toBeNull();
   });
 });
 

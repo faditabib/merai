@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { TranscriptWord } from "./transcript";
 
 /**
@@ -93,14 +94,27 @@ export const CAPTION_STYLE_TOKENS = [
   "minimal-white-bottom", // clean lower-third, subtle background
   "karaoke-highlight", // word-by-word highlight following speech
   "professional-clean", // premium low placement, no box — doctors/founders/educators
+  // Build 6B.2 — Caption Studio additions:
+  "bold-impact", // large, uppercase, black outline — hype/short-form
+  "outline-clean", // white + outline, no box — readable on busy footage
+  "brand-box", // box filled with the creator's brand color
+  "brand-accent", // text in the creator's accent color, outlined
 ] as const;
 
 export type CaptionStyleToken = (typeof CAPTION_STYLE_TOKENS)[number];
 
 export const DEFAULT_CAPTION_STYLE: CaptionStyleToken = "minimal-white-bottom";
 
+/** Text stroke drawn behind the fill for legibility on busy footage. */
+export interface CaptionOutline {
+  color: string;
+  /** Stroke width as a fraction of the font size. */
+  width: number;
+}
+
 /** Renderer-facing style definition consumed by the caption preview and the
- *  ffmpeg.wasm export pipeline. Fonts must have full Arabic coverage. */
+ *  server caption rasterizer. Fonts must have full Arabic coverage.
+ *  Build 6B.2 fields are additive-optional: absent = pre-6B.2 behavior. */
 export interface CaptionStyleSpec {
   token: CaptionStyleToken;
   fontFamily: string;
@@ -113,6 +127,12 @@ export interface CaptionStyleSpec {
   uppercaseLatin: boolean;
   /** Word-level timing animation (karaoke) vs. line-level display. */
   wordLevel: boolean;
+  /** 6B.2: outline stroke behind the fill. */
+  outline?: CaptionOutline;
+  /** 6B.2: size multiplier over the base font size (bounded on render). */
+  fontScale?: number;
+  /** 6B.2: which element pulls the creator's brand color, resolved at export. */
+  useBrandColor?: "text" | "box";
 }
 
 export const CAPTION_STYLE_SPECS: Record<CaptionStyleToken, CaptionStyleSpec> = {
@@ -154,4 +174,106 @@ export const CAPTION_STYLE_SPECS: Record<CaptionStyleToken, CaptionStyleSpec> = 
     uppercaseLatin: false,
     wordLevel: false,
   },
+  "bold-impact": {
+    token: "bold-impact",
+    fontFamily: "IBM Plex Sans Arabic",
+    fontWeight: 700,
+    verticalAnchor: 0.5,
+    textColor: "#FFFFFF",
+    outline: { color: "#000000", width: 0.12 },
+    fontScale: 1.25,
+    uppercaseLatin: true,
+    wordLevel: false,
+  },
+  "outline-clean": {
+    token: "outline-clean",
+    fontFamily: "IBM Plex Sans Arabic",
+    fontWeight: 600,
+    verticalAnchor: 0.85,
+    textColor: "#FFFFFF",
+    outline: { color: "#000000", width: 0.1 },
+    uppercaseLatin: false,
+    wordLevel: false,
+  },
+  "brand-box": {
+    token: "brand-box",
+    fontFamily: "IBM Plex Sans Arabic",
+    fontWeight: 600,
+    verticalAnchor: 0.85,
+    textColor: "#FFFFFF",
+    // Fallback box when no brand color is resolved; useBrandColor overrides it.
+    backgroundColor: "rgba(0,0,0,0.55)",
+    useBrandColor: "box",
+    uppercaseLatin: false,
+    wordLevel: false,
+  },
+  "brand-accent": {
+    token: "brand-accent",
+    fontFamily: "IBM Plex Sans Arabic",
+    fontWeight: 700,
+    verticalAnchor: 0.82,
+    // Fallback text color when no brand color is resolved.
+    textColor: "#FFFFFF",
+    outline: { color: "#000000", width: 0.08 },
+    useBrandColor: "text",
+    uppercaseLatin: false,
+    wordLevel: false,
+  },
 };
+
+/**
+ * Validation for the `exports.caption_config` jsonb snapshot (Build 6B.2).
+ * The render handler parses the column with this and fails loud on malformed
+ * data (same trust-boundary rule as `exports.brand`). `fontScale` is clamped
+ * to a safe band so a bad value can't blow up the layout.
+ */
+export const captionStyleSpecSchema = z.object({
+  token: z.string(),
+  fontFamily: z.string(),
+  fontWeight: z.number(),
+  verticalAnchor: z.number().min(0).max(1),
+  textColor: z.string(),
+  highlightColor: z.string().optional(),
+  backgroundColor: z.string().optional(),
+  uppercaseLatin: z.boolean(),
+  wordLevel: z.boolean(),
+  outline: z.object({ color: z.string(), width: z.number().min(0).max(0.5) }).optional(),
+  fontScale: z.number().min(0.5).max(2).optional(),
+  useBrandColor: z.enum(["text", "box"]).optional(),
+});
+
+/** #RRGGBB → rgba() string at the given alpha (brand colors are hex). */
+export function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/** Brand colors a caption preset may pull from at export time. */
+export interface CaptionBrandColors {
+  primary: string;
+  accent: string;
+}
+
+/**
+ * Resolve the caption spec that must be SNAPSHOTTED for an export (Build 6B.2).
+ * Returns a concrete spec ONLY when the chosen preset needs runtime brand data
+ * (useBrandColor); otherwise null — the token path (`resolveStyleSpec`) already
+ * carries everything, and a null `exports.caption_config` renders exactly as
+ * before 6B.2. Same snapshot philosophy as `exports.brand`: resolve in the app
+ * where the brand colors live, store the result, keep the renderer dumb.
+ */
+export function captionConfigForExport(
+  token: string,
+  brand?: CaptionBrandColors | null,
+): CaptionStyleSpec | null {
+  const spec =
+    CAPTION_STYLE_SPECS[token as CaptionStyleToken] ??
+    CAPTION_STYLE_SPECS[DEFAULT_CAPTION_STYLE];
+  if (!spec.useBrandColor || !brand) return null;
+  if (spec.useBrandColor === "box") {
+    return { ...spec, backgroundColor: hexToRgba(brand.primary, 0.85) };
+  }
+  return { ...spec, textColor: brand.accent };
+}

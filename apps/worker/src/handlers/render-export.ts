@@ -1,12 +1,14 @@
 import {
   brandExportConfigSchema,
   buildExportPlan,
+  captionStyleSpecSchema,
   downgradeEdlV2ToV1,
   parseEdl,
   renderExportPayloadSchema,
   transcriptWordsSchema,
   type AspectRatio,
   type BrandExportConfig,
+  type CaptionStyleSpec,
   type EdlV1,
   type JobRow,
 } from "@merai/core";
@@ -45,6 +47,7 @@ interface ExportRow {
   aspect_ratio: AspectRatio;
   caption_style: string;
   brand: unknown;
+  caption_config: unknown;
 }
 
 /** Injectable side effects so tests never touch storage or real ffmpeg. */
@@ -100,7 +103,7 @@ export async function renderExportWithEngine(
 
   const { rows: exportRows } = await db.query<ExportRow>(
     `select id, project_id, owner_id, edl_version_id, status, cancel_requested,
-            aspect_ratio, caption_style, brand
+            aspect_ratio, caption_style, brand, caption_config
      from public.exports where id = $1`,
     [payload.exportId],
   );
@@ -194,11 +197,27 @@ export async function renderExportWithEngine(
     [exportRow.id],
   );
 
+  // Caption spec (Build 6B.2): a caption_config snapshot (brand-colored /
+  // studio preset) overrides the token path. Null = the token render,
+  // byte-identical to pre-6B.2. Malformed config is deterministic → fail loud.
+  let baseCaptionSpec: CaptionStyleSpec;
+  if (exportRow.caption_config != null) {
+    const parsedCaption = captionStyleSpecSchema.safeParse(exportRow.caption_config);
+    if (!parsedCaption.success) {
+      throw new PermanentJobError(
+        `export ${exportRow.id} has an invalid caption_config: ${parsedCaption.error.issues[0]?.message ?? "unknown"}`,
+      );
+    }
+    baseCaptionSpec = parsedCaption.data as CaptionStyleSpec;
+  } else {
+    baseCaptionSpec = resolveStyleSpec(exportRow.caption_style);
+  }
+
   const plan = buildExportPlan({ edl, words, brand });
   // A lower third owns the bottom band — lift bottom captions above it so the
   // two don't overprint (live E2E finding, Build 6B.1).
   const captionSpec = captionSpecAboveLowerThird(
-    resolveStyleSpec(exportRow.caption_style),
+    baseCaptionSpec,
     Boolean(brand?.lowerThird),
   );
   const captionImages = renderCaptionImages(

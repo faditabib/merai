@@ -81,7 +81,8 @@ export function renderCaptionImages(
   height: number,
 ): { name: string; data: Uint8Array }[] {
   registerCaptionFonts();
-  const fontSize = Math.round(height * 0.045);
+  // 6B.2: fontScale grows/shrinks the base size (preset-driven).
+  const fontSize = Math.round(height * 0.045 * (spec.fontScale ?? 1));
   // Skia weight selection happens via the CSS-style font string.
   const fontDecl = `${spec.fontWeight} ${fontSize}px "${FONT_FAMILY}"`;
 
@@ -117,10 +118,21 @@ export function renderCaptionImages(
         fontSize * 0.25,
       );
       ctx.fill();
-    } else {
+    } else if (!spec.outline) {
+      // Outline provides its own contrast; only fall back to a drop shadow
+      // when there's neither a box nor an outline (6B.2).
       ctx.shadowColor = "rgba(0,0,0,0.9)";
       ctx.shadowBlur = fontSize * 0.15;
       ctx.shadowOffsetY = 2;
+    }
+
+    // 6B.2: outline stroke drawn behind the fill for busy-footage legibility.
+    if (spec.outline) {
+      ctx.lineWidth = fontSize * spec.outline.width;
+      ctx.strokeStyle = spec.outline.color;
+      ctx.lineJoin = "round";
+      ctx.miterLimit = 2;
+      ctx.strokeText(text, x, y, maxWidth);
     }
 
     ctx.fillStyle = spec.textColor;

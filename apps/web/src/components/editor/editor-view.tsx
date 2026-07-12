@@ -10,6 +10,7 @@ import {
   edlOutputDurationMs,
   sourceToOutputMs,
   type BrandExportConfig,
+  type CaptionBrandColors,
   type CaptionStyleToken,
   type EditCommand,
   type EdlV1,
@@ -39,6 +40,8 @@ export interface EditorViewProps {
   sourceDurationMs: number;
   /** Owner's Brand Kit compiled to an export snapshot; null = no branding set. */
   brandConfig: BrandExportConfig | null;
+  /** Owner's brand colors for brand-* caption presets; null = no kit. */
+  brandColors: CaptionBrandColors | null;
 }
 
 /**
@@ -328,6 +331,7 @@ export function EditorView(props: EditorViewProps) {
               words={props.words}
               sourceMs={sourceMs}
               styleToken={edl.captionStyle as CaptionStyleToken}
+              brandColors={props.brandColors}
             />
           </div>
 
@@ -359,6 +363,7 @@ export function EditorView(props: EditorViewProps) {
             <span className="text-sm font-medium">{t("captionStyle")}</span>
             <CaptionStylePicker
               value={edl.captionStyle}
+              brandColors={props.brandColors}
               onChange={(token) =>
                 runCommand({ type: "set-caption-style", styleToken: token })
               }
@@ -420,6 +425,7 @@ export function EditorView(props: EditorViewProps) {
         ownerId={props.ownerId}
         edl={edl}
         brandConfig={props.brandConfig}
+        brandColors={props.brandColors}
         onChangeAspect={(ratio) =>
           runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
         }
