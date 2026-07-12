@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Build 6B.3 — Caption Studio UX (2026-07-12)
+
+144 tests green (65 core + 67 worker + 12 web) · next build ✓ · ar/en parity
+330 = 330 · migration 11 (BUILD_6B_3_ANALYSIS.md + BUILD_6B_3_REPORT.md).
+UX-only build within the hard constraints (no EDL/AI Brain/render-arch, no
+saved preset library).
+
+- 8 creator presets (Viral/Podcast/Educational/Medical/Luxury/Minimal/
+  High Energy/Professional) in a gallery with thumbnail + animation label +
+  use case; old developer tokens stay resolvable but hidden.
+- One shared CaptionPreview renderer (mirrors the worker rasterizer) → preview
+  = export by construction; reused by gallery, live preview, editor overlay.
+- Live controls: position, font scale, text/brand color, outline, box.
+- Single default preference in new nullable brand_kits.caption_default_config
+  ("set as default"); NOT a preset library.
+- Export "your video style" card (caption / brand + color word / format);
+  working spec snapshotted to exports.caption_config (6B.2 channel).
+- Worker UNCHANGED (already renders caption_config from 6B.2). Decision:
+  animation is a label (static export); karaoke/motion export still deferred.
+
+---
+
 ## Build 6B.2 — Caption Studio (2026-07-12)
 
 141 tests green (62 core + 67 worker + 12 web) · next build ✓ · ar/en parity
