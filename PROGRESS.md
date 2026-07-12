@@ -1,5 +1,26 @@
 # Merai — Progress Log
 
+## Build 6C.1 — Tajawal UI + Creator Dashboard + thumbnails (2026-07-12)
+
+144 tests green (65 core + 67 worker + 12 web) · next build ✓ · ar/en parity
+340 = 340 · **zero migrations, no worker change** (BUILD_6C_1_ANALYSIS.md +
+BUILD_6C_1_REPORT.md). First sub-build of the approved Build 6C plan
+(BUILD_6C_ANALYSIS.md).
+
+- UI font → Tajawal (next/font, --font-sans/body). IBM Plex kept + pinned as
+  --font-caption so the live caption preview still matches the export (worker
+  rasterizes vendored Plex, unchanged).
+- Creator dashboard: hero + QuickActions (New video / Brand Kit / Caption
+  Studio + "Record — soon" placeholder for Build 7), data-driven
+  BrandSetupNudge, responsive ProjectCard grid, empty state keeps WorkflowSteps.
+- Client-side thumbnails (ProjectThumbnail): lazy IntersectionObserver →
+  signed URL → first-frame canvas → cached; branded placeholder fallback. No
+  backend, no thumbnails bucket.
+- Two bounded dashboard reads (brand_kit + latest uploads) deduped in JS; no
+  schema change. Next: 6C.2 Creator Styles.
+
+---
+
 ## Build 6B.3 — Caption Studio UX (2026-07-12)
 
 144 tests green (65 core + 67 worker + 12 web) · next build ✓ · ar/en parity
