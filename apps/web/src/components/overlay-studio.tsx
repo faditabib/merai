@@ -18,18 +18,20 @@ export interface OverlayStudioProps {
   onWidthPct: (v: number) => void;
 }
 
-/** CSS placement mirroring core `logoBox` (margin % of the frame, width % of
- *  frame width) so the preview matches the export. */
+/** CSS placement mirroring core `logoBox` EXACTLY. logoBox is PHYSICAL
+ *  (start = left, end = right) — a watermark corner is direction-independent —
+ *  so the preview must use physical left/right too, or preview ≠ export in the
+ *  RTL page. Margin % of the frame, width % of frame width. */
 function placement(position: OverlayPosition, widthPct: number, opacity: number) {
   const m = `${OVERLAY_MARGIN_PCT * 100}%`;
   const isTop = position.startsWith("top");
-  const isStart = position.endsWith("start");
+  const isLeft = position.endsWith("start"); // start = physical left (see logoBox)
   return {
     position: "absolute" as const,
     width: `${widthPct * 100}%`,
     opacity,
     ...(isTop ? { top: m } : { bottom: m }),
-    ...(isStart ? { insetInlineStart: m } : { insetInlineEnd: m }),
+    ...(isLeft ? { left: m } : { right: m }),
   };
 }
 

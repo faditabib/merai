@@ -90,7 +90,22 @@ placement; applying a style seeds them (the logo **image** stays the creator's).
 - Onboarding wizard (6C.4). SVG logo rasterization; per-project overlay
   overrides; animated overlays; a `brand_kits.logo_default` column.
 
-## 8. Production
-- **Both worker and web deploy** (render changed). A frame-verified E2E (logo
-  composited over captions + gradient; lower-third box; unbranded unchanged) is
-  recorded below.
+## 8. Production — deployed & verified (2026-07-12)
+- **Worker (`2edd9e45`) + Vercel web deployed** (render changed).
+- **Frame-verified E2E through the deployed worker** (throwaway user + synthetic
+  clip + a real uploaded logo, cleaned up, 0 leftovers):
+  - **Branded:** the magenta logo composited at the bottom-end corner **on top
+    of** the gradient + caption + lower-third **box** — confirming the logo
+    layer, corner placement, opacity/size, and the canonical z-order end-to-end.
+  - **Unbranded control:** caption only, no gradient/logo/lower-third —
+    backward compatibility confirmed.
+- **Live finding (fixed same session):** the logo is placed by **physical**
+  corner (`logoBox`: start = left) — a watermark corner is direction-independent
+  — but the Overlay Studio preview first used **logical** `insetInlineStart`,
+  which would disagree with the export in the RTL page. Fixed to physical
+  `left`/`right` so preview = export (a **preview-only** CSS fix; no worker
+  change). Redeployed web.
+- **Noted semantics:** the logo is physical while the lower third is logical
+  (RTL-aware), so a "bottom-start" lower third (right, for Arabic) and a
+  "bottom-end" logo (physical right) can land on the same side — the studios'
+  previews surface the overlap so the creator picks clear corners.
