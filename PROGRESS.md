@@ -1,5 +1,24 @@
 # Merai — Progress Log
 
+## Build 6C.2 — Creator Styles System (2026-07-12)
+
+150 tests green (71 core + 67 worker + 12 web) · next build ✓ · ar/en parity
+365 = 365 · **zero migrations, no worker/render change** (BUILD_6C_2_ANALYSIS.md
++ BUILD_6C_2_REPORT.md).
+
+- Hybrid catalog: CREATOR_STYLES (6) in core — Founder Bold / Educational Clean
+  / Podcast Classic / Medical Trust / Luxury Minimal / High Energy — each a real
+  caption spec + colors + gradient + lower-third colors + format. Pure
+  creatorStyleBrandKitPatch overwrites the look, preserves identity (lower-third
+  name, logo). No-creator-names CI guard.
+- One-click apply: gallery atop the Brand Kit form seeds the form's live state
+  so the whole preview transforms instantly; Save persists + records
+  user_metadata.creator_style. Dashboard "Your style" chip.
+- Styles flow to exports through the existing kit→snapshot pipeline — no new
+  render code. Next: 6C.3 Overlay Studio (logo layer).
+
+---
+
 ## Build 6C.1 — Tajawal UI + Creator Dashboard + thumbnails (2026-07-12)
 
 144 tests green (65 core + 67 worker + 12 web) · next build ✓ · ar/en parity
