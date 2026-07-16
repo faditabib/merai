@@ -78,6 +78,8 @@ export default async function DashboardPage({
 
   const showOnboarding =
     !user?.user_metadata?.onboarding_dismissed_at && hasProjects;
+  // 6C.4: suggest the setup wizard until it's completed (or skipped).
+  const wizardPending = !user?.user_metadata?.onboarding_completed_at;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -103,7 +105,22 @@ export default async function DashboardPage({
           <QuickActions />
         </div>
 
-        {brandIncomplete && <BrandSetupNudge />}
+        {/* 6C.4: one-tap studio setup — shown until completed or skipped. */}
+        {wizardPending && hasProjects && (
+          <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-accent/30 bg-accent/5 p-5">
+            <div>
+              <h2 className="font-bold">{t("wizardBanner.title")}</h2>
+              <p className="mt-0.5 text-sm text-muted">{t("wizardBanner.body")}</p>
+            </div>
+            <Link
+              href="/dashboard/onboarding"
+              className="shrink-0 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+            >
+              {t("wizardBanner.cta")}
+            </Link>
+          </section>
+        )}
+        {brandIncomplete && !wizardPending && <BrandSetupNudge />}
         {showOnboarding && <OnboardingCallout />}
 
         {hasProjects ? (
@@ -130,12 +147,27 @@ export default async function DashboardPage({
               <p className="max-w-md text-sm leading-relaxed text-muted">
                 {t("emptyBody")}
               </p>
-              <Link
-                href="/dashboard/new"
-                className="mt-1 rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
-              >
-                {t("newProject")}
-              </Link>
+              {/* 6C.4: new creators are guided through setup first. */}
+              <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
+                {wizardPending && (
+                  <Link
+                    href="/dashboard/onboarding"
+                    className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
+                  >
+                    {t("wizardBanner.cta")}
+                  </Link>
+                )}
+                <Link
+                  href="/dashboard/new"
+                  className={
+                    wizardPending
+                      ? "rounded-xl border border-border px-6 py-2.5 font-semibold transition hover:border-accent hover:text-accent"
+                      : "rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
+                  }
+                >
+                  {t("newProject")}
+                </Link>
+              </div>
             </div>
             <div className="w-full max-w-3xl border-t border-border pt-6 text-start">
               <WorkflowSteps />

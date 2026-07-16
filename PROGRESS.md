@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Build 6C.4 — Creator Onboarding Wizard (2026-07-16)
+
+166 tests green (81 core + 73 worker + 12 web) · next build ✓ · ar/en parity
+431 = 431 · **zero migrations, no worker change** (BUILD_6C_4_ANALYSIS.md +
+BUILD_6C_4_REPORT.md). Final 6C sub-build — Build 6C complete.
+
+- Creator Types catalog in core (6 personas → existing Creator Styles + AI
+  intent seeds); pure creatorTypeDefaults resolver; no-real-names guard
+  extended to type ids.
+- /dashboard/onboarding wizard: type → brand basics (palette prefilled,
+  optional logo) → look (recommended style chipped) → summary. Finish = one
+  guided write through existing channels (creatorStyleBrandKitPatch →
+  brand_kits upsert, user_metadata flags, ai_preferences intent). Skip only
+  sets the completion flag.
+- Dashboard: wizard as empty-state primary CTA for new creators, compact
+  banner for existing ones; both disappear once completed/skipped.
+- Live-verified E2E (throwaway user, cleaned up): doctor → medical-trust patch
+  byte-exact in brand_kits, metadata + intent seeded, style chip live.
+  Next: Build 7 (Creator Studio / recording).
+
+---
+
 ## Build 6C.3 — Overlay Studio (2026-07-12)
 
 160 tests green (75 core + 73 worker + 12 web) · next build ✓ · ar/en parity

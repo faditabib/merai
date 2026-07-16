@@ -29,7 +29,13 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/dashboard/brand-kit)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://merai-web-pi.vercel.app/en/dashboard/brand-kit)",
       "Bash(ffmpeg -y -f lavfi -i color=c=0xE11D8F:s=220x130 -frames:v 1 C:/Users/utopi/AppData/Local/Temp/claude/D--Merai-app/83761fc0-0a67-48c9-8a83-fb6035b34ebc/scratchpad/e2e-logo.png)",
-      "Bash(awk '{print $5,$9}')"
+      "Bash(awk '{print $5,$9}')",
+      "PowerShell(head -30)",
+      "PowerShell(cd \"D:\\\\Merai app\"; ls apps/web/test | % Name; node -e \"const p=require\\('./apps/web/package.json'\\); console.log\\(JSON.stringify\\(p.scripts\\)\\)\")",
+      "PowerShell(cd \"D:\\\\Merai app\"; ls packages/core/test | % Name; node -e \"const r=require\\('./package.json'\\); console.log\\(JSON.stringify\\(r.scripts\\)\\)\")",
+      "PowerShell(cd \"D:\\\\Merai app\"; ls scripts -ErrorAction SilentlyContinue | % Name; ls .claude | % Name; ls e2e -ErrorAction SilentlyContinue | % Name)",
+      "PowerShell(cd \"D:\\\\Merai app\"; Get-Content .env.local | ForEach-Object { \\($_ -split '='\\)[0] } | Where-Object { $_ -and $_ -notmatch '^#' })",
+      "PowerShell(cd \"D:\\\\Merai app\"; Get-Content apps/web/.env.local | ForEach-Object { \\($_ -split '='\\)[0] } | Where-Object { $_ -and $_ -notmatch '^#' }; '--- worker ---'; Get-Content apps/worker/.env | ForEach-Object { \\($_ -split '='\\)[0] } | Where-Object { $_ -and $_ -notmatch '^#' })"
     ]
   }
 }

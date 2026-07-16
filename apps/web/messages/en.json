@@ -57,6 +57,11 @@
       "body": "Add your logo, colors and caption style so every video carries your brand automatically.",
       "cta": "Set up brand"
     },
+    "wizardBanner": {
+      "title": "Set up your studio in a minute",
+      "body": "Pick what you create and we'll apply a full style and brand identity automatically.",
+      "cta": "Start setup"
+    },
     "emptyTitle": "Ready for your first video?",
     "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
     "newProject": "New project",
@@ -331,6 +336,48 @@
       "premium": "Premium brands",
       "shortform": "Short-form"
     }
+  },
+  "onboardingWizard": {
+    "title": "Set up your studio",
+    "subtitle": "One minute, and every video carries your identity.",
+    "skip": "Skip for now",
+    "back": "Back",
+    "next": "Next",
+    "stepOf": "Step {current, number} of {total, number}",
+    "typeTitle": "What do you create?",
+    "typeSubtitle": "Pick your type and we'll configure everything — you can change it anytime.",
+    "types": {
+      "content-creator": { "name": "Content creator", "desc": "Fast-paced shorts and reels." },
+      "podcast": { "name": "Podcast", "desc": "Episodes, interviews and clips." },
+      "coach": { "name": "Coach / founder", "desc": "Motivational, audience-building content." },
+      "doctor": { "name": "Doctor / health", "desc": "Medical awareness with a trusted look." },
+      "educator": { "name": "Educator", "desc": "Clear lessons and explainers." },
+      "business": { "name": "Business", "desc": "Professional content for your brand." }
+    },
+    "brandTitle": "Your brand basics",
+    "brandSubtitle": "We prefilled the colors suggested for your type — tweak them as you like.",
+    "nameLabel": "Brand name",
+    "namePlaceholder": "e.g. Noor Studio",
+    "primaryColor": "Primary color",
+    "secondaryColor": "Secondary color",
+    "accentColor": "Accent color",
+    "logoLabel": "Logo (optional)",
+    "logoUpload": "Upload your logo",
+    "logoReplace": "Replace logo",
+    "logoError": "Logo upload failed — PNG, JPG or WebP up to 2MB.",
+    "styleTitle": "Pick your look",
+    "styleSubtitle": "We pre-selected a style for your type — try another with one tap.",
+    "recommended": "Recommended",
+    "colorsKeptNote": "Your colors from the previous step are kept.",
+    "summaryTitle": "This is your look",
+    "summarySubtitle": "Every export will carry this identity automatically — edit it anytime in Brand Kit.",
+    "yourPalette": "Your palette",
+    "styleLabel": "Style",
+    "formatLabel": "Recommended format",
+    "ctaUpload": "Upload your first video",
+    "ctaDashboard": "Go to dashboard",
+    "saving": "Saving…",
+    "saveError": "Couldn't save. Check your connection and try again."
   },
   "captionStudio": {
     "sample": "Caption text",
