@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { MAX_RAW_UPLOAD_SECONDS } from "@merai/core";
+import { MAX_RAW_UPLOAD_SECONDS, type OverlayPosition } from "@merai/core";
 import {
   containerOfMime,
   formatElapsed,
@@ -11,9 +11,21 @@ import {
   takeFilename,
   type RecorderSession,
 } from "@/lib/record/recorder";
+import {
+  clampPipWidth,
+  createCompositeStream,
+  PIP_WIDTH_DEFAULT,
+  PIP_WIDTH_MAX,
+  PIP_WIDTH_MIN,
+  RECORD_MODES,
+  streamsForMode,
+  type CompositeHandle,
+  type RecordMode,
+} from "@/lib/record/composite";
 import { UploadFlow } from "@/components/upload-flow";
 
 const DEVICE_STORAGE_KEY = "merai.record.devices";
+const PREFS_STORAGE_KEY = "merai.record.prefs";
 const COUNTDOWN_SECONDS = 3;
 const CAP_MS = MAX_RAW_UPLOAD_SECONDS * 1000;
 /** Amber warning zone: the last 60 seconds before the cap. */
@@ -27,7 +39,12 @@ type Phase =
   | "review"
   | "uploading";
 
-type SetupError = "permission-denied" | "no-devices" | "unsupported" | null;
+type SetupError =
+  | "permission-denied"
+  | "no-devices"
+  | "unsupported"
+  | "screen-denied"
+  | null;
 
 interface Take {
   id: number;
@@ -58,7 +75,14 @@ export function RecordFlow() {
   const [reviewTake, setReviewTake] = useState<Take | null>(null);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
 
+  // Build 7.2: recording mode + PiP preferences (persisted, device-level).
+  const [mode, setMode] = useState<RecordMode>("camera");
+  const [pipPosition, setPipPosition] = useState<OverlayPosition>("bottom-end");
+  const [pipWidthPct, setPipWidthPct] = useState(PIP_WIDTH_DEFAULT);
+
   const streamRef = useRef<MediaStream | null>(null);
+  const screenStreamRef = useRef<MediaStream | null>(null);
+  const compositeRef = useRef<CompositeHandle | null>(null);
   const sessionRef = useRef<RecorderSession | null>(null);
   const previewRef = useRef<HTMLVideoElement | null>(null);
   const takeCounter = useRef(0);
@@ -110,11 +134,30 @@ export function RecordFlow() {
     [releaseStream],
   );
 
-  // First open + persisted device preference.
+  const releaseScreen = useCallback(() => {
+    compositeRef.current?.stop();
+    compositeRef.current = null;
+    screenStreamRef.current?.getTracks().forEach((track) => track.stop());
+    screenStreamRef.current = null;
+  }, []);
+
+  // First open + persisted device/mode/PiP preferences.
   useEffect(() => {
     let saved: { camera?: string; mic?: string } = {};
     try {
       saved = JSON.parse(localStorage.getItem(DEVICE_STORAGE_KEY) ?? "{}");
+    } catch {
+      /* fresh */
+    }
+    try {
+      const prefs = JSON.parse(localStorage.getItem(PREFS_STORAGE_KEY) ?? "{}");
+      if ((RECORD_MODES as readonly string[]).includes(prefs.mode)) setMode(prefs.mode);
+      if (["top-start", "top-end", "bottom-start", "bottom-end"].includes(prefs.pipPosition)) {
+        setPipPosition(prefs.pipPosition);
+      }
+      if (typeof prefs.pipWidthPct === "number") {
+        setPipWidthPct(clampPipWidth(prefs.pipWidthPct));
+      }
     } catch {
       /* fresh */
     }
@@ -123,16 +166,32 @@ export function RecordFlow() {
     void openStream(saved.camera, saved.mic);
     return () => {
       sessionRef.current?.stop();
+      releaseScreen();
       releaseStream();
     };
     // Mount-only by design.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Keep the preview attached across phase changes (the element remounts).
+  // Persist mode + PiP prefs whenever they change.
   useEffect(() => {
-    if (previewRef.current && streamRef.current) {
-      previewRef.current.srcObject = streamRef.current;
+    try {
+      localStorage.setItem(
+        PREFS_STORAGE_KEY,
+        JSON.stringify({ mode, pipPosition, pipWidthPct }),
+      );
+    } catch {
+      /* private mode */
+    }
+  }, [mode, pipPosition, pipWidthPct]);
+
+  // Keep the preview attached across phase changes (the element remounts).
+  // While a composite is live (screen modes), the preview must show the
+  // EXACT stream being recorded, not the raw camera (preview = output).
+  useEffect(() => {
+    const active = compositeRef.current?.stream ?? streamRef.current;
+    if (previewRef.current && active) {
+      previewRef.current.srcObject = active;
     }
   }, [phase]);
 
@@ -152,8 +211,23 @@ export function RecordFlow() {
     void openStream(nextCamera || undefined, nextMic || undefined);
   };
 
-  /** 3·2·1 then start the recorder session. */
-  const beginCountdown = () => {
+  /** Screen picker (must run inside the user gesture), then 3·2·1, then
+   *  start the recorder session. */
+  const beginCountdown = async () => {
+    setSetupError(null);
+    const needs = streamsForMode(mode);
+    if (needs.screen) {
+      try {
+        screenStreamRef.current = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: true, // system audio when the browser/OS offers it
+        });
+      } catch (err) {
+        console.error("getDisplayMedia failed", err);
+        setSetupError("screen-denied");
+        return;
+      }
+    }
     setCountdown(COUNTDOWN_SECONDS);
     setPhase("countdown");
     let n = COUNTDOWN_SECONDS;
@@ -169,20 +243,45 @@ export function RecordFlow() {
   };
 
   const startRecording = () => {
-    const stream = streamRef.current;
+    const cameraStream = streamRef.current;
     const mime = mimeRef.current;
-    if (!stream || !mime) {
+    const needs = streamsForMode(mode);
+    if (!cameraStream || !mime || (needs.screen && !screenStreamRef.current)) {
+      releaseScreen();
       setPhase("setup");
       setSetupError("no-devices");
       return;
     }
+
+    // Camera mode records the raw camera stream (7.1). Screen modes record
+    // the composite canvas: screen full-frame (+ camera bubble in
+    // screen-camera) + mic/display audio mixed — ONE blob either way.
+    let recordingStream = cameraStream;
+    if (needs.screen && screenStreamRef.current) {
+      compositeRef.current = createCompositeStream({
+        screenStream: screenStreamRef.current,
+        cameraStream: mode === "screen-camera" ? cameraStream : null,
+        micStream: cameraStream, // its audio tracks; video ignored
+        pip: { position: pipPosition, widthPct: pipWidthPct },
+        onScreenEnded: () => sessionRef.current?.stop(),
+      });
+      recordingStream = compositeRef.current.stream;
+      // The preview shows the EXACT stream being recorded.
+      if (previewRef.current) previewRef.current.srcObject = recordingStream;
+    }
+
     setElapsedMs(0);
     sessionRef.current = startRecorderSession({
-      stream,
+      stream: recordingStream,
       mimeType: mime,
       maxDurationMs: CAP_MS,
       onTick: setElapsedMs,
       onComplete: (blob, durationMs) => {
+        // Tear down screen/composite; restore the camera preview.
+        releaseScreen();
+        if (previewRef.current && streamRef.current) {
+          previewRef.current.srcObject = streamRef.current;
+        }
         takeCounter.current += 1;
         // The File carries the bare CONTAINER mime (video/webm), not the
         // codec-qualified recorder mime — that's what the upload validator
@@ -243,6 +342,9 @@ export function RecordFlow() {
   const mb = (bytes: number) => (bytes / (1024 * 1024)).toFixed(1);
   const capWarning = elapsedMs >= CAP_WARN_MS;
   const recordingLike = phase === "recording" || phase === "paused";
+  const needs = streamsForMode(mode);
+  // Mirror only the raw selfie camera — never the screen composite.
+  const mirrorPreview = !(recordingLike && needs.screen);
 
   // ---- Upload handoff: the existing flow owns everything from here. ----
   if (phase === "uploading" && uploadFile) {
@@ -263,7 +365,7 @@ export function RecordFlow() {
           autoPlay
           muted
           playsInline
-          className="aspect-video w-full -scale-x-100 object-cover"
+          className={`aspect-video w-full object-cover ${mirrorPreview ? "-scale-x-100" : ""}`}
         />
 
         {/* Countdown overlay */}
@@ -301,8 +403,8 @@ export function RecordFlow() {
         )}
       </div>
 
-      {/* Setup errors */}
-      {phase === "setup" && setupError && (
+      {/* Device setup errors (camera/mic) — blocking, with retry. */}
+      {phase === "setup" && setupError && setupError !== "screen-denied" && (
         <div className="flex flex-col gap-3 rounded-xl border border-red-500/40 bg-red-500/5 p-4">
           <p role="alert" className="text-sm text-red-500">
             {t(`errors.${setupError}`)}
@@ -317,9 +419,77 @@ export function RecordFlow() {
         </div>
       )}
 
+      {/* Screen-share denied — non-blocking, controls stay usable. */}
+      {phase === "setup" && setupError === "screen-denied" && (
+        <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-500">
+          {t("errors.screen-denied")}
+        </p>
+      )}
+
       {/* Controls */}
-      {phase === "setup" && !setupError && (
+      {phase === "setup" && (!setupError || setupError === "screen-denied") && (
         <div className="flex flex-col gap-4">
+          {/* Mode selector (7.2) */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm">{t("modeLabel")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {RECORD_MODES.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMode(m)}
+                  className={`rounded-lg border px-4 py-2 text-sm ${
+                    mode === m
+                      ? "border-accent bg-accent/15 text-accent"
+                      : "border-border text-muted hover:border-accent"
+                  }`}
+                >
+                  {t(`modes.${m}`)}
+                </button>
+              ))}
+            </div>
+            {needs.screen && <p className="text-xs text-muted">{t("screenHint")}</p>}
+          </div>
+
+          {/* PiP preferences (screen-camera) — the bubble uses the brand-logo
+              geometry, same corners and size semantics as the Overlay Studio. */}
+          {mode === "screen-camera" && (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-xs text-muted">{t("pipPosition")}</span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(["top-start", "top-end", "bottom-start", "bottom-end"] as OverlayPosition[]).map(
+                    (p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setPipPosition(p)}
+                        className={`rounded-lg border px-2 py-1.5 text-xs ${
+                          pipPosition === p
+                            ? "border-accent bg-accent/15 text-accent"
+                            : "border-border text-muted hover:border-accent"
+                        }`}
+                      >
+                        {t(`pipPositions.${p}`)}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+              <label className="flex flex-col gap-1.5 text-sm">
+                {t("pipSize", { percent: Math.round(pipWidthPct * 100) })}
+                <input
+                  type="range"
+                  min={Math.round(PIP_WIDTH_MIN * 100)}
+                  max={Math.round(PIP_WIDTH_MAX * 100)}
+                  value={Math.round(pipWidthPct * 100)}
+                  onChange={(e) => setPipWidthPct(Number(e.target.value) / 100)}
+                  dir="ltr"
+                />
+              </label>
+            </div>
+          )}
+
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-sm">
               {t("camera")}
@@ -353,7 +523,7 @@ export function RecordFlow() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={beginCountdown}
+              onClick={() => void beginCountdown()}
               className="rounded-xl bg-red-600 px-6 py-2.5 font-semibold text-white transition hover:bg-red-500"
             >
               {takes.length > 0 ? t("recordAnother") : t("startRecording")}

@@ -1,5 +1,26 @@
 # Merai — Progress Log
 
+## Build 7.2 — Screen + Camera Recording, PiP, Preferences (2026-07-16)
+
+190 tests green (81 core + 73 worker + 36 web) · next build ✓ · ar/en parity
+466 = 466 · **zero migrations, no worker change** (BUILD_7_2_ANALYSIS.md +
+BUILD_7_2_REPORT.md).
+
+- Three modes: camera / screen / screen-camera. Screen modes composite onto
+  ONE canvas (screen letterboxed + camera in a rounded PiP bubble) recorded
+  by the unchanged 7.1 RecorderSession → one blob → existing pipeline.
+- PiP geometry IS core logoBox (same corners/margins/width semantics as the
+  brand logo layer) — tested equivalence. Mic + display audio mixed via one
+  AudioContext. Screen picker opens on Start (gesture); native "stop sharing"
+  completes the take.
+- Prefs persisted: mode + PiP corner + size (clamped 0.12–0.35).
+- Live-found fix: preview re-attach effect overwrote the composite with the
+  raw camera — preview now always shows the recorded stream (pixel-verified:
+  blue screen center, magenta camera bubble at the computed logoBox corner).
+  E2E: composite take → upload → project. Next: 7.3 scenes + teleprompter.
+
+---
+
 ## Build 7.1 — Recording Foundation (2026-07-16)
 
 178 tests green (81 core + 73 worker + 24 web) · next build ✓ · ar/en parity

@@ -340,6 +340,21 @@
     "pageTitle": "استوديو التسجيل",
     "pageSubtitle": "سجّل بالكاميرا والمايك مباشرة — ثم يتولى محرّرك الذكي الباقي.",
     "backToDashboard": "لوحة التحكم",
+    "modeLabel": "وضع التسجيل",
+    "modes": {
+      "camera": "الكاميرا",
+      "screen": "الشاشة",
+      "screen-camera": "الشاشة + الكاميرا"
+    },
+    "screenHint": "ستختار الشاشة أو النافذة عند بدء التسجيل.",
+    "pipPosition": "موضع فقاعة الكاميرا",
+    "pipPositions": {
+      "top-start": "أعلى البداية",
+      "top-end": "أعلى النهاية",
+      "bottom-start": "أسفل البداية",
+      "bottom-end": "أسفل النهاية"
+    },
+    "pipSize": "حجم الفقاعة: {percent, number}٪",
     "camera": "الكاميرا",
     "microphone": "المايكروفون",
     "cameraFallback": "كاميرا {n, number}",
@@ -361,7 +376,8 @@
     "errors": {
       "permission-denied": "نحتاج إذن الكاميرا والمايكروفون للتسجيل — اسمح بالوصول من إعدادات المتصفح ثم أعد المحاولة.",
       "no-devices": "لم نعثر على كاميرا أو مايكروفون متصل.",
-      "unsupported": "متصفحك لا يدعم التسجيل — جرّب أحدث نسخة من Chrome أو Safari."
+      "unsupported": "متصفحك لا يدعم التسجيل — جرّب أحدث نسخة من Chrome أو Safari.",
+      "screen-denied": "لم يتم اختيار شاشة للمشاركة — اضغط «ابدأ التسجيل» واختر شاشة أو نافذة."
     }
   },
   "onboardingWizard": {
