@@ -1,5 +1,25 @@
 # Merai — Progress Log
 
+## Build 7.3 — Teleprompter, Speaker Notes, Countdown Controls (2026-07-16)
+
+195 tests green (81 core + 73 worker + 41 web) · next build ✓ · ar/en parity
+475 = 475 · **zero migrations, no worker change** (BUILD_7_3_ANALYSIS.md +
+BUILD_7_3_REPORT.md).
+
+- Script assist in the recorder: off / speaker notes (static band) /
+  teleprompter (scrolling overlay). Speed 10–120 px/s, font 18–48 px, live
+  reading-time estimate (Arabic+Latin word count @140wpm). Script drafts to
+  localStorage; prefs ride merai.record.prefs. Countdown picker 3/5/10s.
+- Scroll offset is a pure function of the SESSION's pause-excluding elapsed —
+  pausing freezes the script exactly (live-verified: −1290.24px at 00:32 =
+  exact 40px/s). Overlay is DOM above the preview; can't leak into the
+  recording.
+- Live-found fix: per-tick CSS transitions stalled under compositor
+  throttling → baseline renders inline from elapsed ticks + rAF smoothing
+  when frames fire. Next: 7.4 scenes + worker stitch.
+
+---
+
 ## Build 7.2 — Screen + Camera Recording, PiP, Preferences (2026-07-16)
 
 190 tests green (81 core + 73 worker + 36 web) · next build ✓ · ar/en parity

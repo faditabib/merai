@@ -362,6 +362,19 @@
     "startRecording": "ابدأ التسجيل",
     "recordAnother": "سجّل لقطة أخرى",
     "capHint": "الحد الأقصى ١٠ دقائق للتسجيل.",
+    "countdownLabel": "العد التنازلي",
+    "countdownSeconds": "{s, number} ث",
+    "prompter": {
+      "label": "النص المساعد",
+      "modes": {
+        "off": "بدون",
+        "notes": "ملاحظات ثابتة",
+        "prompter": "تلقين متحرك"
+      },
+      "placeholder": "اكتب نص حلقتك هنا — يظهر فوق المعاينة أثناء التسجيل.",
+      "speed": "سرعة التمرير",
+      "fontSize": "حجم الخط"
+    },
     "pause": "إيقاف مؤقت",
     "resume": "متابعة",
     "stop": "إنهاء اللقطة",

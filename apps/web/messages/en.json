@@ -362,6 +362,19 @@
     "startRecording": "Start recording",
     "recordAnother": "Record another take",
     "capHint": "Recordings are capped at 10 minutes.",
+    "countdownLabel": "Countdown",
+    "countdownSeconds": "{s, number}s",
+    "prompter": {
+      "label": "Script assist",
+      "modes": {
+        "off": "Off",
+        "notes": "Speaker notes",
+        "prompter": "Teleprompter"
+      },
+      "placeholder": "Write your script here — it shows over the preview while recording.",
+      "speed": "Scroll speed",
+      "fontSize": "Font size"
+    },
     "pause": "Pause",
     "resume": "Resume",
     "stop": "Finish take",

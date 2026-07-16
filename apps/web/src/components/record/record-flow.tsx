@@ -22,11 +22,28 @@ import {
   type CompositeHandle,
   type RecordMode,
 } from "@/lib/record/composite";
+import {
+  clampCountdown,
+  clampFontPx,
+  clampScrollSpeed,
+  COUNTDOWN_DEFAULT,
+  COUNTDOWN_OPTIONS,
+  estimateReadingSeconds,
+  FONT_DEFAULT,
+  FONT_MAX,
+  FONT_MIN,
+  SCRIPT_MAX_CHARS,
+  SCRIPT_STORAGE_KEY,
+  SPEED_DEFAULT,
+  SPEED_MAX,
+  SPEED_MIN,
+  type PrompterMode,
+} from "@/lib/record/teleprompter";
+import { TeleprompterOverlay } from "@/components/record/teleprompter";
 import { UploadFlow } from "@/components/upload-flow";
 
 const DEVICE_STORAGE_KEY = "merai.record.devices";
 const PREFS_STORAGE_KEY = "merai.record.prefs";
-const COUNTDOWN_SECONDS = 3;
 const CAP_MS = MAX_RAW_UPLOAD_SECONDS * 1000;
 /** Amber warning zone: the last 60 seconds before the cap. */
 const CAP_WARN_MS = CAP_MS - 60_000;
@@ -69,7 +86,7 @@ export function RecordFlow() {
   const [cameraId, setCameraId] = useState<string>("");
   const [micId, setMicId] = useState<string>("");
 
-  const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
+  const [countdown, setCountdown] = useState(COUNTDOWN_DEFAULT);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [takes, setTakes] = useState<Take[]>([]);
   const [reviewTake, setReviewTake] = useState<Take | null>(null);
@@ -79,6 +96,13 @@ export function RecordFlow() {
   const [mode, setMode] = useState<RecordMode>("camera");
   const [pipPosition, setPipPosition] = useState<OverlayPosition>("bottom-end");
   const [pipWidthPct, setPipWidthPct] = useState(PIP_WIDTH_DEFAULT);
+
+  // Build 7.3: prompter + countdown preference.
+  const [prompterMode, setPrompterMode] = useState<PrompterMode>("off");
+  const [script, setScript] = useState("");
+  const [prompterSpeed, setPrompterSpeed] = useState(SPEED_DEFAULT);
+  const [prompterFont, setPrompterFont] = useState(FONT_DEFAULT);
+  const [countdownSeconds, setCountdownSeconds] = useState(COUNTDOWN_DEFAULT);
 
   const streamRef = useRef<MediaStream | null>(null);
   const screenStreamRef = useRef<MediaStream | null>(null);
@@ -158,6 +182,25 @@ export function RecordFlow() {
       if (typeof prefs.pipWidthPct === "number") {
         setPipWidthPct(clampPipWidth(prefs.pipWidthPct));
       }
+      // 7.3 prefs (tolerant of older saved shapes).
+      if (["off", "notes", "prompter"].includes(prefs.prompterMode)) {
+        setPrompterMode(prefs.prompterMode);
+      }
+      if (typeof prefs.prompterSpeed === "number") {
+        setPrompterSpeed(clampScrollSpeed(prefs.prompterSpeed));
+      }
+      if (typeof prefs.prompterFont === "number") {
+        setPrompterFont(clampFontPx(prefs.prompterFont));
+      }
+      if (typeof prefs.countdownSeconds === "number") {
+        setCountdownSeconds(clampCountdown(prefs.countdownSeconds));
+      }
+    } catch {
+      /* fresh */
+    }
+    try {
+      const draft = localStorage.getItem(SCRIPT_STORAGE_KEY);
+      if (draft) setScript(draft.slice(0, SCRIPT_MAX_CHARS));
     } catch {
       /* fresh */
     }
@@ -173,17 +216,33 @@ export function RecordFlow() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persist mode + PiP prefs whenever they change.
+  // Persist prefs whenever they change; the script drafts separately.
   useEffect(() => {
     try {
       localStorage.setItem(
         PREFS_STORAGE_KEY,
-        JSON.stringify({ mode, pipPosition, pipWidthPct }),
+        JSON.stringify({
+          mode,
+          pipPosition,
+          pipWidthPct,
+          prompterMode,
+          prompterSpeed,
+          prompterFont,
+          countdownSeconds,
+        }),
       );
     } catch {
       /* private mode */
     }
-  }, [mode, pipPosition, pipWidthPct]);
+  }, [mode, pipPosition, pipWidthPct, prompterMode, prompterSpeed, prompterFont, countdownSeconds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SCRIPT_STORAGE_KEY, script);
+    } catch {
+      /* private mode */
+    }
+  }, [script]);
 
   // Keep the preview attached across phase changes (the element remounts).
   // While a composite is live (screen modes), the preview must show the
@@ -228,9 +287,9 @@ export function RecordFlow() {
         return;
       }
     }
-    setCountdown(COUNTDOWN_SECONDS);
+    setCountdown(countdownSeconds);
     setPhase("countdown");
-    let n = COUNTDOWN_SECONDS;
+    let n = countdownSeconds;
     const tick = setInterval(() => {
       n -= 1;
       if (n > 0) {
@@ -373,6 +432,19 @@ export function RecordFlow() {
           <div className="absolute inset-0 flex items-center justify-center bg-black/60">
             <span className="text-8xl font-bold tabular-nums text-white">{countdown}</span>
           </div>
+        )}
+
+        {/* Prompter / notes overlay (7.3) — DOM above the video; can never
+            leak into the recorded MediaStream. */}
+        {recordingLike && (
+          <TeleprompterOverlay
+            mode={prompterMode}
+            script={script}
+            elapsedMs={elapsedMs}
+            running={phase === "recording"}
+            speedPxPerSec={prompterSpeed}
+            fontPx={prompterFont}
+          />
         )}
 
         {/* Recording status chip */}
@@ -520,7 +592,71 @@ export function RecordFlow() {
               </select>
             </label>
           </div>
-          <div className="flex items-center gap-3">
+          {/* Prompter / speaker notes (7.3) */}
+          <div className="flex flex-col gap-2 rounded-xl border border-border p-3">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="me-1 text-sm">{t("prompter.label")}</span>
+              {(["off", "notes", "prompter"] as PrompterMode[]).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setPrompterMode(m)}
+                  className={`rounded-lg border px-3 py-1.5 text-xs ${
+                    prompterMode === m
+                      ? "border-accent bg-accent/15 text-accent"
+                      : "border-border text-muted hover:border-accent"
+                  }`}
+                >
+                  {t(`prompter.modes.${m}`)}
+                </button>
+              ))}
+            </div>
+            {prompterMode !== "off" && (
+              <>
+                <textarea
+                  value={script}
+                  maxLength={SCRIPT_MAX_CHARS}
+                  onChange={(e) => setScript(e.target.value)}
+                  placeholder={t("prompter.placeholder")}
+                  rows={4}
+                  className="rounded-xl border border-border bg-transparent px-3 py-2 text-sm leading-relaxed"
+                />
+                <div className="flex flex-wrap items-center gap-4">
+                  {script.trim() && (
+                    <span dir="ltr" className="text-xs tabular-nums text-muted">
+                      ≈ {formatElapsed(estimateReadingSeconds(script) * 1000)}
+                    </span>
+                  )}
+                  {prompterMode === "prompter" && (
+                    <label className="flex items-center gap-2 text-xs text-muted">
+                      {t("prompter.speed")}
+                      <input
+                        type="range"
+                        min={SPEED_MIN}
+                        max={SPEED_MAX}
+                        value={prompterSpeed}
+                        onChange={(e) => setPrompterSpeed(Number(e.target.value))}
+                        dir="ltr"
+                      />
+                    </label>
+                  )}
+                  <label className="flex items-center gap-2 text-xs text-muted">
+                    {t("prompter.fontSize")}
+                    <input
+                      type="range"
+                      min={FONT_MIN}
+                      max={FONT_MAX}
+                      value={prompterFont}
+                      onChange={(e) => setPrompterFont(Number(e.target.value))}
+                      dir="ltr"
+                    />
+                  </label>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={() => void beginCountdown()}
@@ -528,6 +664,24 @@ export function RecordFlow() {
             >
               {takes.length > 0 ? t("recordAnother") : t("startRecording")}
             </button>
+            {/* Countdown preference (7.3) */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-muted">{t("countdownLabel")}</span>
+              {COUNTDOWN_OPTIONS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setCountdownSeconds(s)}
+                  className={`rounded-lg border px-2.5 py-1 text-xs tabular-nums ${
+                    countdownSeconds === s
+                      ? "border-accent bg-accent/15 text-accent"
+                      : "border-border text-muted hover:border-accent"
+                  }`}
+                >
+                  {t("countdownSeconds", { s })}
+                </button>
+              ))}
+            </div>
             <span className="text-xs text-muted">{t("capHint")}</span>
           </div>
         </div>

@@ -20,18 +20,18 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784220769.4421847,
-    "ast_hash": "4d44e30476d10a2ed7bbfde40033a02c",
+    "mtime": 1784221502.8767884,
+    "ast_hash": "1ae873c3d29c25f5380ad3caa25df021",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784220781.3480701,
-    "ast_hash": "e51efed2bb2a3d105f406a6f9fe348c3",
+    "mtime": 1784221506.102332,
+    "ast_hash": "c1713143abf235599591ef5850d886e2",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784220880.5728695,
-    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
+    "mtime": 1784221544.2886484,
+    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
     "semantic_hash": ""
   },
   "apps/web/next.config.ts": {
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1784221172.1229374,
-    "ast_hash": "ceb4f4348424635edc914968f4322d31",
+    "mtime": 1784222168.3603575,
+    "ast_hash": "d58125d533e63f548381ef60be940102",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784221157.4097621,
-    "ast_hash": "924902ecd1f855e57ed3737423726ffb",
+    "mtime": 1784222152.6749773,
+    "ast_hash": "6cdbb73c92b10ce3674409195c6b456a",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1040,8 +1040,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/record/record-flow.tsx": {
-    "mtime": 1784221012.7489772,
-    "ast_hash": "71b0f9aadb02230da15ef6900102758b",
+    "mtime": 1784221878.3880672,
+    "ast_hash": "ac44055aae0c4ca7349d5b1c742adff9",
     "semantic_hash": ""
   },
   "apps/web/src/lib/record/recorder.ts": {
@@ -1082,6 +1082,31 @@
   "BUILD_7_2_REPORT.md": {
     "mtime": 1784221143.20329,
     "ast_hash": "548157c9f3e7c3252c45b276014c1b14",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/record/teleprompter.tsx": {
+    "mtime": 1784222001.1452513,
+    "ast_hash": "64a0af61f6595ac321076f28a2a5543a",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/record/teleprompter.ts": {
+    "mtime": 1784221338.7821815,
+    "ast_hash": "83313d35e0ed88fd6c339267bb289920",
+    "semantic_hash": ""
+  },
+  "apps/web/test/teleprompter.test.ts": {
+    "mtime": 1784221354.2560205,
+    "ast_hash": "5977f051a8c0636eb0cd282cf7357cea",
+    "semantic_hash": ""
+  },
+  "BUILD_7_3_ANALYSIS.md": {
+    "mtime": 1784221320.7726681,
+    "ast_hash": "783acf41c1b4bdabe828fe2549e18dd5",
+    "semantic_hash": ""
+  },
+  "BUILD_7_3_REPORT.md": {
+    "mtime": 1784222136.6961453,
+    "ast_hash": "742bd8754dd0d8c55ae10a16477efab9",
     "semantic_hash": ""
   }
 }
