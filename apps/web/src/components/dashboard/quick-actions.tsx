@@ -2,14 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 /**
- * Primary creator actions (Build 6C.1). Three real routes plus a disabled
- * "Record — soon" chip (the Tella-style suite is Build 7). Mobile-first: wraps
- * on small screens, row on larger.
+ * Primary creator actions (Build 6C.1; Record went live in Build 7.1).
+ * Mobile-first: wraps on small screens, row on larger.
  */
 export async function QuickActions() {
   const t = await getTranslations("dashboard.quickActions");
   const actions = [
     { key: "newVideo", href: "/dashboard/new", primary: true },
+    { key: "record", href: "/dashboard/record", primary: false },
     { key: "brandKit", href: "/dashboard/brand-kit", primary: false },
     { key: "captionStudio", href: "/dashboard/brand-kit", primary: false },
   ] as const;
@@ -29,16 +29,6 @@ export async function QuickActions() {
           {t(a.key)}
         </Link>
       ))}
-      <span
-        aria-disabled
-        title={t("recordSoon")}
-        className="flex cursor-default items-center gap-1.5 rounded-xl border border-dashed border-border px-5 py-2.5 text-sm text-muted"
-      >
-        {t("record")}
-        <span className="rounded-full bg-border/60 px-2 py-0.5 text-[11px]">
-          {t("recordSoon")}
-        </span>
-      </span>
     </div>
   );
 }

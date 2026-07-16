@@ -1,8 +1,8 @@
 {
   ".claude/launch.json": {
-    "mtime": 1783466705.292184,
-    "ast_hash": "c74c9a000767aed4754c4caececc4b12",
-    "semantic_hash": "c74c9a000767aed4754c4caececc4b12"
+    "mtime": 1784206533.8421052,
+    "ast_hash": "1cf5dbaba050751fb0859e3ca121dbe0",
+    "semantic_hash": ""
   },
   ".claude/settings.json": {
     "mtime": 1783681102.892112,
@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1783811444.3912306,
-    "ast_hash": "54295e01748e8f3e15f3356e9d58235b",
+    "mtime": 1784206460.6490564,
+    "ast_hash": "9721932b7a1f961398a9428c41307df4",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -20,18 +20,18 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1783868782.9622045,
-    "ast_hash": "6dfb335ad6a47dd6901f0da98d470d82",
+    "mtime": 1784205219.8534262,
+    "ast_hash": "868a92fb8f697cd66d71176f8a108c05",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1783868797.031129,
-    "ast_hash": "754a89bb6c774e091e0a9007e83ab15b",
+    "mtime": 1784205255.853721,
+    "ast_hash": "e7d2257970050c49ccc3198820a14b2a",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1783705798.1408892,
-    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
+    "mtime": 1784206544.208436,
+    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
     "semantic_hash": ""
   },
   "apps/web/next.config.ts": {
@@ -65,8 +65,8 @@
     "semantic_hash": "351a0504cb6d44a72a5ca004337772d7"
   },
   "apps/web/src/app/[locale]/dashboard/page.tsx": {
-    "mtime": 1783849519.0862384,
-    "ast_hash": "bf5a044425f4e37e0b5c0f3985096c44",
+    "mtime": 1784205388.8868692,
+    "ast_hash": "e3c94f2e058882ca104b7f6cee6a54f9",
     "semantic_hash": ""
   },
   "apps/web/src/app/[locale]/dashboard/projects/[id]/edit/page.tsx": {
@@ -485,8 +485,8 @@
     "semantic_hash": "823c7c7f94685f1854a46edab05baa87"
   },
   "packages/core/src/index.ts": {
-    "mtime": 1783849243.9730513,
-    "ast_hash": "2fe0a9853c41d9bb30bde5342191ae2e",
+    "mtime": 1784205046.8933074,
+    "ast_hash": "3cae5b1bcbae8be0f14c1d8435d4fbec",
     "semantic_hash": ""
   },
   "packages/core/src/jobs.ts": {
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1783869849.2046156,
-    "ast_hash": "db96ece713e2585eae1265d0b0c4ca84",
+    "mtime": 1784207605.3268392,
+    "ast_hash": "f69749220ca286af3625b347d53fa61d",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1783869835.1705794,
-    "ast_hash": "03f28796bc5767c435fb47659eb29446",
+    "mtime": 1784207591.6195636,
+    "ast_hash": "e36d4a56287cc100e03a1bfc77a8b62e",
     "semantic_hash": ""
   },
   "README.md": {
@@ -985,8 +985,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/overlay-studio.tsx": {
-    "mtime": 1783868615.363285,
-    "ast_hash": "d1ab35f85a008a1c1151a5d87dacbe49",
+    "mtime": 1783871072.5498297,
+    "ast_hash": "4f4f5cd06bf7f11f47108a05dea9b93f",
     "semantic_hash": ""
   },
   "apps/worker/test/render-brand.test.ts": {
@@ -1000,8 +1000,38 @@
     "semantic_hash": ""
   },
   "BUILD_6C_3_REPORT.md": {
-    "mtime": 1783869824.9520564,
-    "ast_hash": "2f488a904fba0dde96bd20783ac1e86a",
+    "mtime": 1783871133.1155493,
+    "ast_hash": "a3fda9db42a3aee493ca6f0662baa9b3",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/[locale]/dashboard/onboarding/page.tsx": {
+    "mtime": 1784205354.1705177,
+    "ast_hash": "df7991fa61bffde5e733d779e6c2c04b",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/onboarding/onboarding-wizard.tsx": {
+    "mtime": 1784205339.322237,
+    "ast_hash": "a0652a1b7b8e116d20c65f9a4ce4fa03",
+    "semantic_hash": ""
+  },
+  "packages/core/src/creator-types.ts": {
+    "mtime": 1784205033.680202,
+    "ast_hash": "4b188d5ee6f9c5342139a17c05acc330",
+    "semantic_hash": ""
+  },
+  "packages/core/test/creator-types.test.ts": {
+    "mtime": 1784205062.2546327,
+    "ast_hash": "ef10fe6d9984f2fbf270f3b993658313",
+    "semantic_hash": ""
+  },
+  "BUILD_6C_4_ANALYSIS.md": {
+    "mtime": 1784205015.9135978,
+    "ast_hash": "c64545c0c9f2f2aae2f732e29774b03c",
+    "semantic_hash": ""
+  },
+  "BUILD_6C_4_REPORT.md": {
+    "mtime": 1784207580.1352181,
+    "ast_hash": "7aab778c424072262bda787a7abb8aca",
     "semantic_hash": ""
   }
 }

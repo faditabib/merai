@@ -22,12 +22,18 @@ type UploadState =
   | "finalizing"
   | "error";
 
+export interface UploadFlowProps {
+  /** Build 7.1: a file supplied by another surface (the recorder). When set,
+   *  the flow auto-starts and the dropzone is never shown. */
+  externalFile?: File | null;
+}
+
 /**
  * Full client-side upload flow: duration probe → project/upload creation →
  * resumable tus upload with pause/resume/cancel → finalize (enqueues
  * transcription) → navigate to the project page.
  */
-export function UploadFlow() {
+export function UploadFlow(props: UploadFlowProps = {}) {
   const t = useTranslations("upload");
   const router = useRouter();
 
@@ -46,6 +52,18 @@ export function UploadFlow() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [state]);
+
+  // Externally-supplied file (recorder handoff): start once per file.
+  const startedExternal = useRef<File | null>(null);
+  useEffect(() => {
+    const file = props.externalFile;
+    if (file && startedExternal.current !== file) {
+      startedExternal.current = file;
+      void handleFile(file);
+    }
+    // handleFile is stable in practice (no reactive deps beyond setters).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.externalFile]);
 
   function fail(key: string) {
     setState("error");
@@ -131,6 +149,22 @@ export function UploadFlow() {
     state === "uploading" || state === "paused" || state === "finalizing";
 
   if (state === "idle" || state === "error" || busy) {
+    // Recorder handoff: no dropzone — just status/errors while starting.
+    if (props.externalFile) {
+      return (
+        <div className="flex flex-col gap-4">
+          {state === "error" && errorKey ? (
+            <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-500">
+              {t(`errors.${errorKey}`)}
+            </p>
+          ) : (
+            <p className="rounded-xl border border-border bg-card p-4 text-sm text-muted">
+              {t(state === "probing" ? "probing" : "starting")}
+            </p>
+          )}
+        </div>
+      );
+    }
     return (
       <div className="flex flex-col gap-4">
         <label

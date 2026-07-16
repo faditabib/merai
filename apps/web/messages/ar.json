@@ -49,8 +49,7 @@
       "newVideo": "فيديو جديد",
       "brandKit": "الهوية البصرية",
       "captionStudio": "استوديو الترجمة",
-      "record": "تسجيل",
-      "recordSoon": "قريبًا"
+      "record": "تسجيل"
     },
     "brandNudge": {
       "title": "أكمل هويتك البصرية",
@@ -335,6 +334,34 @@
       "medical": "الأطباء والعيادات",
       "premium": "العلامات الفاخرة",
       "shortform": "المقاطع القصيرة"
+    }
+  },
+  "record": {
+    "pageTitle": "استوديو التسجيل",
+    "pageSubtitle": "سجّل بالكاميرا والمايك مباشرة — ثم يتولى محرّرك الذكي الباقي.",
+    "backToDashboard": "لوحة التحكم",
+    "camera": "الكاميرا",
+    "microphone": "المايكروفون",
+    "cameraFallback": "كاميرا {n, number}",
+    "micFallback": "مايكروفون {n, number}",
+    "startRecording": "ابدأ التسجيل",
+    "recordAnother": "سجّل لقطة أخرى",
+    "capHint": "الحد الأقصى ١٠ دقائق للتسجيل.",
+    "pause": "إيقاف مؤقت",
+    "resume": "متابعة",
+    "stop": "إنهاء اللقطة",
+    "keepTake": "احتفظ باللقطة",
+    "discardTake": "احذفها وأعد التسجيل",
+    "takesTitle": "اللقطات",
+    "takeLabel": "لقطة {n, number}",
+    "useTake": "استخدم هذه اللقطة",
+    "deleteTake": "حذف",
+    "uploadingTitle": "جارٍ رفع لقطتك",
+    "retryDevices": "أعد المحاولة",
+    "errors": {
+      "permission-denied": "نحتاج إذن الكاميرا والمايكروفون للتسجيل — اسمح بالوصول من إعدادات المتصفح ثم أعد المحاولة.",
+      "no-devices": "لم نعثر على كاميرا أو مايكروفون متصل.",
+      "unsupported": "متصفحك لا يدعم التسجيل — جرّب أحدث نسخة من Chrome أو Safari."
     }
   },
   "onboardingWizard": {

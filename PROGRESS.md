@@ -1,5 +1,26 @@
 # Merai — Progress Log
 
+## Build 7.1 — Recording Foundation (2026-07-16)
+
+178 tests green (81 core + 73 worker + 24 web) · next build ✓ · ar/en parity
+454 = 454 · **zero migrations, no worker change** (BUILD_7_1_ANALYSIS.md +
+BUILD_7_1_REPORT.md). First Build 7 sub-build — Merai records.
+
+- /dashboard/record: camera+mic capture with mirrored preview, device pickers
+  (persisted), 3·2·1 countdown, pause/resume (one continuous blob),
+  10-min-cap timer with amber warning + auto-stop, per-take review, takes
+  rail, one-take handoff.
+- Recorder core in lib/record: injectable mime selection (vp9→vp8→webm→mp4),
+  pure pause-excluding elapsed tracker — all unit-tested.
+- Handoff = the existing UploadFlow via an additive externalFile prop; the
+  full record → probe → validate → create → tus → transcribe pipeline was
+  E2E-verified live with synthetic capture devices.
+- Two live-found bugs fixed + regression-tested: codec-qualified mime vs the
+  upload allowlist; Chrome MediaRecorder WebM Infinity-duration in the probe
+  (also fixes user-uploaded Chrome WebM). Next: 7.2 screen + PiP.
+
+---
+
 ## Build 6C.4 — Creator Onboarding Wizard (2026-07-16)
 
 166 tests green (81 core + 73 worker + 12 web) · next build ✓ · ar/en parity

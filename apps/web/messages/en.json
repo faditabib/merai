@@ -49,8 +49,7 @@
       "newVideo": "New video",
       "brandKit": "Brand Kit",
       "captionStudio": "Caption Studio",
-      "record": "Record",
-      "recordSoon": "Soon"
+      "record": "Record"
     },
     "brandNudge": {
       "title": "Finish your Brand Kit",
@@ -335,6 +334,34 @@
       "medical": "Doctors & clinics",
       "premium": "Premium brands",
       "shortform": "Short-form"
+    }
+  },
+  "record": {
+    "pageTitle": "Recording studio",
+    "pageSubtitle": "Record with your camera and mic — your AI editor takes it from there.",
+    "backToDashboard": "Dashboard",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "cameraFallback": "Camera {n, number}",
+    "micFallback": "Microphone {n, number}",
+    "startRecording": "Start recording",
+    "recordAnother": "Record another take",
+    "capHint": "Recordings are capped at 10 minutes.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Finish take",
+    "keepTake": "Keep take",
+    "discardTake": "Discard & re-record",
+    "takesTitle": "Takes",
+    "takeLabel": "Take {n, number}",
+    "useTake": "Use this take",
+    "deleteTake": "Delete",
+    "uploadingTitle": "Uploading your take",
+    "retryDevices": "Try again",
+    "errors": {
+      "permission-denied": "We need camera and microphone access to record — allow it in your browser settings and try again.",
+      "no-devices": "No connected camera or microphone was found.",
+      "unsupported": "Your browser doesn't support recording — try the latest Chrome or Safari."
     }
   },
   "onboardingWizard": {
