@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1784223260.7143695,
-    "ast_hash": "642a52918f1097e7ee94628954bad813",
+    "mtime": 1784239680.281569,
+    "ast_hash": "76ffab016546c23aa95f01755d6c9420",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784221544.2886484,
-    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
+    "mtime": 1784239661.1690714,
+    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
     "semantic_hash": ""
   },
   "apps/web/next.config.ts": {
@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/editor-view.tsx": {
-    "mtime": 1784223842.5924146,
-    "ast_hash": "665aeb51ea70ad65e915af7762962e33",
+    "mtime": 1784239421.3023622,
+    "ast_hash": "9ec4c35b955a12c81a7dc5a8f6d6714e",
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/export-panel.tsx": {
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/timeline.tsx": {
-    "mtime": 1783748639.618135,
-    "ast_hash": "8f27447544c60ec9a0264cda844f25ae",
+    "mtime": 1784239540.0544693,
+    "ast_hash": "053ffb11aa87c2d4b16926ef1c73cfef",
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/transcript-panel.tsx": {
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1784239135.5466783,
-    "ast_hash": "4f042876a57edcbf05506a3ced442453",
+    "mtime": 1784240669.5212674,
+    "ast_hash": "90e099c60f3769857fb0829b7f0a03cc",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784239118.8203213,
-    "ast_hash": "f17e1d9097aa085e81465c98fd0fc543",
+    "mtime": 1784240652.542199,
+    "ast_hash": "2b8f5f9bf47bf6b3ce443830a1c022d9",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1152,6 +1152,26 @@
   "BUILD_7_5_REPORT.md": {
     "mtime": 1784239105.991529,
     "ast_hash": "796655362ffc93e9e20ade6cd35d00f9",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/editor/waveform.ts": {
+    "mtime": 1784239309.85528,
+    "ast_hash": "8d96cd78e94528555be7038edfc89b51",
+    "semantic_hash": ""
+  },
+  "apps/web/test/waveform.test.ts": {
+    "mtime": 1784239359.854597,
+    "ast_hash": "c2d2274b31ad080251a1877c8f76ebf2",
+    "semantic_hash": ""
+  },
+  "BUILD_7_6_ANALYSIS.md": {
+    "mtime": 1784239291.585441,
+    "ast_hash": "a880b65eb02b06a7673ee95cca7cc64b",
+    "semantic_hash": ""
+  },
+  "BUILD_7_6_REPORT.md": {
+    "mtime": 1784240637.4775615,
+    "ast_hash": "66ab9e0864ca2cb6b1516171a180a334",
     "semantic_hash": ""
   }
 }

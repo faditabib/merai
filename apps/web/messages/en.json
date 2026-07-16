@@ -61,6 +61,21 @@
       "body": "Pick what you create and we'll apply a full style and brand identity automatically.",
       "cta": "Start setup"
     },
+    "organize": {
+      "title": "Your videos",
+      "searchPlaceholder": "Search by title or tag…",
+      "select": "Select",
+      "doneSelecting": "Done selecting",
+      "selectedCount": "{n, number} selected",
+      "bulkTagPlaceholder": "Tag name",
+      "bulkAdd": "Add tag",
+      "bulkRemove": "Remove tag",
+      "clearFilters": "Clear filters",
+      "tagsLabel": "Tag",
+      "addTagPlaceholder": "New tag…",
+      "removeTag": "Remove tag {tag}",
+      "noMatches": "No matches — try a different search or filter."
+    },
     "emptyTitle": "Ready for your first video?",
     "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
     "newProject": "New project",

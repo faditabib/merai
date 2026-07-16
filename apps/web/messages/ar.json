@@ -61,6 +61,21 @@
       "body": "اختر نوع المحتوى الذي تصنعه وسنطبّق لك أسلوبًا وهوية بصرية كاملة تلقائيًا.",
       "cta": "ابدأ الإعداد"
     },
+    "organize": {
+      "title": "فيديوهاتك",
+      "searchPlaceholder": "ابحث بالعنوان أو الوسم…",
+      "select": "تحديد",
+      "doneSelecting": "إنهاء التحديد",
+      "selectedCount": "{n, number} محدد",
+      "bulkTagPlaceholder": "اسم الوسم",
+      "bulkAdd": "أضف الوسم",
+      "bulkRemove": "أزل الوسم",
+      "clearFilters": "امسح التصفية",
+      "tagsLabel": "وسم",
+      "addTagPlaceholder": "وسم جديد…",
+      "removeTag": "أزل الوسم {tag}",
+      "noMatches": "لا نتائج مطابقة — جرّب بحثًا أو تصفية أخرى."
+    },
     "emptyTitle": "جاهز لأول فيديو؟",
     "emptyBody": "ارفع تسجيلك الخام وسيبدأ محرّرك الذكي العمل فورًا — من التفريغ النصي حتى فيديو جاهز للنشر.",
     "newProject": "مشروع جديد",

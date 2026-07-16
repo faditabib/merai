@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
 import { OnboardingCallout, WorkflowSteps } from "@/components/onboarding-callout";
 import { QuickActions } from "@/components/dashboard/quick-actions";
-import { ProjectCard } from "@/components/dashboard/project-card";
+import { ProjectsExplorer } from "@/components/dashboard/projects-explorer";
 import { BrandSetupNudge } from "@/components/dashboard/brand-setup-nudge";
 
 // Per-user page — always rendered at request time, never prerendered.
@@ -16,6 +16,7 @@ interface ProjectRow {
   title: string;
   status: string;
   created_at: string;
+  tags: string[] | null;
 }
 
 export default async function DashboardPage({
@@ -52,7 +53,7 @@ export default async function DashboardPage({
   const [{ data: projects }, { data: kit }, { data: uploads }] = await Promise.all([
     supabase
       .from("projects")
-      .select("id, title, status, created_at")
+      .select("id, title, status, created_at, tags")
       .order("created_at", { ascending: false }),
     supabase
       .from("brand_kits")
@@ -124,22 +125,16 @@ export default async function DashboardPage({
         {showOnboarding && <OnboardingCallout />}
 
         {hasProjects ? (
-          <section className="flex flex-col gap-4">
-            <h2 className="text-lg font-semibold">{t("recentTitle")}</h2>
-            <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {rows.map((project) => (
-                <li key={project.id}>
-                  <ProjectCard
-                    id={project.id}
-                    title={project.title}
-                    status={project.status}
-                    createdAt={project.created_at}
-                    storagePath={latestUpload.get(project.id) ?? null}
-                  />
-                </li>
-              ))}
-            </ul>
-          </section>
+          <ProjectsExplorer
+            initialProjects={rows.map((project) => ({
+              id: project.id,
+              title: project.title,
+              status: project.status,
+              created_at: project.created_at,
+              tags: project.tags ?? [],
+              storagePath: latestUpload.get(project.id) ?? null,
+            }))}
+          />
         ) : (
           <section className="flex flex-1 flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-border p-8 text-center sm:p-12">
             <div className="flex flex-col items-center gap-3">

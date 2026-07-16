@@ -1,5 +1,22 @@
 # Merai — Progress Log
 
+## Build 7.7 — Project Organization (2026-07-17)
+
+242 tests green (96 core + 79 worker + 67 web) · next build ✓ · ar/en parity
+499 = 499 · **one additive migration** (projects.tags text[] + GIN; applied
+live) (BUILD_7_7_ANALYSIS.md + BUILD_7_7_REPORT.md).
+
+- Tags are the organization primitive (a collection = a tag filter). Pure
+  organize lib: normalize/add/remove (case-insensitive dedupe, ≤12), allTags,
+  filterProjects (query over title OR tags; chip OR; facet AND).
+- ProjectsExplorer: search, tag chips, bulk select + add/remove tag over the
+  selection; ProjectCard went client (tags chips + inline editor + selection).
+  Tag writes via the RLS-scoped client, optimistic.
+- Live-verified: filter → 1 card, search → 1 card, bulk "موسم ١" persisted to
+  both selected rows in the live DB. Next: Build 8 (Skills foundation).
+
+---
+
 ## Build 7.6 — Timeline v2 (2026-07-17)
 
 231 tests green (96 core + 79 worker + 56 web) · next build ✓ · parity
