@@ -555,6 +555,11 @@
   },
   "export": {
     "title": "Export",
+    "autoCanvas": {
+      "chip": "Auto",
+      "waiting": "Waiting for video dimensions…",
+      "summary": "Auto: {ratio} from the source dimensions, captions and logo kept inside the safe area automatically."
+    },
     "aspect": "Aspect:",
     "aspectNames": {
       "9x16": "vertical",

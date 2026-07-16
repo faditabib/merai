@@ -1,3 +1,4 @@
+export * from "./auto-canvas";
 export * from "./brand";
 export * from "./creator-styles";
 export * from "./creator-types";

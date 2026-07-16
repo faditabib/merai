@@ -1,5 +1,24 @@
 # Merai — Progress Log
 
+## Build 7.5 — Auto Canvas (2026-07-16)
+
+221 tests green (96 core + 79 worker + 46 web) · next build ✓ · ar/en parity
+486 = 486 · **zero migrations, no worker change** (BUILD_7_5_ANALYSIS.md +
+BUILD_7_5_REPORT.md).
+
+- Pure layout brain in core: aspect recommendation from real source dims
+  (landscape→16:9, portrait→9:16, square→1:1), title-safe caption clamp +
+  lower-third collision lift, free-corner logo auto-placement — safe margin
+  is the SAME OVERLAY_MARGIN_PCT the logo layer and PiP already use.
+- Export panel "Auto" chip (default on; manual pick wins); outputs ride the
+  existing snapshot channels — renderer needs zero new code. Transparency
+  line states what Auto chose.
+- Live-verified: real 1280×720 take → editor showed Auto→16:9; exports row
+  carried aspect 16:9 + safe anchor. Pre-existing 0-segment-EDL render edge
+  flagged as follow-up. Next: 7.6 Timeline v2.
+
+---
+
 ## Build 7.4 — Scenes + Worker Stitch (2026-07-16)
 
 206 tests green (81 core + 79 worker + 46 web) · next build ✓ · ar/en parity

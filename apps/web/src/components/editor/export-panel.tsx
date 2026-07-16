@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
+  applyAutoLayout,
   hueName,
+  recommendAspectRatio,
   resolveCaptionSpec,
   CAPTION_PRESET_IDS,
   type AspectRatio,
@@ -48,6 +50,8 @@ export interface ExportPanelProps {
   brandColors: CaptionBrandColors | null;
   /** Brand kit name for the "your video style" card; null = no kit. */
   brandName: string | null;
+  /** Source video dimensions (Build 7.5 Auto Canvas); null until metadata. */
+  sourceDims: { width: number; height: number } | null;
   onChangeAspect: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
@@ -76,6 +80,21 @@ export function ExportPanel(props: ExportPanelProps) {
   // (brandColors) — offer the toggle if the kit provides either.
   const hasBranding = props.brandConfig != null || props.brandColors != null;
   const [applyBranding, setApplyBranding] = useState(hasBranding);
+
+  // Auto Canvas (7.5): on by default; a manual aspect pick switches it off.
+  const [autoCanvas, setAutoCanvas] = useState(true);
+  const recommendedAspect = recommendAspectRatio(
+    props.sourceDims?.width,
+    props.sourceDims?.height,
+  );
+  // Keep the EDL's aspect following the recommendation while auto is on.
+  useEffect(() => {
+    if (autoCanvas && props.sourceDims && props.edl.aspectRatio !== recommendedAspect) {
+      props.onChangeAspect(recommendedAspect);
+    }
+    // Intentionally not depending on props.onChangeAspect identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoCanvas, recommendedAspect, props.sourceDims, props.edl.aspectRatio]);
 
   const refreshList = useCallback(async () => {
     const { data } = await createClient()
@@ -122,6 +141,32 @@ export function ExportPanel(props: ExportPanelProps) {
       const versionId = await props.ensureSavedVersion();
       if (!versionId) throw new Error("save failed");
 
+      // Snapshot assembly: resolve the caption spec, then (Auto Canvas 7.5)
+      // run anchor + logo corner through the pure layout brain. Outputs ride
+      // the EXISTING snapshot channels — the renderer needs zero new code.
+      const brand = applyBranding ? props.brandConfig : null;
+      let captionConfig = resolveCaptionSpec(
+        props.captionSpec,
+        applyBranding ? props.brandColors : null,
+      );
+      let brandSnapshot = brand;
+      if (autoCanvas) {
+        const layout = applyAutoLayout({
+          captionAnchor: captionConfig.verticalAnchor,
+          lowerThirdPosition: brand?.lowerThird
+            ? (brand.lowerThird.position ?? "bottom-start")
+            : null,
+          hasLogo: brand?.logo != null,
+        });
+        captionConfig = { ...captionConfig, verticalAnchor: layout.captionAnchor };
+        if (brand?.logo && layout.logoPosition) {
+          brandSnapshot = {
+            ...brand,
+            logo: { ...brand.logo, position: layout.logoPosition },
+          };
+        }
+      }
+
       const { data: created, error: createError } = await supabase
         .from("exports")
         .insert({
@@ -132,13 +177,10 @@ export function ExportPanel(props: ExportPanelProps) {
           caption_style: props.captionSpec.token,
           // Snapshot the branding so later Brand Kit edits never change a
           // render that already happened (same as aspect/caption columns).
-          brand: applyBranding ? props.brandConfig : null,
+          brand: brandSnapshot,
           // Snapshot the resolved working caption spec (Build 6B.3) — carries
-          // studio tweaks + brand color; the worker renders it verbatim.
-          caption_config: resolveCaptionSpec(
-            props.captionSpec,
-            applyBranding ? props.brandColors : null,
-          ),
+          // studio tweaks + brand color (+ the 7.5 auto layout when on).
+          caption_config: captionConfig,
           status: "pending",
         })
         .select(EXPORT_ROW_COLUMNS)
@@ -221,12 +263,29 @@ export function ExportPanel(props: ExportPanelProps) {
       <div className="flex flex-wrap items-center gap-3">
         <h2 className="font-semibold">{t("title")}</h2>
         <span className="text-sm text-muted">{t("aspect")}</span>
+        {/* Auto Canvas (7.5): aspect from the source's real dimensions. */}
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => setAutoCanvas(true)}
+          title={props.sourceDims ? undefined : t("autoCanvas.waiting")}
+          className={`rounded-lg border px-3 py-1 text-sm ${
+            autoCanvas
+              ? "border-accent bg-accent/15 text-accent"
+              : "border-border text-muted hover:border-accent"
+          }`}
+        >
+          {t("autoCanvas.chip")}
+        </button>
         {ASPECT_RATIOS.map((ratio) => (
           <button
             key={ratio}
             type="button"
             disabled={busy}
-            onClick={() => props.onChangeAspect(ratio)}
+            onClick={() => {
+              setAutoCanvas(false); // manual pick wins
+              props.onChangeAspect(ratio);
+            }}
             className={`rounded-lg border px-3 py-1 text-sm tabular-nums ${
               props.edl.aspectRatio === ratio
                 ? "border-accent bg-accent/15 text-accent"
@@ -246,6 +305,13 @@ export function ExportPanel(props: ExportPanelProps) {
           {t("start")}
         </button>
       </div>
+
+      {/* Auto Canvas transparency: say what Auto chose — no silent magic. */}
+      {autoCanvas && props.sourceDims && (
+        <p className="text-xs text-muted">
+          {t("autoCanvas.summary", { ratio: props.edl.aspectRatio })}
+        </p>
+      )}
 
       {/* Branding (Build 6B.1): apply the creator's Brand Kit to this export. */}
       <div className="flex flex-wrap items-center gap-2 text-sm">

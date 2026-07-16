@@ -71,6 +71,9 @@ export function EditorView(props: EditorViewProps) {
 
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  // Build 7.5 (Auto Canvas): the source's real dimensions, read once the
+  // player has metadata — drives the aspect recommendation.
+  const [sourceDims, setSourceDims] = useState<{ width: number; height: number } | null>(null);
   const [videoError, setVideoError] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [sourceMs, setSourceMs] = useState(0);
@@ -348,6 +351,12 @@ export function EditorView(props: EditorViewProps) {
                 className="max-h-[420px] w-full"
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
+                onLoadedMetadata={(e) =>
+                  setSourceDims({
+                    width: e.currentTarget.videoWidth,
+                    height: e.currentTarget.videoHeight,
+                  })
+                }
                 playsInline
               />
             ) : (
@@ -457,6 +466,7 @@ export function EditorView(props: EditorViewProps) {
         brandConfig={props.brandConfig}
         brandColors={props.brandColors}
         brandName={props.brandName}
+        sourceDims={sourceDims}
         onChangeAspect={(ratio) =>
           runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
         }
