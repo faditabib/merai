@@ -1,5 +1,25 @@
 # Merai — Progress Log
 
+## Build 8 — Skills Foundation (2026-07-17)
+
+252 tests green (106 core + 79 worker + 67 web) · next build ✓ · ar/en parity
+512 = 512 · **zero migrations, no worker change** (BUILD_8_ANALYSIS.md +
+BUILD_8_REPORT.md).
+
+- The marketplace contract: skillDefinitionSchema (versioned, zod-validated;
+  instruction ≤ the ai_suggestions CHECK; look/persona referential to real
+  catalogs; forward-open steps for future pipelines). The launch catalog
+  parses through the same gate a marketplace skill will.
+- Six launch skills (Arabic-first, scoped to the Brain's allowlist):
+  podcast-editor, shorts-generator, course-creator, business-videos,
+  social-media, medical-creator.
+- AI panel Skills row, persona-ranked via 6C.4 creator_type; one tap = the
+  skill's intent (visible preference) + instruction through the EXISTING
+  Brain flow. Live-verified end-to-end: tap → suggestion → live Haiku plan
+  ready (goal "clean-medical-content"). Next: Build 9 (SaaS/Stripe).
+
+---
+
 ## Build 7.7 — Project Organization (2026-07-17)
 
 242 tests green (96 core + 79 worker + 67 web) · next build ✓ · ar/en parity

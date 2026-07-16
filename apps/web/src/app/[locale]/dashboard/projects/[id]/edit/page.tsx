@@ -3,9 +3,11 @@ import {
   brandKitRowSchema,
   edlV1ViewOf,
   logoOverlayPrefSchema,
+  CREATOR_TYPE_IDS,
   type BrandExportConfig,
   type CaptionBrandColors,
   type CaptionStyleSpec,
+  type CreatorTypeId,
   type TranscriptWord,
 } from "@merai/core";
 import { redirect } from "@/i18n/navigation";
@@ -137,6 +139,13 @@ export default async function EditorPage({
         brandColors={brandColors}
         captionDefaultConfig={captionDefaultConfig}
         brandName={brandName}
+        creatorType={
+          (CREATOR_TYPE_IDS as readonly string[]).includes(
+            user!.user_metadata?.creator_type as string,
+          )
+            ? (user!.user_metadata!.creator_type as CreatorTypeId)
+            : null
+        }
       />
     </div>
   );

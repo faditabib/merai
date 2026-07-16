@@ -218,6 +218,25 @@
     "aiAssistant": {
       "title": "AI assistant",
       "subtitle": "State your goal and Merai proposes an edit plan — you approve it",
+      "skills": {
+        "title": "Skills — one-tap edits",
+        "names": {
+          "podcast-editor": "Podcast Editor",
+          "shorts-generator": "Shorts Generator",
+          "course-creator": "Course Creator",
+          "business-videos": "Business Videos",
+          "social-media": "Social Media",
+          "medical-creator": "Medical Creator"
+        },
+        "hints": {
+          "podcast-editor": "Remove silence and filler while keeping the conversational rhythm.",
+          "shorts-generator": "Fast, punchy cut built for Reels and Shorts.",
+          "course-creator": "Gentle cleanup that preserves explanations and pauses.",
+          "business-videos": "A concise, confident message with a professional look.",
+          "social-media": "Fast pacing with a strong opening hook.",
+          "medical-creator": "Cleanup that preserves medical accuracy."
+        }
+      },
       "placeholder": "e.g. Make this shorter and faster",
       "send": "Suggest",
       "thinking": "Thinking…",

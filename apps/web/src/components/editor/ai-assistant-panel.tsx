@@ -6,12 +6,16 @@ import {
   MAX_AI_INSTRUCTION_CHARS,
   parseStoredAiCommands,
   parseStoredAiSteps,
+  recommendedSkills,
+  skillBrainRequest,
   type AiEditStep,
   type AiFeedback,
   type AiFeedbackReason,
   type AiIntent,
+  type CreatorTypeId,
   type EditCommand,
   type EdlV1,
+  type SkillDefinition,
   type TranscriptWord,
 } from "@merai/core";
 import { requestAiEdit } from "@/app/actions/projects";
@@ -58,6 +62,8 @@ export function AiAssistantPanel(props: {
   dirty: boolean;
   edl: EdlV1;
   words: TranscriptWord[];
+  /** Build 8: persona (user_metadata.creator_type) — ranks the skills row. */
+  creatorType: CreatorTypeId | null;
   ensureSavedVersion: () => Promise<string | null>;
   onApplyCommands: (commands: EditCommand[]) => void;
 }) {
@@ -117,6 +123,15 @@ export function AiAssistantPanel(props: {
     }, POLL_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [suggestion, supabase]);
+
+  /** Build 8: one tap = the skill's intent (visible, editable — the 5.6
+   *  explicit-preference rule) + its instruction through the normal flow. */
+  const runSkill = (skill: SkillDefinition) => {
+    const brainRequest = skillBrainRequest(skill);
+    saveIntent(brainRequest.intent);
+    setInstruction(brainRequest.instruction);
+    void request(brainRequest.instruction);
+  };
 
   const request = useCallback(
     async (text: string) => {
@@ -338,6 +353,26 @@ export function AiAssistantPanel(props: {
             ))}
           </select>
         </label>
+      </div>
+
+      {/* Skills (Build 8): productized workflows, persona-ranked. One tap
+          runs the Brain with the skill's instruction + intent. */}
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs text-muted">{t("skills.title")}</span>
+        <div className="flex flex-wrap gap-2">
+          {recommendedSkills(props.creatorType).map((skill) => (
+            <button
+              key={skill.id}
+              type="button"
+              disabled={working}
+              onClick={() => runSkill(skill)}
+              title={t(`skills.hints.${skill.id}`)}
+              className="rounded-full border border-accent/40 bg-accent/5 px-3 py-1 text-sm text-accent transition hover:bg-accent/15 disabled:opacity-40"
+            >
+              ⚡ {t(`skills.names.${skill.id}`)}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

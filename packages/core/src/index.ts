@@ -9,6 +9,7 @@ export * from "./edit-commands";
 export * from "./ai-edit";
 export * from "./export-plan";
 export * from "./jobs";
+export * from "./skills";
 export * from "./captions";
 export * from "./fillers";
 export * from "./limits";

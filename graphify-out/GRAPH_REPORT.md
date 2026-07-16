@@ -1,16 +1,16 @@
 # Graph Report - Merai app  (2026-07-17)
 
 ## Corpus Check
-- 234 files · ~145,754 words
+- 238 files · ~148,288 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1701 nodes · 2828 edges · 168 communities (110 shown, 58 thin omitted)
+- 1731 nodes · 2887 edges · 167 communities (109 shown, 58 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.73)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3a43628b`
+- Built from commit: `5f041827`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -174,12 +174,11 @@
 - fillers.ts
 - captions.ts
 - creator-styles.ts
-- limits.ts
 
 ## God Nodes (most connected - your core abstractions)
-1. `Merai — Architectural Decisions` - 46 edges
+1. `Merai — Architectural Decisions` - 47 edges
 2. `TranscriptWord` - 38 edges
-3. `Merai — Progress Log` - 30 edges
+3. `Merai — Progress Log` - 31 edges
 4. `EdlV1` - 29 edges
 5. `createClient()` - 25 edges
 6. `getDb()` - 25 edges
@@ -189,16 +188,16 @@
 10. `compilerOptions` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `BrandKitFormProps` --references--> `BrandKitRow`  [EXTRACTED]
-  apps/web/src/components/brand-kit-form.tsx → packages/core/src/brand.ts
-- `CaptionPreview()` --calls--> `resolveCaptionSpec()`  [EXTRACTED]
-  apps/web/src/components/caption-preview.tsx → packages/core/src/captions.ts
 - `CreatorStylePreviewProps` --references--> `CreatorStyle`  [EXTRACTED]
   apps/web/src/components/creator-style-preview.tsx → packages/core/src/creator-styles.ts
+- `EditorView()` --indirect_call--> `seconds()`  [INFERRED]
+  apps/web/src/components/editor/editor-view.tsx → packages/core/src/export-plan.ts
+- `BrandKitFormProps` --references--> `CreatorStyleId`  [EXTRACTED]
+  apps/web/src/components/brand-kit-form.tsx → packages/core/src/creator-styles.ts
+- `CreatorStylesProps` --references--> `CreatorStyleId`  [EXTRACTED]
+  apps/web/src/components/creator-styles.tsx → packages/core/src/creator-styles.ts
 - `CaptionOverlayProps` --references--> `EdlV1`  [EXTRACTED]
   apps/web/src/components/editor/caption-overlay.tsx → packages/core/src/edl.ts
-- `CaptionOverlayProps` --references--> `TranscriptWord`  [EXTRACTED]
-  apps/web/src/components/editor/caption-overlay.tsx → packages/core/src/transcript.ts
 
 ## Import Cycles
 - None detected.
@@ -208,7 +207,7 @@
 - **AssemblyAI Transcription Pipeline Decisions** — decisions_transcription_provider_interface, decisions_arabic_auto_detection, decisions_custom_spelling_brand_terms, decisions_ten_minute_cap, decisions_transcripts_normalized_plus_raw [EXTRACTED 1.00]
 - **Arabic-first RTL Design System** — decisions_i18n_next_intl_arabic_default, decisions_locale_detection_disabled, decisions_ibm_plex_sans_arabic, decisions_timeline_ltr [INFERRED 0.85]
 
-## Communities (168 total, 58 thin omitted)
+## Communities (167 total, 58 thin omitted)
 
 ### Community 0 - "EDL Domain & Editing Ops"
 Cohesion: 0.06
@@ -231,12 +230,12 @@ Cohesion: 0.18
 Nodes (12): requireEnv(), defaultDeps, OutputTooLargeError, renderExport(), RenderExportDeps, renderExportWithEngine(), renderBlankImage(), createRenderEngine() (+4 more)
 
 ### Community 5 - "AI Analysis & EDL Builder"
-Cohesion: 0.14
-Nodes (19): ANALYSIS_TOOL, HaikuAnalysisEngine, MessageCreator, renderTranscript(), HeuristicAnalysisEngine, AnalysisEngine, AnalysisInput, AnalysisResult (+11 more)
+Cohesion: 0.15
+Nodes (18): ANALYSIS_TOOL, HaikuAnalysisEngine, MessageCreator, renderTranscript(), HeuristicAnalysisEngine, AnalysisEngine, AnalysisInput, AnalysisResult (+10 more)
 
 ### Community 6 - "Transcription Providers"
-Cohesion: 0.09
-Nodes (26): enqueueAnalyze(), ProjectRow, transcribe(), transcribeWithProvider(), UploadRow, AssemblyAIProvider, AssemblyAIProviderOptions, CUSTOM_SPELLING (+18 more)
+Cohesion: 0.07
+Nodes (24): Db, AssemblyAIProvider, AssemblyAIProviderOptions, CUSTOM_SPELLING, arabicFixture, takeOne, takeTwo, buildFixture() (+16 more)
 
 ### Community 7 - "Worker Package Manifest"
 Cohesion: 0.06
@@ -263,8 +262,8 @@ Cohesion: 0.12
 Nodes (16): description, engines, node, name, private, scripts, build, dev (+8 more)
 
 ### Community 14 - "i18n Routing & Proxy"
-Cohesion: 0.09
-Nodes (22): Build 5.5 — AI Editing Brain v1 (2026-07-11), Build 5.6 — AI Brain UX polish + feedback loop (2026-07-11), Build 5 — Professional editing core: EDL v2 foundation (2026-07-11), Build 6A.1 — Visual QA fixes + production redeploy (2026-07-11), Build 6A — Creator experience layer (2026-07-11), Build 6B.1 — Creator Identity Layer (2026-07-11), Build 6B.2 — Caption Studio (2026-07-12), Build 6B.3 — Caption Studio UX (2026-07-12) (+14 more)
+Cohesion: 0.08
+Nodes (23): Build 5.5 — AI Editing Brain v1 (2026-07-11), Build 5.6 — AI Brain UX polish + feedback loop (2026-07-11), Build 5 — Professional editing core: EDL v2 foundation (2026-07-11), Build 6A.1 — Visual QA fixes + production redeploy (2026-07-11), Build 6A — Creator experience layer (2026-07-11), Build 6B.1 — Creator Identity Layer (2026-07-11), Build 6B.2 — Caption Studio (2026-07-12), Build 6B.3 — Caption Studio UX (2026-07-12) (+15 more)
 
 ### Community 15 - "Worker TypeScript Config"
 Cohesion: 0.12
@@ -276,7 +275,7 @@ Nodes (13): compilerOptions, isolatedModules, lib, module, moduleResolution, noE
 
 ### Community 31 - "Merai — Architectural Decisions"
 Cohesion: 0.04
-Nodes (46): 2026-07-08 — 10-minute cap enforced in three layers, no ffprobe infra, 2026-07-08 — Arabic language handling: keep auto-detection, no pin, 2026-07-08 — Auth: Supabase email+password to start, 2026-07-08 — Brand terms: AssemblyAI custom_spelling adopted, word_boost rejected, 2026-07-08 — Browser locale detection disabled, 2026-07-08 — DB-level tests run on PGlite applying the real migrations, 2026-07-08 — EDL is versioned, immutable, append-only JSON (v1 single-track), 2026-07-08 — Enum-like columns are text + CHECK constraints, not Postgres enums (+38 more)
+Nodes (47): 2026-07-08 — 10-minute cap enforced in three layers, no ffprobe infra, 2026-07-08 — Arabic language handling: keep auto-detection, no pin, 2026-07-08 — Auth: Supabase email+password to start, 2026-07-08 — Brand terms: AssemblyAI custom_spelling adopted, word_boost rejected, 2026-07-08 — Browser locale detection disabled, 2026-07-08 — DB-level tests run on PGlite applying the real migrations, 2026-07-08 — EDL is versioned, immutable, append-only JSON (v1 single-track), 2026-07-08 — Enum-like columns are text + CHECK constraints, not Postgres enums (+39 more)
 
 ### Community 32 - "1. Current architecture (verified from source, not docs)"
 Cohesion: 0.07
@@ -335,8 +334,8 @@ Cohesion: 0.19
 Nodes (10): LocaleLayout(), plexArabic, tajawal, dirFor(), Locale, routing, updateSession(), config (+2 more)
 
 ### Community 90 - "RenderRequest"
-Cohesion: 0.39
-Nodes (7): OverlayStudio(), OverlayStudioProps, placement(), POSITIONS, AutoLayout, AutoLayoutInput, OverlayPosition
+Cohesion: 0.25
+Nodes (11): OverlayStudio(), OverlayStudioProps, placement(), POSITIONS, applyAutoLayout(), autoCaptionAnchor(), AutoLayout, AutoLayoutInput (+3 more)
 
 ### Community 91 - "Build 6B.2 Analysis — Caption Studio + Creator Presets"
 Cohesion: 0.07
@@ -355,16 +354,16 @@ Cohesion: 0.28
 Nodes (13): ProjectCard(), ProjectCardProps, STATUS_STYLES, ExplorerProject, ProjectsExplorer(), ProjectsExplorerProps, addTag(), allTags() (+5 more)
 
 ### Community 96 - "project-status-view.tsx"
-Cohesion: 0.22
-Nodes (14): ACTIVE_STATUSES, ASPECT_RATIOS, ExportPanel(), ExportPanelProps, ExportRow, ExportRow, applyAutoLayout(), autoCaptionAnchor() (+6 more)
+Cohesion: 0.20
+Nodes (17): CaptionPreviewProps, CaptionStudioProps, CaptionOverlayProps, EditorViewProps, ACTIVE_STATUSES, ASPECT_RATIOS, ExportPanel(), ExportPanelProps (+9 more)
 
 ### Community 97 - "Build 6C Analysis — Creator Experience Layer"
 Cohesion: 0.15
 Nodes (13): 10. Risks & mitigations, 11. Explicit scope boundaries for 6C, 12. Open decisions for approval, 1. Current-state audit (after 6B.3), 2. Feature area A — Creator Onboarding Wizard, 3. Feature area B — Creator Presets ("Creator Styles"), 4. Feature area C — Overlay Studio, 5. Feature area D — Tella-style Recording (architecture ONLY, do not build) (+5 more)
 
 ### Community 98 - "editor-view.tsx"
-Cohesion: 0.18
-Nodes (14): EditorView(), CaptionLine, edlOutputDurationMs(), sourceToOutputMs(), buildExportPlan(), CaptionOverlayPlan, CaptionSequenceEntry, ENCODE_ARGS (+6 more)
+Cohesion: 0.20
+Nodes (11): CaptionLine, buildExportPlan(), CaptionOverlayPlan, CaptionSequenceEntry, ENCODE_ARGS, EXPORT_RESOLUTIONS, ffconcatScript(), seconds() (+3 more)
 
 ### Community 99 - "Build 5.5 Analysis — AI Editing Brain v1"
 Cohesion: 0.11
@@ -379,8 +378,8 @@ Cohesion: 0.29
 Nodes (6): 1. Deployment versions (verified, not assumed), 2. Environment variables (names verified, values never displayed), 3. Production smoke test — full creator flow, 4. Blockers / owner actions, 5. Conclusion, Production Alignment Report
 
 ### Community 103 - "TranscriptWord"
-Cohesion: 0.18
-Nodes (17): CreatorStylePreview(), CaptionOverlay(), activeCaptionIndex(), activeWordIndex(), buildCaptionLines(), CAPTION_PRESET_IDS, CAPTION_PRESETS, CAPTION_STYLE_SPECS (+9 more)
+Cohesion: 0.12
+Nodes (27): CaptionPreview(), captionSpanStyle(), anchorToPosition(), CaptionStudio(), DEFAULT_OUTLINE, Position, POSITION_ANCHOR, TEXT_SWATCHES (+19 more)
 
 ### Community 104 - "Build 5.6 Analysis — AI Brain UX Polish + Feedback Loop"
 Cohesion: 0.10
@@ -391,24 +390,24 @@ Cohesion: 0.50
 Nodes (3): ai_preferences_set_updated_at, public.ai_preferences, public.ai_suggestions
 
 ### Community 106 - "edl-ops.ts"
-Cohesion: 0.29
-Nodes (14): applyEditCommand(), applyEditCommands(), nextSegmentAfterSource(), nextSegmentId(), outputToSourceMs(), removeWords(), reorderSegment(), restoreRemoved() (+6 more)
+Cohesion: 0.20
+Nodes (18): applyEditCommand(), edlV1Schema, KeptSegment, keptSegmentSchema, nextSegmentId(), outputToSourceMs(), removeWords(), reorderSegment() (+10 more)
 
 ### Community 107 - "caption-studio.tsx"
 Cohesion: 0.22
 Nodes (7): 1. The shape of the change, 2. Worker `stitch` handler, 3. Web, 4. Files, 5. Risks, 6. Verification, Build 7.4 Analysis — Scenes + Worker Stitch (multi-clip recording projects)
 
 ### Community 108 - "export-plan.ts"
-Cohesion: 0.10
-Nodes (19): createEditBrain(), EditBrain, EditBrainInput, HaikuEditBrain, MessageCreator, PLAN_TOOL, renderState(), PermanentJobError (+11 more)
+Cohesion: 0.11
+Nodes (17): EditBrain, EditBrainInput, HaikuEditBrain, MessageCreator, PLAN_TOOL, renderState(), env, Level (+9 more)
 
 ### Community 109 - "upload-flow.tsx"
-Cohesion: 0.12
-Nodes (4): Db, createTestDb(), MIGRATIONS_DIR, TestDb
+Cohesion: 0.16
+Nodes (8): defaultDeps, execFileAsync, ffmpegStitch(), handoffToTranscribe(), stitch(), StitchDeps, stitchWithDeps(), UploadRow
 
 ### Community 110 - "brand-kit-form.tsx"
-Cohesion: 0.11
-Nodes (16): Box, brandExportConfigSchema, gradientOverlayConfigSchema, HexColor, hexColorSchema, LogoOverlayConfig, logoOverlayConfigSchema, lowerThirdConfigSchema (+8 more)
+Cohesion: 0.13
+Nodes (13): Box, brandExportConfigSchema, gradientOverlayConfigSchema, HexColor, hexColorSchema, LogoOverlayConfig, logoOverlayConfigSchema, lowerThirdConfigSchema (+5 more)
 
 ### Community 111 - "Build 6B.1 Report — Creator Identity Layer"
 Cohesion: 0.25
@@ -483,16 +482,16 @@ Cohesion: 0.17
 Nodes (12): 1. Current state (what the wizard composes — nothing new to invent), 2.1 Creator types (core catalog — the one new pure piece), 2.2 Wizard UX (4 steps, skippable, ~60–90s), 2.3 Writes (on Finish — all existing channels), 2.4 Visibility (backward compatible), 2. Design, 3. Database impact, 4. Files to touch (+4 more)
 
 ### Community 130 - "render-export.test.ts"
-Cohesion: 0.30
-Nodes (13): sendAlert(), getDb(), setDb(), env, main(), claimNextJob(), completeJob(), failJob() (+5 more)
+Cohesion: 0.35
+Nodes (12): sendAlert(), getDb(), setDb(), main(), claimNextJob(), completeJob(), failJob(), failJobPermanently() (+4 more)
 
 ### Community 131 - "generate-edl.test.ts"
 Cohesion: 0.09
-Nodes (25): cleanupExpired(), handlers, JobHandler, defaultDeps, execFileAsync, ffmpegStitch(), handoffToTranscribe(), stitch() (+17 more)
+Nodes (26): cleanupExpired(), handlers, JobHandler, enqueueAnalyze(), ProjectRow, transcribe(), transcribeWithProvider(), UploadRow (+18 more)
 
 ### Community 132 - "transcribe.ts"
-Cohesion: 0.15
-Nodes (22): completeUpload(), createProjectWithScenes(), createProjectWithUpload(), CreateScenesResult, CreateUploadResult, finalizeScenes(), requestAiEdit(), requestExportRender() (+14 more)
+Cohesion: 0.16
+Nodes (21): completeUpload(), createProjectWithScenes(), createProjectWithUpload(), CreateScenesResult, CreateUploadResult, finalizeScenes(), requestAiEdit(), requestExportRender() (+13 more)
 
 ### Community 133 - "Build 6C.1 Report — Tajawal UI + Creator Dashboard + Thumbnails"
 Cohesion: 0.17
@@ -519,8 +518,8 @@ Cohesion: 0.26
 Nodes (8): cgroupMemoryMb(), execFileAsync, LocalFfmpegEngine, RenderAbortedError, RenderEngine, RenderRequest, VeryGoodFfmpegEngine, ExportPlan
 
 ### Community 140 - "limits.ts"
-Cohesion: 0.19
-Nodes (16): LOGO_TYPES, OnboardingWizard(), OnboardingWizardProps, TYPE_ICONS, AI_INTENTS, AiIntent, BrandKitRow, CREATOR_STYLE_IDS (+8 more)
+Cohesion: 0.26
+Nodes (12): LOGO_TYPES, OnboardingWizard(), TYPE_ICONS, AI_INTENTS, AiIntent, CREATOR_STYLES, CreatorStyleId, getCreatorStyle() (+4 more)
 
 ### Community 142 - "fillers.ts"
 Cohesion: 0.36
@@ -535,12 +534,12 @@ Cohesion: 0.11
 Nodes (16): 1. What v2 adds over the 6A timeline, 2.1 Waveform (pure math + thin browser wrapper), 2.2 Ruler & trim tooltip, 2.3 Performance, 2. Design, 3. Files, 4. DB/worker impact, 5. Risks (+8 more)
 
 ### Community 145 - "edl.ts"
-Cohesion: 0.26
-Nodes (6): AppHeader(), LocaleSwitcher(), SignOutButton(), { Link, redirect, usePathname, useRouter, getPathname }, brandKitRowSchema, logoOverlayPrefSchema
+Cohesion: 0.21
+Nodes (8): BrandKitPage(), AppHeader(), BrandKitForm(), LocaleSwitcher(), SignOutButton(), { Link, redirect, usePathname, useRouter, getPathname }, brandKitRowSchema, logoOverlayPrefSchema
 
 ### Community 146 - "generate-edl.test.ts"
-Cohesion: 0.11
-Nodes (22): AiAssistantPanel(), FEEDBACK_REASONS, INTENTS, PRESET_KEYS, SuggestionRow, AI_FEEDBACK_REASONS, AI_FEEDBACK_VALUES, AiEditCategory (+14 more)
+Cohesion: 0.10
+Nodes (24): AiAssistantPanel(), FEEDBACK_REASONS, INTENTS, PRESET_KEYS, SuggestionRow, AI_FEEDBACK_REASONS, AI_FEEDBACK_VALUES, AiEditCategory (+16 more)
 
 ### Community 147 - "Build 7.2 Analysis — Screen + Camera Recording, PiP, Preferences"
 Cohesion: 0.20
@@ -563,8 +562,8 @@ Cohesion: 0.25
 Nodes (8): 1. What was built, 2. Bug found live (fixed): compositor-throttled scroll, 3. Database & worker, 4. Tests (190 → 195), 5. Verification (live backend, synthetic camera), 6. Backward compatibility, 7. Production, Build 7.3 Report — Teleprompter, Speaker Notes, Countdown Controls
 
 ### Community 152 - "edl.ts"
-Cohesion: 0.22
-Nodes (13): ShortcutsHelp(), ReorderDrag, Timeline(), TimelineProps, TrimDrag, WaveformStrip, buildPeaks(), decodePeaksFromMedia() (+5 more)
+Cohesion: 0.14
+Nodes (24): AiDecisionCard(), EditorView(), ShortcutsHelp(), ReorderDrag, Timeline(), TimelineProps, TrimDrag, WaveformStrip (+16 more)
 
 ### Community 154 - "Build 7.4 Report — Scenes + Worker Stitch (multi-clip recording projects)"
 Cohesion: 0.29
@@ -579,28 +578,28 @@ Cohesion: 0.36
 Nodes (7): renderBrandImages(), renderGradientImage(), renderLogoImage(), renderLowerThirdImage(), rgba(), registerCaptionFonts(), LOGO_CFG
 
 ### Community 157 - "limits.ts"
-Cohesion: 0.24
-Nodes (14): CaptionPreview(), CaptionPreviewProps, captionSpanStyle(), anchorToPosition(), CaptionStudio(), CaptionStudioProps, DEFAULT_OUTLINE, Position (+6 more)
+Cohesion: 0.13
+Nodes (13): 1. What a Merai Skill IS (the foundation decision), 2. The six launch skills, 3. Integration (zero worker change), 4. Files, 5. Deferred (explicitly), 6. Verification, Build 8 Analysis — Skills Foundation (Merai Skills Marketplace), 1. What was built (+5 more)
 
 ### Community 159 - "TranscriptWord"
-Cohesion: 0.39
-Nodes (6): AiDecisionCard(), anchorFor(), CardAnchor, TranscriptPanel(), TranscriptPanelProps, RemovedSegment
+Cohesion: 0.20
+Nodes (12): CREATOR_STYLE_IDS, CREATOR_TYPE_IDS, aspectRatioSchema, catalog, getSkill(), SKILL_IDS, SkillDefinition, skillDefinitionSchema (+4 more)
 
 ### Community 160 - "CreatorStyle"
-Cohesion: 0.29
-Nodes (10): BrandKitFormProps, GRADIENT_DEFAULTS, LOGO_TYPES, CreatorStylePreviewProps, CreatorStyles(), CreatorStylesProps, LogoOverlayPref, LowerThirdShape (+2 more)
+Cohesion: 0.27
+Nodes (10): BrandKitFormProps, GRADIENT_DEFAULTS, LOGO_TYPES, CreatorStyles(), CreatorStylesProps, OnboardingWizardProps, BrandKitRow, LogoOverlayPref (+2 more)
 
 ### Community 161 - "auth-form.tsx"
-Cohesion: 0.22
-Nodes (6): AuthForm(), BrandKitForm(), cache, ProjectThumbnail(), ProjectThumbnailProps, createClient()
+Cohesion: 0.24
+Nodes (5): AuthForm(), cache, ProjectThumbnail(), ProjectThumbnailProps, createClient()
 
 ### Community 162 - "edl.ts"
-Cohesion: 0.29
-Nodes (6): edlV1Schema, KeptSegment, keptSegmentSchema, removalReasonSchema, removedSegmentSchema, segmentBase
+Cohesion: 0.23
+Nodes (6): createEditBrain(), PermanentJobError, generateEdl(), resolveIntentHint(), WORDS, validateAiEditPlan()
 
 ### Community 163 - "logger.ts"
 Cohesion: 0.24
-Nodes (9): createAnalysisEngine(), analyze(), analyzeWithEngine(), TranscriptRow, Level, log, write(), analyzePayloadSchema (+1 more)
+Nodes (7): createAnalysisEngine(), analyze(), analyzeWithEngine(), TranscriptRow, analyzePayloadSchema, transcriptWordSchema, transcriptWordsSchema
 
 ### Community 164 - "fillers.ts"
 Cohesion: 0.29
@@ -611,29 +610,25 @@ Cohesion: 0.31
 Nodes (6): images, line, captionSpecAboveLowerThird(), FONT_DIR, renderCaptionImages(), resolveStyleSpec()
 
 ### Community 166 - "creator-styles.ts"
-Cohesion: 0.38
-Nodes (5): GradientOverlayConfig, LowerThirdConfig, BrandKitStylePatch, CreatorStyleColors, CreatorStylePatchInput
-
-### Community 167 - "limits.ts"
-Cohesion: 0.50
-Nodes (3): SubscriptionTier, TIER_LIMITS, TierLimits
+Cohesion: 0.32
+Nodes (6): GradientOverlayConfig, LowerThirdConfig, BrandKitStylePatch, creatorStyleBrandKitPatch(), CreatorStyleColors, CreatorStylePatchInput
 
 ## Knowledge Gaps
-- **840 isolated node(s):** `eslintConfig`, `withNextIntl`, `nextConfig`, `name`, `version` (+835 more)
+- **857 isolated node(s):** `eslintConfig`, `withNextIntl`, `nextConfig`, `name`, `version` (+852 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **58 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `TranscriptWord` connect `AI Analysis & EDL Builder` to `editor-view.tsx`, `edl-v2.ts`, `Transcription Providers`, `TranscriptWord`, `edl-ops.ts`, `export-plan.ts`, `fillers.ts`, `brand-kit-form.tsx`, `edl.ts`, `generate-edl.test.ts`, `edl.ts`, `limits.ts`, `TranscriptWord`?**
+- **Why does `TranscriptWord` connect `AI Analysis & EDL Builder` to `project-status-view.tsx`, `editor-view.tsx`, `logger.ts`, `edl-v2.ts`, `Transcription Providers`, `TranscriptWord`, `edl-ops.ts`, `export-plan.ts`, `fillers.ts`, `brand-kit-form.tsx`, `generate-edl.test.ts`, `edl.ts`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `EdlV1` connect `edl.ts` to `project-status-view.tsx`, `edl.ts`, `edl-v2.ts`, `Server Render Pipeline`, `AI Analysis & EDL Builder`, `editor-view.tsx`, `TranscriptWord`, `edl-ops.ts`, `export-plan.ts`, `fillers.ts`, `brand-kit-form.tsx`, `generate-edl.test.ts`, `limits.ts`, `TranscriptWord`?**
+- **Why does `EdlV1` connect `edl.ts` to `project-status-view.tsx`, `edl.ts`, `edl-v2.ts`, `Server Render Pipeline`, `AI Analysis & EDL Builder`, `editor-view.tsx`, `TranscriptWord`, `edl-ops.ts`, `export-plan.ts`, `fillers.ts`, `brand-kit-form.tsx`, `generate-edl.test.ts`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **Why does `createClient()` connect `transcribe.ts` to `edl.ts`, `fillers.ts`, `createClient`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+- **Why does `createClient()` connect `transcribe.ts` to `project-status-view.tsx`, `edl.ts`, `fillers.ts`, `createClient`?**
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `NOTE: This file should not be edited`, `withNextIntl` to the rest of the system?**
-  _868 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _885 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `EDL Domain & Editing Ops` be split into smaller, more focused modules?**
   _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
 - **Should `Web Upload & Project UI` be split into smaller, more focused modules?**

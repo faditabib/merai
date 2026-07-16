@@ -14,6 +14,7 @@ import {
   type BrandExportConfig,
   type CaptionBrandColors,
   type CaptionStyleSpec,
+  type CreatorTypeId,
   type EditCommand,
   type EdlV1,
   type TranscriptWord,
@@ -49,6 +50,8 @@ export interface EditorViewProps {
   captionDefaultConfig: CaptionStyleSpec | null;
   /** Brand kit name for the export "your video style" card; null = no kit. */
   brandName: string | null;
+  /** Persona (user_metadata.creator_type) — ranks the Skills row (Build 8). */
+  creatorType: CreatorTypeId | null;
 }
 
 /**
@@ -481,6 +484,7 @@ export function EditorView(props: EditorViewProps) {
         dirty={dirty}
         edl={edl}
         words={props.words}
+        creatorType={props.creatorType}
         ensureSavedVersion={ensureSavedVersion}
         onApplyCommands={applyAiCommands}
       />
