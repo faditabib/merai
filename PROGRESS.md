@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Build 7.4 — Scenes + Worker Stitch (2026-07-16)
+
+206 tests green (81 core + 79 worker + 46 web) · next build ✓ · ar/en parity
+483 = 483 · **zero migrations** — but the first Build 7 WORKER change
+(BUILD_7_4_ANALYSIS.md + BUILD_7_4_REPORT.md).
+
+- Multi-scene recording projects: kept takes become ordered scenes → N tus
+  uploads → worker `stitch` job (new job type; jobs.type has no CHECK) →
+  normalize-then-join (per scene one small ffmpeg run to 1280×720/30fps/
+  H.264+AAC, then -c copy concat — the export pipeline's memory model) →
+  ONE ordinary video_uploads row → unchanged single-source pipeline.
+- Stitched row pre-created 'pending' by createProjectWithScenes (RLS
+  app-side; worker fills bytes); finalizeScenes verifies objects + enqueues;
+  project stays 'uploading' until the stitch hands off to 'transcribing'.
+- Deps-injectable handler; 6 PGlite tests (converge, order, permanent
+  failures, no status regression) + validateSceneSet (combined 10-min cap).
+- Live E2E, every job attempt 1: 2 real takes → stitch (0.9MB in 2s, real
+  ffmpeg) → AssemblyAI transcribe → Haiku analyze → project READY.
+  Next: 7.5 Auto Canvas.
+
+---
+
 ## Build 7.3 — Teleprompter, Speaker Notes, Countdown Controls (2026-07-16)
 
 195 tests green (81 core + 73 worker + 41 web) · next build ✓ · ar/en parity

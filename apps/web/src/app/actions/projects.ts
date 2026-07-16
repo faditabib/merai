@@ -3,7 +3,12 @@
 import { randomUUID } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { safeExtension, validateVideoFile } from "@/lib/upload/validate";
+import {
+  safeExtension,
+  validateSceneSet,
+  validateVideoFile,
+  type SceneInput,
+} from "@/lib/upload/validate";
 
 /**
  * Server actions for the upload → transcription pipeline.
@@ -80,6 +85,166 @@ export async function createProjectWithUpload(input: {
     bucket: RAW_BUCKET,
     objectName,
   };
+}
+
+export interface CreateScenesResult {
+  ok: boolean;
+  error?: string;
+  projectId?: string;
+  stitchedUploadId?: string;
+  bucket?: string;
+  /** Per input scene, in order: the upload row id + tus object name. */
+  scenes?: Array<{ uploadId: string; objectName: string }>;
+}
+
+/**
+ * Multi-scene recording project (Build 7.4): one project, N ordered scene
+ * uploads, and ONE pre-created 'pending' stitched upload row whose path the
+ * worker fills. Zero migrations — the stitched source is an ordinary
+ * video_uploads row, so the whole downstream pipeline stays single-source.
+ */
+export async function createProjectWithScenes(input: {
+  title: string;
+  scenes: Array<SceneInput & { filename: string }>;
+}): Promise<CreateScenesResult> {
+  const validationError = validateSceneSet(input.scenes);
+  if (validationError) return { ok: false, error: validationError };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "not-authenticated" };
+
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .insert({
+      owner_id: user.id,
+      title: input.title,
+      status: "uploading",
+      source_language: "auto",
+    })
+    .select("id")
+    .single();
+  if (projectError || !project) return { ok: false, error: "create-failed" };
+
+  const rollback = async () => {
+    await supabase.from("projects").delete().eq("id", project.id);
+  };
+
+  // Scene rows (order preserved by the returned array).
+  const scenes: Array<{ uploadId: string; objectName: string }> = [];
+  const sceneRows = input.scenes.map((scene, index) => {
+    const uploadId = randomUUID();
+    const objectName = `${user.id}/${uploadId}/original.${safeExtension(scene.filename)}`;
+    scenes.push({ uploadId, objectName });
+    return {
+      id: uploadId,
+      project_id: project.id,
+      owner_id: user.id,
+      storage_path: `${RAW_BUCKET}/${objectName}`,
+      original_filename: scene.filename || `scene-${index + 1}`,
+      mime_type: scene.mimeType,
+      size_bytes: scene.sizeBytes,
+      duration_seconds: scene.durationSeconds,
+      status: "uploading",
+    };
+  });
+
+  // The stitched source row, pre-created so the worker only fills bytes.
+  const stitchedUploadId = randomUUID();
+  const totalSeconds = input.scenes.reduce((s, x) => s + (x.durationSeconds ?? 0), 0);
+  const { error: uploadsError } = await supabase.from("video_uploads").insert([
+    ...sceneRows,
+    {
+      id: stitchedUploadId,
+      project_id: project.id,
+      owner_id: user.id,
+      storage_path: `${RAW_BUCKET}/${user.id}/${stitchedUploadId}/original.mp4`,
+      original_filename: "stitched.mp4",
+      mime_type: "video/mp4",
+      size_bytes: 0,
+      duration_seconds: totalSeconds || null,
+      status: "pending",
+    },
+  ]);
+  if (uploadsError) {
+    await rollback();
+    return { ok: false, error: "create-failed" };
+  }
+
+  return {
+    ok: true,
+    projectId: project.id,
+    stitchedUploadId,
+    bucket: RAW_BUCKET,
+    scenes,
+  };
+}
+
+/**
+ * All scene bytes are in storage → verify each object, mark the scene rows
+ * uploaded, and enqueue the stitch job. The project stays 'uploading' until
+ * the worker's stitch handler hands off to transcription.
+ */
+export async function finalizeScenes(input: {
+  projectId: string;
+  uploadIds: string[];
+  stitchedUploadId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "not-authenticated" };
+
+  // RLS scopes to the owner — also the ownership check.
+  const { data: uploads } = await supabase
+    .from("video_uploads")
+    .select("id, project_id, storage_path, status")
+    .eq("project_id", input.projectId);
+  const byId = new Map((uploads ?? []).map((u) => [u.id, u]));
+  if (!byId.has(input.stitchedUploadId)) return { ok: false, error: "not-found" };
+
+  const admin = createAdminClient();
+  for (const uploadId of input.uploadIds) {
+    const upload = byId.get(uploadId);
+    if (!upload) return { ok: false, error: "not-found" };
+    const objectName = upload.storage_path.slice(RAW_BUCKET.length + 1);
+    const folder = objectName.slice(0, objectName.lastIndexOf("/"));
+    const filename = objectName.slice(objectName.lastIndexOf("/") + 1);
+    const { data: objects, error: listError } = await admin.storage
+      .from(RAW_BUCKET)
+      .list(folder);
+    if (listError || !objects?.some((o) => o.name === filename)) {
+      return { ok: false, error: "object-missing" };
+    }
+  }
+
+  const { error: updateError } = await supabase
+    .from("video_uploads")
+    .update({ status: "uploaded" })
+    .in("id", input.uploadIds);
+  if (updateError) return { ok: false, error: "update-failed" };
+
+  const { error: jobError } = await admin.from("jobs").upsert(
+    {
+      type: "stitch",
+      payload: {
+        projectId: input.projectId,
+        ownerId: user.id,
+        uploadIds: input.uploadIds,
+        stitchedUploadId: input.stitchedUploadId,
+      },
+      dedupe_key: `stitch:${input.stitchedUploadId}`,
+      owner_id: user.id,
+      project_id: input.projectId,
+    },
+    { onConflict: "dedupe_key", ignoreDuplicates: true },
+  );
+  if (jobError) return { ok: false, error: "enqueue-failed" };
+
+  return { ok: true };
 }
 
 export async function completeUpload(input: {

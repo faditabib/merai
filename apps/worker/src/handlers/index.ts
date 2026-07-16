@@ -3,6 +3,7 @@ import { analyze } from "./analyze";
 import { cleanupExpired } from "./cleanup-expired";
 import { generateEdl } from "./generate-edl";
 import { renderExport } from "./render-export";
+import { stitch } from "./stitch";
 import { transcribe } from "./transcribe";
 
 export type JobHandler = (job: JobRow) => Promise<void>;
@@ -13,4 +14,5 @@ export const handlers: Record<JobType, JobHandler> = {
   generate_edl: generateEdl,
   render_export: renderExport,
   cleanup_expired: cleanupExpired,
+  stitch,
 };

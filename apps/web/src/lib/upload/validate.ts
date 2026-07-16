@@ -46,3 +46,29 @@ export function safeExtension(filename: string): string {
   const match = /\.([a-z0-9]{2,5})$/i.exec(filename);
   return match ? match[1]!.toLowerCase() : "mp4";
 }
+
+export interface SceneInput {
+  mimeType: string;
+  sizeBytes: number;
+  durationSeconds: number | null;
+}
+
+/**
+ * Scene-set validation (Build 7.4): every scene passes the single-file
+ * gate AND the combined duration fits the raw cap — the stitched source is
+ * one upload, so the cap applies to the SUM (the STT-measured duration on
+ * the stitched file stays the authoritative check).
+ */
+export function validateSceneSet(
+  scenes: SceneInput[],
+): UploadValidationError | "scenes-too-few" | "scenes-too-long" | null {
+  if (scenes.length < 2) return "scenes-too-few";
+  let totalSeconds = 0;
+  for (const scene of scenes) {
+    const sceneError = validateVideoFile(scene);
+    if (sceneError) return sceneError;
+    totalSeconds += scene.durationSeconds!;
+  }
+  if (totalSeconds > MAX_RAW_UPLOAD_SECONDS) return "scenes-too-long";
+  return null;
+}

@@ -15,6 +15,7 @@ export const JOB_TYPES = [
   "generate_edl",
   "render_export",
   "cleanup_expired",
+  "stitch",
 ] as const;
 export type JobType = (typeof JOB_TYPES)[number];
 
@@ -52,12 +53,26 @@ export type RenderExportPayload = z.infer<typeof renderExportPayloadSchema>;
 /** Periodic retention sweep; no payload. */
 export const cleanupExpiredPayloadSchema = z.object({});
 
+/**
+ * Scene stitch (Build 7.4): normalize + concatenate ORDERED scene uploads
+ * into the pre-created stitched upload row, then hand off to transcription.
+ * `uploadIds` order IS the scene order.
+ */
+export const stitchPayloadSchema = z.object({
+  projectId: z.string().uuid(),
+  ownerId: z.string().uuid(),
+  uploadIds: z.array(z.string().uuid()).min(2),
+  stitchedUploadId: z.string().uuid(),
+});
+export type StitchPayload = z.infer<typeof stitchPayloadSchema>;
+
 export const jobPayloadSchemas = {
   transcribe: transcribePayloadSchema,
   analyze: analyzePayloadSchema,
   generate_edl: generateEdlPayloadSchema,
   render_export: renderExportPayloadSchema,
   cleanup_expired: cleanupExpiredPayloadSchema,
+  stitch: stitchPayloadSchema,
 } satisfies Record<JobType, z.ZodTypeAny>;
 
 export const jobStatusSchema = z.enum(["queued", "processing", "done", "failed"]);

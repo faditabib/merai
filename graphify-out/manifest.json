@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1784207869.7483356,
-    "ast_hash": "14f69f56d3db460c6eff8b690ab2b3b9",
+    "mtime": 1784223260.7143695,
+    "ast_hash": "642a52918f1097e7ee94628954bad813",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -20,13 +20,13 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784221502.8767884,
-    "ast_hash": "1ae873c3d29c25f5380ad3caa25df021",
+    "mtime": 1784222684.066715,
+    "ast_hash": "5ec95e4fa2ca8b57bb56d3d8bfa1676d",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784221506.102332,
-    "ast_hash": "c1713143abf235599591ef5850d886e2",
+    "mtime": 1784222687.2797277,
+    "ast_hash": "1dbe143c7548e46f81d4ad653c3a3a8b",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
@@ -90,8 +90,8 @@
     "semantic_hash": "192e2138648c46c0b7f4bd8f0f4298fd"
   },
   "apps/web/src/app/actions/projects.ts": {
-    "mtime": 1783767482.7081122,
-    "ast_hash": "064a069bae9fc2ece3816cd89c4d0410",
+    "mtime": 1784222599.5371895,
+    "ast_hash": "7cadfe03a1a5b8b7b3115401a7d320ee",
     "semantic_hash": ""
   },
   "apps/web/src/app/auth/confirm/route.ts": {
@@ -200,9 +200,9 @@
     "semantic_hash": "ae82b8d54497e502fe9e857b31dd909b"
   },
   "apps/web/src/lib/upload/validate.ts": {
-    "mtime": 1783467912.1189044,
-    "ast_hash": "71d1316526f829f55b9ee9a84cb47c31",
-    "semantic_hash": "71d1316526f829f55b9ee9a84cb47c31"
+    "mtime": 1784222561.0694907,
+    "ast_hash": "74aa5bcc09002bf30444bc69ae14df84",
+    "semantic_hash": ""
   },
   "apps/web/src/proxy.ts": {
     "mtime": 1783464352.9197097,
@@ -220,9 +220,9 @@
     "semantic_hash": "b48e0a0b6628506de0e5730daf235e71"
   },
   "apps/web/test/validate.test.ts": {
-    "mtime": 1783468452.5057964,
-    "ast_hash": "ea411f6178af53a6313214fa316dd457",
-    "semantic_hash": "ea411f6178af53a6313214fa316dd457"
+    "mtime": 1784222725.6553495,
+    "ast_hash": "83e6eaae1a680e8fc3be1f3d2d0165b5",
+    "semantic_hash": ""
   },
   "apps/web/tsconfig.json": {
     "mtime": 1783463576.294398,
@@ -295,9 +295,9 @@
     "semantic_hash": ""
   },
   "apps/worker/src/handlers/index.ts": {
-    "mtime": 1783644258.3615909,
-    "ast_hash": "38e05a24814c7d7b15b4dcd2e22b23eb",
-    "semantic_hash": "38e05a24814c7d7b15b4dcd2e22b23eb"
+    "mtime": 1784222500.1996098,
+    "ast_hash": "af87be4ef36793b2319494bc20d1fad1",
+    "semantic_hash": ""
   },
   "apps/worker/src/handlers/render-export.ts": {
     "mtime": 1783868473.719098,
@@ -490,8 +490,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/jobs.ts": {
-    "mtime": 1783767237.520286,
-    "ast_hash": "11d3485887a358980eb9c7571d58b5f9",
+    "mtime": 1784222455.0130527,
+    "ast_hash": "63fb6382fd2860918331b22e425dc333",
     "semantic_hash": ""
   },
   "packages/core/src/limits.ts": {
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1784222168.3603575,
-    "ast_hash": "d58125d533e63f548381ef60be940102",
+    "mtime": 1784223349.9898713,
+    "ast_hash": "e3e022af61ba643b460aec78d3abcd1b",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784222152.6749773,
-    "ast_hash": "6cdbb73c92b10ce3674409195c6b456a",
+    "mtime": 1784223331.4624138,
+    "ast_hash": "4b2b3f3e4f796b138604212b213bfafb",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1040,8 +1040,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/record/record-flow.tsx": {
-    "mtime": 1784221878.3880672,
-    "ast_hash": "ac44055aae0c4ca7349d5b1c742adff9",
+    "mtime": 1784222672.5315747,
+    "ast_hash": "852315606544e585be090881832cc806",
     "semantic_hash": ""
   },
   "apps/web/src/lib/record/recorder.ts": {
@@ -1107,6 +1107,31 @@
   "BUILD_7_3_REPORT.md": {
     "mtime": 1784222136.6961453,
     "ast_hash": "742bd8754dd0d8c55ae10a16477efab9",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/record/scenes-upload-flow.tsx": {
+    "mtime": 1784222624.640783,
+    "ast_hash": "ec829d83358f2f7bce412711ac986b9a",
+    "semantic_hash": ""
+  },
+  "apps/worker/src/handlers/stitch.ts": {
+    "mtime": 1784222488.8749409,
+    "ast_hash": "a98dfc30050e50619445d2fdb8afd721",
+    "semantic_hash": ""
+  },
+  "apps/worker/test/stitch.test.ts": {
+    "mtime": 1784222525.4384553,
+    "ast_hash": "177c07eb4b19a468b49a868a9a991d10",
+    "semantic_hash": ""
+  },
+  "BUILD_7_4_ANALYSIS.md": {
+    "mtime": 1784222440.0646455,
+    "ast_hash": "be7a45b5e478c2569807f5b7b347a41b",
+    "semantic_hash": ""
+  },
+  "BUILD_7_4_REPORT.md": {
+    "mtime": 1784223317.7592115,
+    "ast_hash": "6a5d0df6c42ef7984307e2d3ae2749ac",
     "semantic_hash": ""
   }
 }

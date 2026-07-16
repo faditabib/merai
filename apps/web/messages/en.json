@@ -386,6 +386,18 @@
     "deleteTake": "Delete",
     "uploadingTitle": "Uploading your take",
     "retryDevices": "Try again",
+    "scenes": {
+      "title": "Creating your project from the takes",
+      "projectTitle": "Recording {date}",
+      "combine": "Combine {n, number} takes into a project",
+      "overCap": "The takes together exceed the 10-minute cap — delete one or more.",
+      "uploadingScene": "Uploading take {n, number} of {total, number}",
+      "finalizing": "Preparing the stitch…",
+      "errors": {
+        "scenes-too-few": "You need at least two takes to combine.",
+        "scenes-too-long": "The takes together exceed the 10-minute cap."
+      }
+    },
     "errors": {
       "permission-denied": "We need camera and microphone access to record — allow it in your browser settings and try again.",
       "no-devices": "No connected camera or microphone was found.",

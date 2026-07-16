@@ -40,6 +40,7 @@ import {
   type PrompterMode,
 } from "@/lib/record/teleprompter";
 import { TeleprompterOverlay } from "@/components/record/teleprompter";
+import { ScenesUploadFlow } from "@/components/record/scenes-upload-flow";
 import { UploadFlow } from "@/components/upload-flow";
 
 const DEVICE_STORAGE_KEY = "merai.record.devices";
@@ -54,7 +55,8 @@ type Phase =
   | "recording"
   | "paused"
   | "review"
-  | "uploading";
+  | "uploading"
+  | "uploading-scenes";
 
 type SetupError =
   | "permission-denied"
@@ -398,6 +400,15 @@ export function RecordFlow() {
     setPhase("uploading");
   };
 
+  /** Build 7.4: all kept takes become the ORDERED SCENES of one project. */
+  const combineTakes = () => {
+    releaseStream();
+    setPhase("uploading-scenes");
+  };
+
+  const totalTakesMs = takes.reduce((sum, take) => sum + take.durationMs, 0);
+  const scenesOverCap = totalTakesMs > CAP_MS;
+
   const mb = (bytes: number) => (bytes / (1024 * 1024)).toFixed(1);
   const capWarning = elapsedMs >= CAP_WARN_MS;
   const recordingLike = phase === "recording" || phase === "paused";
@@ -411,6 +422,24 @@ export function RecordFlow() {
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{t("uploadingTitle")}</h2>
         <UploadFlow externalFile={uploadFile} />
+      </div>
+    );
+  }
+
+  // ---- Multi-scene handoff (7.4): N scenes → one stitched project. ----
+  if (phase === "uploading-scenes") {
+    return (
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">{t("scenes.title")}</h2>
+        <ScenesUploadFlow
+          title={t("scenes.projectTitle", {
+            date: new Date().toLocaleDateString(),
+          })}
+          scenes={takes.map((take) => ({
+            file: take.file,
+            durationSeconds: take.durationMs / 1000,
+          }))}
+        />
       </div>
     );
   }
@@ -741,7 +770,29 @@ export function RecordFlow() {
       {/* Takes rail */}
       {takes.length > 0 && phase !== "review" && (
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">{t("takesTitle")}</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">{t("takesTitle")}</h2>
+            {/* 7.4: takes become the ordered scenes of ONE project. */}
+            {takes.length >= 2 && (
+              <div className="flex items-center gap-2">
+                <span dir="ltr" className="text-xs tabular-nums text-muted">
+                  {formatElapsed(totalTakesMs)}
+                </span>
+                <button
+                  type="button"
+                  disabled={phase !== "setup" || scenesOverCap}
+                  onClick={combineTakes}
+                  title={scenesOverCap ? t("scenes.overCap") : undefined}
+                  className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
+                >
+                  {t("scenes.combine", { n: takes.length })}
+                </button>
+              </div>
+            )}
+          </div>
+          {scenesOverCap && takes.length >= 2 && (
+            <p className="text-xs text-amber-600">{t("scenes.overCap")}</p>
+          )}
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {takes.map((take) => (
               <li
