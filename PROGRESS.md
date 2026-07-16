@@ -1,5 +1,23 @@
 # Merai — Progress Log
 
+## Build 7.6 — Timeline v2 (2026-07-17)
+
+231 tests green (96 core + 79 worker + 56 web) · next build ✓ · parity
+unchanged · **zero migrations, no worker change** (BUILD_7_6_ANALYSIS.md +
+BUILD_7_6_REPORT.md).
+
+- Real waveforms behind timeline blocks: one client-side decode of the
+  source → ~1000 bucketed peaks; segments slice their window (pure, tested)
+  — edits never re-decode. Progressive enhancement (decode failure = v1
+  visuals).
+- Time ruler with nice ticks (1/5/10/30/60s bands) + mm:ss labels; live trim
+  tooltip (time ± delta); wider trim touch targets; canvases content-memoized
+  so playhead ticks never redraw them.
+- Live-verified: 3-segment project showed ruler 00:01→00:14 + 3 painted
+  waveform canvases. Next: 7.7 project organization.
+
+---
+
 ## Build 7.5 — Auto Canvas (2026-07-16)
 
 221 tests green (96 core + 79 worker + 46 web) · next build ✓ · ar/en parity

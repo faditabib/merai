@@ -18,6 +18,7 @@ import {
   type EdlV1,
   type TranscriptWord,
 } from "@merai/core";
+import { decodePeaksFromMedia } from "@/lib/editor/waveform";
 import { createClient } from "@/lib/supabase/client";
 import { CaptionStudio } from "@/components/caption-studio";
 import { AiAssistantPanel } from "./ai-assistant-panel";
@@ -77,6 +78,9 @@ export function EditorView(props: EditorViewProps) {
   const [videoError, setVideoError] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [sourceMs, setSourceMs] = useState(0);
+  // Timeline v2 (7.6): bucketed audio peaks of the full source (null until
+  // decoded; stays null when decoding isn't possible).
+  const [peaks, setPeaks] = useState<number[] | null>(null);
   const [previewEdit, setPreviewEdit] = useState(true);
   const [selectedWordIds, setSelectedWordIds] = useState<string[]>([]);
 
@@ -114,6 +118,28 @@ export function EditorView(props: EditorViewProps) {
         else setVideoUrl(data.signedUrl);
       });
   }, [props.storagePath, supabase]);
+
+  // Timeline v2 (7.6): decode the source's audio ONCE into bucketed peaks.
+  // Progressive enhancement — any failure just means no waveform.
+  useEffect(() => {
+    if (!videoUrl) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const response = await fetch(videoUrl);
+        if (!response.ok) return;
+        const bytes = await response.arrayBuffer();
+        if (cancelled) return;
+        const decoded = await decodePeaksFromMedia(bytes);
+        if (!cancelled && decoded) setPeaks(decoded);
+      } catch {
+        /* no waveform */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [videoUrl]);
 
   // Fine-grained playhead tracking (timeupdate is too coarse for karaoke).
   useEffect(() => {
@@ -429,6 +455,7 @@ export function EditorView(props: EditorViewProps) {
         words={props.words}
         sourceMs={sourceMs}
         sourceDurationMs={props.sourceDurationMs}
+        peaks={peaks}
         onSeek={seekSource}
         onTrim={(segmentId, edge, ms) =>
           runCommand({ type: "trim-segment", segmentId, edge, ms })

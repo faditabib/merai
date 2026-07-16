@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   edlOutputDurationMs,
@@ -10,6 +10,8 @@ import {
   type RemovedSegment,
   type TranscriptWord,
 } from "@merai/core";
+import { peaksForRange, rulerTicks } from "@/lib/editor/waveform";
+import { formatElapsed } from "@/lib/record/recorder";
 import { AiDecisionCard } from "./ai-decision-card";
 
 export interface TimelineProps {
@@ -17,6 +19,8 @@ export interface TimelineProps {
   words: TranscriptWord[];
   sourceMs: number;
   sourceDurationMs: number;
+  /** Timeline v2 (7.6): full-source audio peaks; null = no waveform. */
+  peaks: number[] | null;
   onSeek: (sourceMs: number) => void;
   onTrim: (segmentId: string, edge: "in" | "out", newMs: number) => void;
   onSplit: (segmentId: string, sourceMs: number) => void;
@@ -29,6 +33,8 @@ interface TrimDrag {
   segmentId: string;
   edge: "in" | "out";
   currentMs: number;
+  /** For the live tooltip's delta (7.6). */
+  originMs: number;
 }
 
 interface ReorderDrag {
@@ -85,11 +91,11 @@ export function Timeline(props: TimelineProps) {
     event.stopPropagation();
     event.preventDefault();
     const startX = event.clientX;
-    setTrimDrag({ segmentId, edge, currentMs: originMs });
+    setTrimDrag({ segmentId, edge, currentMs: originMs, originMs });
 
     const onMove = (move: PointerEvent) => {
       const deltaMs = pxToMs(move.clientX - startX);
-      setTrimDrag({ segmentId, edge, currentMs: Math.round(originMs + deltaMs) });
+      setTrimDrag({ segmentId, edge, currentMs: Math.round(originMs + deltaMs), originMs });
     };
     const onUp = (up: PointerEvent) => {
       window.removeEventListener("pointermove", onMove);
@@ -180,11 +186,35 @@ export function Timeline(props: TimelineProps) {
         <span className="ms-auto text-xs text-muted">{t("timelineHint")}</span>
       </div>
 
+      {/* Time ruler (7.6) — LTR like the strip; ticks at nice intervals. */}
+      <div dir="ltr" className="relative h-4 w-full select-none">
+        {outputDurationMs > 0 &&
+          rulerTicks(outputDurationMs).map((ms) => (
+            <span
+              key={ms}
+              className="absolute top-0 flex flex-col items-center text-[10px] tabular-nums text-muted"
+              style={{ left: `${(ms / outputDurationMs) * 100}%`, transform: "translateX(-50%)" }}
+            >
+              <span className="h-1 w-px bg-border" />
+              {formatElapsed(ms)}
+            </span>
+          ))}
+      </div>
+
+      {/* Live trim tooltip (7.6): current edge time + delta. */}
+      {trimDrag && (
+        <div dir="ltr" className="pointer-events-none w-fit rounded-lg bg-accent px-2 py-0.5 text-xs font-semibold tabular-nums text-accent-foreground">
+          {formatElapsed(Math.max(0, trimDrag.currentMs))}{" "}
+          ({trimDrag.currentMs >= trimDrag.originMs ? "+" : "−"}
+          {((Math.abs(trimDrag.currentMs - trimDrag.originMs)) / 1000).toFixed(1)}s)
+        </div>
+      )}
+
       {/* Timeline strip — LTR by design */}
       <div
         dir="ltr"
         ref={containerRef}
-        className="relative flex h-20 w-full select-none items-stretch gap-px overflow-visible rounded-xl bg-border/30 p-1"
+        className="relative flex h-24 w-full select-none items-stretch gap-px overflow-visible rounded-xl bg-border/30 p-1"
       >
         {props.edl.timeline.map((segment, index) => {
           const isTrimming = trimDrag?.segmentId === segment.id;
@@ -232,18 +262,24 @@ export function Timeline(props: TimelineProps) {
                 }`}
                 title={`${((outMs - inMs) / 1000).toFixed(1)}s`}
               >
-                {/* Trim handles */}
+                {/* Waveform (7.6) — the block's slice of the source peaks. */}
+                {props.peaks && props.sourceDurationMs > 0 && (
+                  <WaveformStrip
+                    peaks={peaksForRange(props.peaks, props.sourceDurationMs, inMs, outMs)}
+                  />
+                )}
+                {/* Trim handles — before: widens the touch target (7.6). */}
                 <div
                   onPointerDown={(event) =>
                     startTrim(event, segment.id, "in", segment.sourceInMs)
                   }
-                  className="absolute inset-y-0 left-0 w-2 cursor-ew-resize rounded-s-lg bg-accent/50 hover:bg-accent"
+                  className="absolute inset-y-0 left-0 z-[1] w-2 cursor-ew-resize rounded-s-lg bg-accent/50 before:absolute before:-inset-x-2 before:inset-y-0 before:content-[''] hover:bg-accent"
                 />
                 <div
                   onPointerDown={(event) =>
                     startTrim(event, segment.id, "out", segment.sourceOutMs)
                   }
-                  className="absolute inset-y-0 right-0 w-2 cursor-ew-resize rounded-e-lg bg-accent/50 hover:bg-accent"
+                  className="absolute inset-y-0 right-0 z-[1] w-2 cursor-ew-resize rounded-e-lg bg-accent/50 before:absolute before:-inset-x-2 before:inset-y-0 before:content-[''] hover:bg-accent"
                 />
               </div>
             </div>
@@ -275,6 +311,41 @@ export function Timeline(props: TimelineProps) {
     </section>
   );
 }
+
+/** Canvas peak bars — memoized; redraws only when its slice changes. */
+const WaveformStrip = memo(
+  function WaveformStrip({ peaks }: { peaks: number[] }) {
+    const ref = useRef<HTMLCanvasElement | null>(null);
+    useEffect(() => {
+      const canvas = ref.current;
+      if (!canvas) return;
+      const w = canvas.clientWidth || 100;
+      const h = canvas.clientHeight || 48;
+      canvas.width = w;
+      canvas.height = h;
+      const g = canvas.getContext("2d");
+      if (!g) return;
+      g.clearRect(0, 0, w, h);
+      g.fillStyle = getComputedStyle(canvas).color;
+      const barWidth = w / peaks.length;
+      peaks.forEach((peak, i) => {
+        const barHeight = Math.max(1, peak * h * 0.9);
+        g.fillRect(i * barWidth, (h - barHeight) / 2, Math.max(1, barWidth * 0.7), barHeight);
+      });
+    }, [peaks]);
+    return (
+      <canvas
+        ref={ref}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full text-accent/40"
+      />
+    );
+  },
+  // Slices are recreated per render — compare by content, they're tiny.
+  (prev, next) =>
+    prev.peaks.length === next.peaks.length &&
+    prev.peaks.every((p, i) => p === next.peaks[i]),
+);
 
 function RemovedGhost(props: {
   ghost: RemovedSegment;

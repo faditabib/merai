@@ -678,7 +678,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_app_locale_dashboard_brand_kit_page",
-      "community": 110,
+      "community": 90,
       "norm_label": "page.tsx"
     },
     {
@@ -688,7 +688,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "apps_web_src_app_locale_dashboard_brand_kit_page_brandkitpage",
-      "community": 110,
+      "community": 90,
       "norm_label": "brandkitpage()"
     },
     {
@@ -768,7 +768,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_app_locale_dashboard_projects_id_edit_page",
-      "community": 96,
+      "community": 98,
       "norm_label": "page.tsx"
     },
     {
@@ -1058,7 +1058,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_brand_kit_form",
-      "community": 110,
+      "community": 90,
       "norm_label": "brand-kit-form.tsx"
     },
     {
@@ -1068,7 +1068,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "apps_web_src_components_brand_kit_form_logo_types",
-      "community": 110,
+      "community": 90,
       "norm_label": "logo_types"
     },
     {
@@ -1078,7 +1078,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "apps_web_src_components_brand_kit_form_gradient_defaults",
-      "community": 110,
+      "community": 90,
       "norm_label": "gradient_defaults"
     },
     {
@@ -1088,7 +1088,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "apps_web_src_components_brand_kit_form_brandkitformprops",
-      "community": 110,
+      "community": 90,
       "norm_label": "brandkitformprops"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "apps_web_src_components_brand_kit_form_brandkitform",
-      "community": 110,
+      "community": 90,
       "norm_label": "brandkitform()"
     },
     {
@@ -1128,7 +1128,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "apps_web_src_components_caption_preview_captionpreviewprops",
-      "community": 96,
+      "community": 103,
       "norm_label": "captionpreviewprops"
     },
     {
@@ -1228,7 +1228,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_style_preview",
-      "community": 103,
+      "community": 90,
       "norm_label": "creator-style-preview.tsx"
     },
     {
@@ -1238,7 +1238,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_style_preview_creatorstylepreviewprops",
-      "community": 110,
+      "community": 90,
       "norm_label": "creatorstylepreviewprops"
     },
     {
@@ -1248,7 +1248,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_style_preview_creatorstylepreview",
-      "community": 103,
+      "community": 90,
       "norm_label": "creatorstylepreview()"
     },
     {
@@ -1258,7 +1258,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_styles",
-      "community": 110,
+      "community": 90,
       "norm_label": "creator-styles.tsx"
     },
     {
@@ -1268,7 +1268,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_styles_creatorstylesprops",
-      "community": 110,
+      "community": 90,
       "norm_label": "creatorstylesprops"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "apps_web_src_components_creator_styles_creatorstyles",
-      "community": 110,
+      "community": 90,
       "norm_label": "creatorstyles()"
     },
     {
@@ -1408,7 +1408,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel",
-      "community": 90,
+      "community": 146,
       "norm_label": "ai-assistant-panel.tsx"
     },
     {
@@ -1418,7 +1418,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel_suggestionrow",
-      "community": 90,
+      "community": 146,
       "norm_label": "suggestionrow"
     },
     {
@@ -1428,7 +1428,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel_preset_keys",
-      "community": 90,
+      "community": 146,
       "norm_label": "preset_keys"
     },
     {
@@ -1438,7 +1438,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel_feedback_reasons",
-      "community": 90,
+      "community": 146,
       "norm_label": "feedback_reasons"
     },
     {
@@ -1448,7 +1448,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel_intents",
-      "community": 90,
+      "community": 146,
       "norm_label": "intents"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_ai_assistant_panel_aiassistantpanel",
-      "community": 90,
+      "community": 146,
       "norm_label": "aiassistantpanel()"
     },
     {
@@ -1498,7 +1498,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_caption_overlay_captionoverlayprops",
-      "community": 96,
+      "community": 103,
       "norm_label": "captionoverlayprops"
     },
     {
@@ -1518,7 +1518,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_editor_view",
-      "community": 96,
+      "community": 98,
       "norm_label": "editor-view.tsx"
     },
     {
@@ -1528,7 +1528,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_editor_view_editorviewprops",
-      "community": 96,
+      "community": 98,
       "norm_label": "editorviewprops"
     },
     {
@@ -1538,7 +1538,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_editor_view_editorview",
-      "community": 106,
+      "community": 98,
       "norm_label": "editorview()"
     },
     {
@@ -1555,7 +1555,7 @@
       "label": "ASPECT_RATIOS",
       "file_type": "code",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L20",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_export_panel_aspect_ratios",
       "community": 96,
@@ -1565,7 +1565,7 @@
       "label": "ACTIVE_STATUSES",
       "file_type": "code",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_export_panel_active_statuses",
       "community": 96,
@@ -1575,7 +1575,7 @@
       "label": "ExportRow",
       "file_type": "code",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_export_panel_exportrow",
       "community": 96,
@@ -1585,7 +1585,7 @@
       "label": "ExportPanelProps",
       "file_type": "code",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L39",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "community": 96,
@@ -1595,7 +1595,7 @@
       "label": "ExportPanel()",
       "file_type": "code",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L62",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_export_panel_exportpanel",
       "community": 96,
@@ -1608,7 +1608,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_shortcuts_help",
-      "community": 96,
+      "community": 98,
       "norm_label": "shortcuts-help.tsx"
     },
     {
@@ -1618,7 +1618,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "apps_web_src_components_editor_shortcuts_help_shortcutshelp",
-      "community": 96,
+      "community": 98,
       "norm_label": "shortcutshelp()"
     },
     {
@@ -1848,7 +1848,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_src_components_overlay_studio",
-      "community": 110,
+      "community": 90,
       "norm_label": "overlay-studio.tsx"
     },
     {
@@ -1858,7 +1858,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_web_src_components_overlay_studio_positions",
-      "community": 110,
+      "community": 90,
       "norm_label": "positions"
     },
     {
@@ -1868,7 +1868,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_web_src_components_overlay_studio_overlaystudioprops",
-      "community": 110,
+      "community": 90,
       "norm_label": "overlaystudioprops"
     },
     {
@@ -1878,7 +1878,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "apps_web_src_components_overlay_studio_placement",
-      "community": 110,
+      "community": 90,
       "norm_label": "placement()"
     },
     {
@@ -1888,7 +1888,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "apps_web_src_components_overlay_studio_overlaystudio",
-      "community": 110,
+      "community": 90,
       "norm_label": "overlaystudio()"
     },
     {
@@ -4228,7 +4228,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_worker_src_db_db_end",
-      "community": 6,
+      "community": 108,
       "norm_label": ".end()"
     },
     {
@@ -4298,7 +4298,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_env",
-      "community": 138,
+      "community": 140,
       "norm_label": "env.ts"
     },
     {
@@ -4308,7 +4308,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_worker_src_env_env",
-      "community": 138,
+      "community": 130,
       "norm_label": "env"
     },
     {
@@ -4328,7 +4328,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_errors",
-      "community": 146,
+      "community": 143,
       "norm_label": "errors.ts"
     },
     {
@@ -4338,7 +4338,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_worker_src_errors_permanentjoberror",
-      "community": 146,
+      "community": 143,
       "norm_label": "permanentjoberror"
     },
     {
@@ -4348,7 +4348,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_worker_src_errors_permanentjoberror_constructor",
-      "community": 146,
+      "community": 143,
       "norm_label": ".constructor()"
     },
     {
@@ -4358,7 +4358,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_analyze",
-      "community": 5,
+      "community": 131,
       "norm_label": "analyze.ts"
     },
     {
@@ -4368,7 +4368,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_analyze_transcriptrow",
-      "community": 5,
+      "community": 131,
       "norm_label": "transcriptrow"
     },
     {
@@ -4378,7 +4378,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_analyze_analyze",
-      "community": 5,
+      "community": 131,
       "norm_label": "analyze()"
     },
     {
@@ -4388,7 +4388,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_analyze_analyzewithengine",
-      "community": 5,
+      "community": 131,
       "norm_label": "analyzewithengine()"
     },
     {
@@ -4398,7 +4398,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_cleanup_expired",
-      "community": 95,
+      "community": 131,
       "norm_label": "cleanup-expired.ts"
     },
     {
@@ -4408,7 +4408,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_cleanup_expired_cleanupexpired",
-      "community": 95,
+      "community": 131,
       "norm_label": "cleanupexpired()"
     },
     {
@@ -4448,7 +4448,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_index",
-      "community": 95,
+      "community": 131,
       "norm_label": "index.ts"
     },
     {
@@ -4458,7 +4458,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_index_jobhandler",
-      "community": 95,
+      "community": 131,
       "norm_label": "jobhandler"
     },
     {
@@ -4468,7 +4468,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_index_handlers",
-      "community": 95,
+      "community": 131,
       "norm_label": "handlers"
     },
     {
@@ -4478,7 +4478,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export",
-      "community": 4,
+      "community": 143,
       "norm_label": "render-export.ts"
     },
     {
@@ -4488,7 +4488,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_outputtoolargeerror",
-      "community": 4,
+      "community": 143,
       "norm_label": "outputtoolargeerror"
     },
     {
@@ -4498,7 +4498,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_exportrow",
-      "community": 96,
+      "community": 143,
       "norm_label": "exportrow"
     },
     {
@@ -4508,7 +4508,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_renderexportdeps",
-      "community": 4,
+      "community": 143,
       "norm_label": "renderexportdeps"
     },
     {
@@ -4518,7 +4518,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_defaultdeps",
-      "community": 4,
+      "community": 143,
       "norm_label": "defaultdeps"
     },
     {
@@ -4528,7 +4528,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_renderexport",
-      "community": 4,
+      "community": 143,
       "norm_label": "renderexport()"
     },
     {
@@ -4538,7 +4538,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "apps_worker_src_handlers_render_export_renderexportwithengine",
-      "community": 4,
+      "community": 143,
       "norm_label": "renderexportwithengine()"
     },
     {
@@ -4758,7 +4758,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_logger",
-      "community": 138,
+      "community": 6,
       "norm_label": "logger.ts"
     },
     {
@@ -4768,7 +4768,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_logger_level",
-      "community": 138,
+      "community": 6,
       "norm_label": "level"
     },
     {
@@ -4778,7 +4778,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_worker_src_logger_write",
-      "community": 138,
+      "community": 6,
       "norm_label": "write()"
     },
     {
@@ -4788,7 +4788,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_worker_src_logger_log",
-      "community": 138,
+      "community": 6,
       "norm_label": "log"
     },
     {
@@ -4858,7 +4858,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand",
-      "community": 4,
+      "community": 156,
       "norm_label": "brand.ts"
     },
     {
@@ -4868,7 +4868,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand_rgba",
-      "community": 4,
+      "community": 156,
       "norm_label": "rgba()"
     },
     {
@@ -4878,7 +4878,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand_rendergradientimage",
-      "community": 4,
+      "community": 156,
       "norm_label": "rendergradientimage()"
     },
     {
@@ -4888,7 +4888,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand_renderlowerthirdimage",
-      "community": 4,
+      "community": 156,
       "norm_label": "renderlowerthirdimage()"
     },
     {
@@ -4898,7 +4898,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand_renderlogoimage",
-      "community": 4,
+      "community": 156,
       "norm_label": "renderlogoimage()"
     },
     {
@@ -4908,7 +4908,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "apps_worker_src_render_brand_renderbrandimages",
-      "community": 4,
+      "community": 156,
       "norm_label": "renderbrandimages()"
     },
     {
@@ -4938,7 +4938,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_worker_src_render_captions_registercaptionfonts",
-      "community": 4,
+      "community": 156,
       "norm_label": "registercaptionfonts()"
     },
     {
@@ -4998,7 +4998,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_worker_src_render_index_createrenderengine",
-      "community": 4,
+      "community": 143,
       "norm_label": "createrenderengine()"
     },
     {
@@ -5108,7 +5108,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "apps_worker_src_render_types_renderengine_render",
-      "community": 4,
+      "community": 143,
       "norm_label": ".render()"
     },
     {
@@ -5338,7 +5338,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_arabic",
-      "community": 6,
+      "community": 108,
       "norm_label": "arabic.ts"
     },
     {
@@ -5348,7 +5348,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_arabic_takeone",
-      "community": 6,
+      "community": 108,
       "norm_label": "takeone"
     },
     {
@@ -5358,7 +5358,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_arabic_taketwo",
-      "community": 6,
+      "community": 108,
       "norm_label": "taketwo"
     },
     {
@@ -5368,7 +5368,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_arabic_arabicfixture",
-      "community": 6,
+      "community": 108,
       "norm_label": "arabicfixture"
     },
     {
@@ -5378,7 +5378,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_build",
-      "community": 6,
+      "community": 108,
       "norm_label": "build.ts"
     },
     {
@@ -5388,7 +5388,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_build_wordspec",
-      "community": 6,
+      "community": 108,
       "norm_label": "wordspec"
     },
     {
@@ -5398,7 +5398,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_build_buildfixture",
-      "community": 6,
+      "community": 108,
       "norm_label": "buildfixture()"
     },
     {
@@ -5408,7 +5408,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_english",
-      "community": 6,
+      "community": 108,
       "norm_label": "english.ts"
     },
     {
@@ -5418,7 +5418,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_english_takeone",
-      "community": 6,
+      "community": 108,
       "norm_label": "takeone"
     },
     {
@@ -5428,7 +5428,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_english_restart",
-      "community": 6,
+      "community": 108,
       "norm_label": "restart"
     },
     {
@@ -5438,7 +5438,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_english_taketwo",
-      "community": 6,
+      "community": 108,
       "norm_label": "taketwo"
     },
     {
@@ -5448,7 +5448,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_fixtures_english_englishfixture",
-      "community": 6,
+      "community": 108,
       "norm_label": "englishfixture"
     },
     {
@@ -5588,7 +5588,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "apps_worker_src_transcription_types_assemblyaiword",
-      "community": 6,
+      "community": 108,
       "norm_label": "assemblyaiword"
     },
     {
@@ -5628,7 +5628,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_test_assemblyai_provider_test",
-      "community": 6,
+      "community": 108,
       "norm_label": "assemblyai-provider.test.ts"
     },
     {
@@ -5638,7 +5638,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "apps_worker_test_assemblyai_provider_test_jsonresponse",
-      "community": 6,
+      "community": 108,
       "norm_label": "jsonresponse()"
     },
     {
@@ -5648,7 +5648,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "apps_worker_test_assemblyai_provider_test_fastprovider",
-      "community": 6,
+      "community": 108,
       "norm_label": "fastprovider()"
     },
     {
@@ -5658,7 +5658,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "apps_worker_test_assemblyai_provider_test_request",
-      "community": 6,
+      "community": 108,
       "norm_label": "request"
     },
     {
@@ -5898,7 +5898,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_test_normalize_test",
-      "community": 6,
+      "community": 108,
       "norm_label": "normalize.test.ts"
     },
     {
@@ -5918,7 +5918,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_test_render_brand_test",
-      "community": 4,
+      "community": 156,
       "norm_label": "render-brand.test.ts"
     },
     {
@@ -5928,7 +5928,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_worker_test_render_brand_test_samplepng",
-      "community": 4,
+      "community": 156,
       "norm_label": "samplepng()"
     },
     {
@@ -5938,7 +5938,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_worker_test_render_brand_test_logo_cfg",
-      "community": 4,
+      "community": 156,
       "norm_label": "logo_cfg"
     },
     {
@@ -5948,7 +5948,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_test_render_export_test",
-      "community": 138,
+      "community": 143,
       "norm_label": "render-export.test.ts"
     },
     {
@@ -5958,7 +5958,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_worker_test_render_export_test_seedexport",
-      "community": 138,
+      "community": 143,
       "norm_label": "seedexport()"
     },
     {
@@ -5968,7 +5968,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "apps_worker_test_render_export_test_jobfor",
-      "community": 138,
+      "community": 143,
       "norm_label": "jobfor()"
     },
     {
@@ -5978,7 +5978,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "apps_worker_test_render_export_test_stubdeps",
-      "community": 138,
+      "community": 143,
       "norm_label": "stubdeps()"
     },
     {
@@ -5988,7 +5988,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "apps_worker_test_render_export_test_render",
-      "community": 138,
+      "community": 143,
       "norm_label": "render()"
     },
     {
@@ -6618,7 +6618,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit",
-      "community": 90,
+      "community": 146,
       "norm_label": "ai-edit.ts"
     },
     {
@@ -6638,7 +6638,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aieditcommandtype",
-      "community": 90,
+      "community": 146,
       "norm_label": "aieditcommandtype"
     },
     {
@@ -6658,7 +6658,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aieditcategory",
-      "community": 90,
+      "community": 146,
       "norm_label": "aieditcategory"
     },
     {
@@ -6668,7 +6668,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aieditstepschema",
-      "community": 90,
+      "community": 146,
       "norm_label": "aieditstepschema"
     },
     {
@@ -6678,7 +6678,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aieditstep",
-      "community": 90,
+      "community": 146,
       "norm_label": "aieditstep"
     },
     {
@@ -6688,7 +6688,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_annotation_keys",
-      "community": 90,
+      "community": 146,
       "norm_label": "annotation_keys"
     },
     {
@@ -6698,7 +6698,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aieditplanschema",
-      "community": 143,
+      "community": 146,
       "norm_label": "aieditplanschema"
     },
     {
@@ -6728,7 +6728,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aiplanrejection",
-      "community": 90,
+      "community": 146,
       "norm_label": "aiplanrejection"
     },
     {
@@ -6738,7 +6738,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aiplanvalidation",
-      "community": 90,
+      "community": 146,
       "norm_label": "aiplanvalidation"
     },
     {
@@ -6758,7 +6758,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_parsestoredaicommands",
-      "community": 90,
+      "community": 146,
       "norm_label": "parsestoredaicommands()"
     },
     {
@@ -6768,7 +6768,7 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_parsestoredaisteps",
-      "community": 90,
+      "community": 146,
       "norm_label": "parsestoredaisteps()"
     },
     {
@@ -6778,7 +6778,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_ai_feedback_values",
-      "community": 90,
+      "community": 146,
       "norm_label": "ai_feedback_values"
     },
     {
@@ -6788,7 +6788,7 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aifeedback",
-      "community": 90,
+      "community": 146,
       "norm_label": "aifeedback"
     },
     {
@@ -6798,7 +6798,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_ai_feedback_reasons",
-      "community": 90,
+      "community": 146,
       "norm_label": "ai_feedback_reasons"
     },
     {
@@ -6808,7 +6808,7 @@
       "source_location": "L236",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aifeedbackreason",
-      "community": 90,
+      "community": 146,
       "norm_label": "aifeedbackreason"
     },
     {
@@ -6828,7 +6828,7 @@
       "source_location": "L239",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aiintent",
-      "community": 110,
+      "community": 146,
       "norm_label": "aiintent"
     },
     {
@@ -6838,7 +6838,7 @@
       "source_location": "L241",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aisuggestionstatusschema",
-      "community": 90,
+      "community": 146,
       "norm_label": "aisuggestionstatusschema"
     },
     {
@@ -6848,8 +6848,88 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "packages_core_src_ai_edit_aisuggestionstatus",
-      "community": 90,
+      "community": 146,
       "norm_label": "aisuggestionstatus"
+    },
+    {
+      "label": "auto-canvas.ts",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas",
+      "community": 96,
+      "norm_label": "auto-canvas.ts"
+    },
+    {
+      "label": "LOGO_CORNER_PREFERENCE",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_logo_corner_preference",
+      "community": 96,
+      "norm_label": "logo_corner_preference"
+    },
+    {
+      "label": "recommendAspectRatio()",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_recommendaspectratio",
+      "community": 96,
+      "norm_label": "recommendaspectratio()"
+    },
+    {
+      "label": "AutoLayoutInput",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_autolayoutinput",
+      "community": 90,
+      "norm_label": "autolayoutinput"
+    },
+    {
+      "label": "AutoLayout",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_autolayout",
+      "community": 90,
+      "norm_label": "autolayout"
+    },
+    {
+      "label": "autoCaptionAnchor()",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_autocaptionanchor",
+      "community": 96,
+      "norm_label": "autocaptionanchor()"
+    },
+    {
+      "label": "autoLogoPosition()",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L89",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_autologoposition",
+      "community": 96,
+      "norm_label": "autologoposition()"
+    },
+    {
+      "label": "applyAutoLayout()",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L112",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_applyautolayout",
+      "community": 96,
+      "norm_label": "applyautolayout()"
     },
     {
       "label": "brand.ts",
@@ -6918,7 +6998,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "packages_core_src_brand_overlayposition",
-      "community": 110,
+      "community": 90,
       "norm_label": "overlayposition"
     },
     {
@@ -6998,7 +7078,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "packages_core_src_brand_logooverlaypref",
-      "community": 110,
+      "community": 90,
       "norm_label": "logooverlaypref"
     },
     {
@@ -7058,7 +7138,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "packages_core_src_brand_brandkitrow",
-      "community": 110,
+      "community": 90,
       "norm_label": "brandkitrow"
     },
     {
@@ -7078,7 +7158,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "packages_core_src_captions_captionline",
-      "community": 108,
+      "community": 98,
       "norm_label": "captionline"
     },
     {
@@ -7128,7 +7208,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "packages_core_src_captions_captionstyletoken",
-      "community": 103,
+      "community": 4,
       "norm_label": "captionstyletoken"
     },
     {
@@ -7148,7 +7228,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "packages_core_src_captions_captionstylespec",
-      "community": 96,
+      "community": 103,
       "norm_label": "captionstylespec"
     },
     {
@@ -7158,7 +7238,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "packages_core_src_captions_caption_style_specs",
-      "community": 110,
+      "community": 103,
       "norm_label": "caption_style_specs"
     },
     {
@@ -7228,7 +7308,7 @@
       "source_location": "L392",
       "_origin": "ast",
       "id": "packages_core_src_captions_captionstylespecschema",
-      "community": 103,
+      "community": 110,
       "norm_label": "captionstylespecschema"
     },
     {
@@ -7248,7 +7328,7 @@
       "source_location": "L416",
       "_origin": "ast",
       "id": "packages_core_src_captions_captionbrandcolors",
-      "community": 96,
+      "community": 103,
       "norm_label": "captionbrandcolors"
     },
     {
@@ -7298,7 +7378,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "packages_core_src_creator_styles_creatorstyleid",
-      "community": 110,
+      "community": 90,
       "norm_label": "creatorstyleid"
     },
     {
@@ -7318,7 +7398,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "packages_core_src_creator_styles_creatorstyle",
-      "community": 110,
+      "community": 90,
       "norm_label": "creatorstyle"
     },
     {
@@ -7418,7 +7498,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "packages_core_src_creator_types_creatortype",
-      "community": 110,
+      "community": 146,
       "norm_label": "creatortype"
     },
     {
@@ -7468,7 +7548,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_core_src_edit_commands_editcommandschema",
-      "community": 90,
+      "community": 146,
       "norm_label": "editcommandschema"
     },
     {
@@ -7478,7 +7558,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "packages_core_src_edit_commands_editcommand",
-      "community": 90,
+      "community": 146,
       "norm_label": "editcommand"
     },
     {
@@ -7538,7 +7618,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "packages_core_src_edl_ops_sourcetooutputms",
-      "community": 106,
+      "community": 98,
       "norm_label": "sourcetooutputms()"
     },
     {
@@ -7558,7 +7638,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "packages_core_src_edl_ops_segmentatsource",
-      "community": 106,
+      "community": 98,
       "norm_label": "segmentatsource()"
     },
     {
@@ -7568,7 +7648,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "packages_core_src_edl_ops_nextsegmentaftersource",
-      "community": 106,
+      "community": 98,
       "norm_label": "nextsegmentaftersource()"
     },
     {
@@ -7828,7 +7908,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "packages_core_src_edl_v2_parseedl",
-      "community": 4,
+      "community": 143,
       "norm_label": "parseedl()"
     },
     {
@@ -7868,7 +7948,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "packages_core_src_edl_v2_downgradeedlv2tov1",
-      "community": 4,
+      "community": 34,
       "norm_label": "downgradeedlv2tov1()"
     },
     {
@@ -7898,7 +7978,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_edl",
-      "community": 108,
+      "community": 106,
       "norm_label": "edl.ts"
     },
     {
@@ -7908,7 +7988,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "packages_core_src_edl_aspectratioschema",
-      "community": 110,
+      "community": 106,
       "norm_label": "aspectratioschema"
     },
     {
@@ -7928,7 +8008,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "packages_core_src_edl_removalreasonschema",
-      "community": 108,
+      "community": 106,
       "norm_label": "removalreasonschema"
     },
     {
@@ -7948,7 +8028,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "packages_core_src_edl_segmentbase",
-      "community": 108,
+      "community": 106,
       "norm_label": "segmentbase"
     },
     {
@@ -7958,7 +8038,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "packages_core_src_edl_keptsegmentschema",
-      "community": 108,
+      "community": 106,
       "norm_label": "keptsegmentschema"
     },
     {
@@ -7968,7 +8048,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "packages_core_src_edl_keptsegment",
-      "community": 108,
+      "community": 106,
       "norm_label": "keptsegment"
     },
     {
@@ -7978,7 +8058,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "packages_core_src_edl_removedsegmentschema",
-      "community": 108,
+      "community": 106,
       "norm_label": "removedsegmentschema"
     },
     {
@@ -7998,7 +8078,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "packages_core_src_edl_edlv1schema",
-      "community": 108,
+      "community": 5,
       "norm_label": "edlv1schema"
     },
     {
@@ -8018,7 +8098,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "packages_core_src_edl_edloutputdurationms",
-      "community": 108,
+      "community": 98,
       "norm_label": "edloutputdurationms()"
     },
     {
@@ -8028,7 +8108,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_export_plan",
-      "community": 108,
+      "community": 98,
       "norm_label": "export-plan.ts"
     },
     {
@@ -8038,7 +8118,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_export_resolutions",
-      "community": 108,
+      "community": 98,
       "norm_label": "export_resolutions"
     },
     {
@@ -8048,7 +8128,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_captionoverlayplan",
-      "community": 108,
+      "community": 98,
       "norm_label": "captionoverlayplan"
     },
     {
@@ -8058,7 +8138,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_captionsequenceentry",
-      "community": 108,
+      "community": 98,
       "norm_label": "captionsequenceentry"
     },
     {
@@ -8068,7 +8148,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_segmentrenderstep",
-      "community": 108,
+      "community": 98,
       "norm_label": "segmentrenderstep"
     },
     {
@@ -8088,7 +8168,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_seconds",
-      "community": 108,
+      "community": 98,
       "norm_label": "seconds()"
     },
     {
@@ -8098,7 +8178,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_encode_args",
-      "community": 108,
+      "community": 98,
       "norm_label": "encode_args"
     },
     {
@@ -8108,7 +8188,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_ffconcatscript",
-      "community": 108,
+      "community": 98,
       "norm_label": "ffconcatscript()"
     },
     {
@@ -8118,7 +8198,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "packages_core_src_export_plan_buildexportplan",
-      "community": 108,
+      "community": 98,
       "norm_label": "buildexportplan()"
     },
     {
@@ -8228,7 +8308,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_index",
-      "community": 5,
+      "community": 98,
       "norm_label": "index.ts"
     },
     {
@@ -8268,7 +8348,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_core_src_jobs_transcribepayloadschema",
-      "community": 140,
+      "community": 131,
       "norm_label": "transcribepayloadschema"
     },
     {
@@ -8398,7 +8478,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "packages_core_src_jobs_jobrow",
-      "community": 95,
+      "community": 131,
       "norm_label": "jobrow"
     },
     {
@@ -8408,7 +8488,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_limits",
-      "community": 5,
+      "community": 157,
       "norm_label": "limits.ts"
     },
     {
@@ -8418,7 +8498,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_core_src_limits_subscriptiontier",
-      "community": 5,
+      "community": 157,
       "norm_label": "subscriptiontier"
     },
     {
@@ -8428,7 +8508,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "packages_core_src_limits_tierlimits",
-      "community": 5,
+      "community": 157,
       "norm_label": "tierlimits"
     },
     {
@@ -8438,7 +8518,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_core_src_limits_tier_limits",
-      "community": 5,
+      "community": 157,
       "norm_label": "tier_limits"
     },
     {
@@ -8448,7 +8528,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_src_transcript",
-      "community": 106,
+      "community": 98,
       "norm_label": "transcript.ts"
     },
     {
@@ -8458,7 +8538,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "packages_core_src_transcript_transcriptwordschema",
-      "community": 106,
+      "community": 98,
       "norm_label": "transcriptwordschema"
     },
     {
@@ -8468,7 +8548,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_core_src_transcript_transcriptword",
-      "community": 96,
+      "community": 98,
       "norm_label": "transcriptword"
     },
     {
@@ -8478,7 +8558,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_core_src_transcript_transcriptwordsschema",
-      "community": 106,
+      "community": 98,
       "norm_label": "transcriptwordsschema"
     },
     {
@@ -8488,7 +8568,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_test_ai_edit_test",
-      "community": 143,
+      "community": 146,
       "norm_label": "ai-edit.test.ts"
     },
     {
@@ -8498,7 +8578,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "packages_core_test_ai_edit_test_word",
-      "community": 143,
+      "community": 146,
       "norm_label": "word()"
     },
     {
@@ -8508,7 +8588,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_core_test_ai_edit_test_words",
-      "community": 143,
+      "community": 146,
       "norm_label": "words"
     },
     {
@@ -8518,8 +8598,18 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_core_test_ai_edit_test_edl",
-      "community": 143,
+      "community": 146,
       "norm_label": "edl"
+    },
+    {
+      "label": "auto-canvas.test.ts",
+      "file_type": "code",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "packages_core_test_auto_canvas_test",
+      "community": 96,
+      "norm_label": "auto-canvas.test.ts"
     },
     {
       "label": "brand.test.ts",
@@ -8708,7 +8798,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_core_test_export_plan_test",
-      "community": 108,
+      "community": 98,
       "norm_label": "export-plan.test.ts"
     },
     {
@@ -8718,7 +8808,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_core_test_export_plan_test_word",
-      "community": 108,
+      "community": 98,
       "norm_label": "word()"
     },
     {
@@ -8728,7 +8818,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "packages_core_test_export_plan_test_words",
-      "community": 108,
+      "community": 98,
       "norm_label": "words"
     },
     {
@@ -8738,7 +8828,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_core_test_export_plan_test_edl",
-      "community": 108,
+      "community": 98,
       "norm_label": "edl"
     },
     {
@@ -14222,6 +14312,156 @@
       "norm_label": "6. production"
     },
     {
+      "label": "BUILD_7_5_ANALYSIS.md",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "build_7_5_analysis",
+      "community": 155,
+      "norm_label": "build_7_5_analysis.md"
+    },
+    {
+      "label": "Build 7.5 Analysis \u2014 Auto Canvas",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "community": 155,
+      "norm_label": "build 7.5 analysis \u2014 auto canvas"
+    },
+    {
+      "label": "1. What Auto Canvas is here",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_1_what_auto_canvas_is_here",
+      "community": 155,
+      "norm_label": "1. what auto canvas is here"
+    },
+    {
+      "label": "2. Rules (deterministic, tested)",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_2_rules_deterministic_tested",
+      "community": 155,
+      "norm_label": "2. rules (deterministic, tested)"
+    },
+    {
+      "label": "3. Integration",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_3_integration",
+      "community": 155,
+      "norm_label": "3. integration"
+    },
+    {
+      "label": "4. Files",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_4_files",
+      "community": 155,
+      "norm_label": "4. files"
+    },
+    {
+      "label": "5. DB/worker impact",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_5_db_worker_impact",
+      "community": 155,
+      "norm_label": "5. db/worker impact"
+    },
+    {
+      "label": "6. Verification",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "build_7_5_analysis_6_verification",
+      "community": 155,
+      "norm_label": "6. verification"
+    },
+    {
+      "label": "BUILD_7_5_REPORT.md",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "build_7_5_report",
+      "community": 155,
+      "norm_label": "build_7_5_report.md"
+    },
+    {
+      "label": "Build 7.5 Report \u2014 Auto Canvas",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "build_7_5_report_build_7_5_report_auto_canvas",
+      "community": 155,
+      "norm_label": "build 7.5 report \u2014 auto canvas"
+    },
+    {
+      "label": "1. What was built",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "build_7_5_report_1_what_was_built",
+      "community": 155,
+      "norm_label": "1. what was built"
+    },
+    {
+      "label": "2. Tests (206 \u2192 221)",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "build_7_5_report_2_tests_206_221",
+      "community": 155,
+      "norm_label": "2. tests (206 \u2192 221)"
+    },
+    {
+      "label": "3. Verification (live backend, real pipeline)",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "build_7_5_report_3_verification_live_backend_real_pipeline",
+      "community": 155,
+      "norm_label": "3. verification (live backend, real pipeline)"
+    },
+    {
+      "label": "4. Backward compatibility",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "build_7_5_report_4_backward_compatibility",
+      "community": 155,
+      "norm_label": "4. backward compatibility"
+    },
+    {
+      "label": "5. Production",
+      "file_type": "document",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "build_7_5_report_5_production",
+      "community": 155,
+      "norm_label": "5. production"
+    },
+    {
       "label": "CLAUDE.md",
       "file_type": "document",
       "source_file": "CLAUDE.md",
@@ -14262,10 +14502,20 @@
       "norm_label": "merai \u2014 architectural decisions"
     },
     {
-      "label": "2026-07-16 \u2014 Build 7.4: scenes stitch INTO the single-source pipeline, not around it",
+      "label": "2026-07-16 \u2014 Build 7.5: Auto Canvas is a pure function over existing snapshot channels",
       "file_type": "document",
       "source_file": "DECISIONS.md",
       "source_location": "L3",
+      "_origin": "ast",
+      "id": "decisions_2026_07_16_build_7_5_auto_canvas_is_a_pure_function_over_existing_snapshot_channels",
+      "community": 31,
+      "norm_label": "2026-07-16 \u2014 build 7.5: auto canvas is a pure function over existing snapshot channels"
+    },
+    {
+      "label": "2026-07-16 \u2014 Build 7.4: scenes stitch INTO the single-source pipeline, not around it",
+      "file_type": "document",
+      "source_file": "DECISIONS.md",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "decisions_2026_07_16_build_7_4_scenes_stitch_into_the_single_source_pipeline_not_around_it",
       "community": 31,
@@ -14275,7 +14525,7 @@
       "label": "2026-07-16 \u2014 Build 7.3: the prompter scrolls on session time, renders above the stream, and never trusts the compositor",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L6",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "decisions_2026_07_16_build_7_3_the_prompter_scrolls_on_session_time_renders_above_the_stream_and_never_trusts_the_compositor",
       "community": 31,
@@ -14285,7 +14535,7 @@
       "label": "2026-07-16 \u2014 Build 7.2: screen+camera is burned into ONE canvas; the PiP bubble IS the logo geometry",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L9",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "decisions_2026_07_16_build_7_2_screen_camera_is_burned_into_one_canvas_the_pip_bubble_is_the_logo_geometry",
       "community": 31,
@@ -14295,7 +14545,7 @@
       "label": "2026-07-16 \u2014 Build 7.1: a recorded take is just a File; the recorder never grows its own pipeline",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L12",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "decisions_2026_07_16_build_7_1_a_recorded_take_is_just_a_file_the_recorder_never_grows_its_own_pipeline",
       "community": 31,
@@ -14305,7 +14555,7 @@
       "label": "2026-07-16 \u2014 Build 6C.4: a creator type is a pointer, not an entity; the wizard is a guided writer",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L15",
+      "source_location": "L18",
       "_origin": "ast",
       "id": "decisions_2026_07_16_build_6c_4_a_creator_type_is_a_pointer_not_an_entity_the_wizard_is_a_guided_writer",
       "community": 31,
@@ -14315,7 +14565,7 @@
       "label": "2026-07-12 \u2014 Build 6C.3: the logo is one more full-frame PNG; overlays are additive; zero migrations",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L18",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "decisions_2026_07_12_build_6c_3_the_logo_is_one_more_full_frame_png_overlays_are_additive_zero_migrations",
       "community": 31,
@@ -14325,7 +14575,7 @@
       "label": "2026-07-12 \u2014 Build 6C.2: Creator Styles are bundles that write existing kit fields",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L21",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "decisions_2026_07_12_build_6c_2_creator_styles_are_bundles_that_write_existing_kit_fields",
       "community": 31,
@@ -14335,7 +14585,7 @@
       "label": "2026-07-12 \u2014 Build 6C.1: Tajawal is UI-only; thumbnails are client-side; zero migrations",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L24",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "decisions_2026_07_12_build_6c_1_tajawal_is_ui_only_thumbnails_are_client_side_zero_migrations",
       "community": 31,
@@ -14345,7 +14595,7 @@
       "label": "2026-07-12 \u2014 Build 6B.3: Caption Studio is UX + one column; the worker is untouched",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L27",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "decisions_2026_07_12_build_6b_3_caption_studio_is_ux_one_column_the_worker_is_untouched",
       "community": 31,
@@ -14355,7 +14605,7 @@
       "label": "2026-07-12 \u2014 Build 6B.2: caption presets are brand-aware via an export snapshot",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L30",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "decisions_2026_07_12_build_6b_2_caption_presets_are_brand_aware_via_an_export_snapshot",
       "community": 31,
@@ -14365,7 +14615,7 @@
       "label": "2026-07-11 \u2014 Build 6B.1: branding is an export-row snapshot, not an EDL field",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L33",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "decisions_2026_07_11_build_6b_1_branding_is_an_export_row_snapshot_not_an_edl_field",
       "community": 31,
@@ -14375,7 +14625,7 @@
       "label": "2026-07-11 \u2014 Brain annotations ride inline then split; preferences are explicit-only",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L36",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "decisions_2026_07_11_brain_annotations_ride_inline_then_split_preferences_are_explicit_only",
       "community": 31,
@@ -14385,7 +14635,7 @@
       "label": "2026-07-11 \u2014 AI Editing Brain: suggestion rows only, refuse-or-normalize, human applies",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L39",
+      "source_location": "L42",
       "_origin": "ast",
       "id": "decisions_2026_07_11_ai_editing_brain_suggestion_rows_only_refuse_or_normalize_human_applies",
       "community": 31,
@@ -14395,7 +14645,7 @@
       "label": "2026-07-11 \u2014 Build 6A: trust UI shows only real data; UX flags live in auth metadata",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L42",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "decisions_2026_07_11_build_6a_trust_ui_shows_only_real_data_ux_flags_live_in_auth_metadata",
       "community": 31,
@@ -14405,7 +14655,7 @@
       "label": "2026-07-11 \u2014 EDL v2 (multi-track) foundation: readers-first, refusal over flattening",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L45",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "decisions_2026_07_11_edl_v2_multi_track_foundation_readers_first_refusal_over_flattening",
       "community": 31,
@@ -14415,7 +14665,7 @@
       "label": "2026-07-10 \u2014 Phase A hardening: permanent errors, over-cap download fallback, alerting, first deploys",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L48",
+      "source_location": "L51",
       "_origin": "ast",
       "id": "decisions_2026_07_10_phase_a_hardening_permanent_errors_over_cap_download_fallback_alerting_first_deploys",
       "community": 31,
@@ -14425,7 +14675,7 @@
       "label": "2026-07-10 \u2014 Export rendering moved fully server-side; ffmpeg.wasm removed",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L59",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "decisions_2026_07_10_export_rendering_moved_fully_server_side_ffmpeg_wasm_removed",
       "community": 31,
@@ -14435,7 +14685,7 @@
       "label": "2026-07-08 \u2014 Monorepo via npm workspaces",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L71",
+      "source_location": "L74",
       "_origin": "ast",
       "id": "decisions_2026_07_08_monorepo_via_npm_workspaces",
       "community": 31,
@@ -14445,7 +14695,7 @@
       "label": "2026-07-08 \u2014 Job queue: Postgres (Supabase) with FOR UPDATE SKIP LOCKED",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L74",
+      "source_location": "L77",
       "_origin": "ast",
       "id": "decisions_2026_07_08_job_queue_postgres_supabase_with_for_update_skip_locked",
       "community": 31,
@@ -14455,7 +14705,7 @@
       "label": "2026-07-08 \u2014 Enum-like columns are text + CHECK constraints, not Postgres enums",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L77",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "decisions_2026_07_08_enum_like_columns_are_text_check_constraints_not_postgres_enums",
       "community": 31,
@@ -14465,7 +14715,7 @@
       "label": "2026-07-08 \u2014 Timeline direction: LTR always, even in the RTL UI",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L80",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "decisions_2026_07_08_timeline_direction_ltr_always_even_in_the_rtl_ui",
       "community": 31,
@@ -14475,7 +14725,7 @@
       "label": "2026-07-08 \u2014 i18n: next-intl, Arabic default at root path",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L83",
+      "source_location": "L86",
       "_origin": "ast",
       "id": "decisions_2026_07_08_i18n_next_intl_arabic_default_at_root_path",
       "community": 31,
@@ -14485,7 +14735,7 @@
       "label": "2026-07-08 \u2014 Browser locale detection disabled",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L86",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "decisions_2026_07_08_browser_locale_detection_disabled",
       "community": 31,
@@ -14495,7 +14745,7 @@
       "label": "2026-07-08 \u2014 Typography: IBM Plex Sans Arabic (single family, Arabic + Latin)",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L89",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "decisions_2026_07_08_typography_ibm_plex_sans_arabic_single_family_arabic_latin",
       "community": 31,
@@ -14505,7 +14755,7 @@
       "label": "2026-07-08 \u2014 Retention windows (margin decision)",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L92",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "decisions_2026_07_08_retention_windows_margin_decision",
       "community": 31,
@@ -14515,7 +14765,7 @@
       "label": "2026-07-08 \u2014 Worker runs TypeScript directly via tsx (no build step)",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L95",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "decisions_2026_07_08_worker_runs_typescript_directly_via_tsx_no_build_step",
       "community": 31,
@@ -14525,7 +14775,7 @@
       "label": "2026-07-08 \u2014 EDL is versioned, immutable, append-only JSON (v1 single-track)",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L98",
+      "source_location": "L101",
       "_origin": "ast",
       "id": "decisions_2026_07_08_edl_is_versioned_immutable_append_only_json_v1_single_track",
       "community": 31,
@@ -14535,7 +14785,7 @@
       "label": "2026-07-08 \u2014 Transcripts: normalized words + raw provider payload both stored",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L101",
+      "source_location": "L104",
       "_origin": "ast",
       "id": "decisions_2026_07_08_transcripts_normalized_words_raw_provider_payload_both_stored",
       "community": 31,
@@ -14545,7 +14795,7 @@
       "label": "2026-07-08 \u2014 Auth: Supabase email+password to start",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L104",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "decisions_2026_07_08_auth_supabase_email_password_to_start",
       "community": 31,
@@ -14555,7 +14805,7 @@
       "label": "2026-07-08 \u2014 Next.js 16 conventions",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L107",
+      "source_location": "L110",
       "_origin": "ast",
       "id": "decisions_2026_07_08_next_js_16_conventions",
       "community": 31,
@@ -14565,7 +14815,7 @@
       "label": "2026-07-08 \u2014 Transcription behind a provider interface; mock is the keyless default",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L110",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "decisions_2026_07_08_transcription_behind_a_provider_interface_mock_is_the_keyless_default",
       "community": 31,
@@ -14575,7 +14825,7 @@
       "label": "2026-07-08 \u2014 10-minute cap enforced in three layers, no ffprobe infra",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L113",
+      "source_location": "L116",
       "_origin": "ast",
       "id": "decisions_2026_07_08_10_minute_cap_enforced_in_three_layers_no_ffprobe_infra",
       "community": 31,
@@ -14585,7 +14835,7 @@
       "label": "2026-07-08 \u2014 Pipeline status lives on projects.status; frontend polls",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L116",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "decisions_2026_07_08_pipeline_status_lives_on_projects_status_frontend_polls",
       "community": 31,
@@ -14595,7 +14845,7 @@
       "label": "2026-07-08 \u2014 DB-level tests run on PGlite applying the real migrations",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L119",
+      "source_location": "L122",
       "_origin": "ast",
       "id": "decisions_2026_07_08_db_level_tests_run_on_pglite_applying_the_real_migrations",
       "community": 31,
@@ -14605,7 +14855,7 @@
       "label": "2026-07-08 \u2014 Resumable uploads: tus-js-client against Supabase's resumable endpoint, 6 MiB chunks",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L122",
+      "source_location": "L125",
       "_origin": "ast",
       "id": "decisions_2026_07_08_resumable_uploads_tus_js_client_against_supabase_s_resumable_endpoint_6_mib_chunks",
       "community": 31,
@@ -14615,7 +14865,7 @@
       "label": "2026-07-08 \u2014 Arabic language handling: keep auto-detection, no pin",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L125",
+      "source_location": "L128",
       "_origin": "ast",
       "id": "decisions_2026_07_08_arabic_language_handling_keep_auto_detection_no_pin",
       "community": 31,
@@ -14625,7 +14875,7 @@
       "label": "2026-07-08 \u2014 Brand terms: AssemblyAI custom_spelling adopted, word_boost rejected",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L128",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "decisions_2026_07_08_brand_terms_assemblyai_custom_spelling_adopted_word_boost_rejected",
       "community": 31,
@@ -14635,7 +14885,7 @@
       "label": "2026-07-09 \u2014 Export: single-threaded ffmpeg.wasm core, self-hosted",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L131",
+      "source_location": "L134",
       "_origin": "ast",
       "id": "decisions_2026_07_09_export_single_threaded_ffmpeg_wasm_core_self_hosted",
       "community": 31,
@@ -14645,7 +14895,7 @@
       "label": "2026-07-09 \u2014 Exported captions are rasterized by the browser, never by ffmpeg",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L134",
+      "source_location": "L137",
       "_origin": "ast",
       "id": "decisions_2026_07_09_exported_captions_are_rasterized_by_the_browser_never_by_ffmpeg",
       "community": 31,
@@ -14655,7 +14905,7 @@
       "label": "2026-07-09 \u2014 Export renders SEGMENT-WISE; single filter graphs are banned for cuts",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L137",
+      "source_location": "L140",
       "_origin": "ast",
       "id": "decisions_2026_07_09_export_renders_segment_wise_single_filter_graphs_are_banned_for_cuts",
       "community": 31,
@@ -14665,7 +14915,7 @@
       "label": "2026-07-09 \u2014 Export resolution: 720-class (9:16\u2192720\u00d71280, 1:1\u2192720\u00d7720, 16:9\u21921280\u00d7720)",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L140",
+      "source_location": "L143",
       "_origin": "ast",
       "id": "decisions_2026_07_09_export_resolution_720_class_9_16_720_1280_1_1_720_720_16_9_1280_720",
       "community": 31,
@@ -14675,7 +14925,7 @@
       "label": "2026-07-08 \u2014 Storage layout: owner-uuid-prefixed paths in private buckets",
       "file_type": "document",
       "source_file": "DECISIONS.md",
-      "source_location": "L143",
+      "source_location": "L146",
       "_origin": "ast",
       "id": "decisions_2026_07_08_storage_layout_owner_uuid_prefixed_paths_in_private_buckets",
       "community": 31,
@@ -15152,10 +15402,20 @@
       "norm_label": "merai \u2014 progress log"
     },
     {
-      "label": "Build 7.4 \u2014 Scenes + Worker Stitch (2026-07-16)",
+      "label": "Build 7.5 \u2014 Auto Canvas (2026-07-16)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
       "source_location": "L3",
+      "_origin": "ast",
+      "id": "progress_build_7_5_auto_canvas_2026_07_16",
+      "community": 14,
+      "norm_label": "build 7.5 \u2014 auto canvas (2026-07-16)"
+    },
+    {
+      "label": "Build 7.4 \u2014 Scenes + Worker Stitch (2026-07-16)",
+      "file_type": "document",
+      "source_file": "PROGRESS.md",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "progress_build_7_4_scenes_worker_stitch_2026_07_16",
       "community": 14,
@@ -15165,7 +15425,7 @@
       "label": "Build 7.3 \u2014 Teleprompter, Speaker Notes, Countdown Controls (2026-07-16)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L25",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "progress_build_7_3_teleprompter_speaker_notes_countdown_controls_2026_07_16",
       "community": 14,
@@ -15175,7 +15435,7 @@
       "label": "Build 7.2 \u2014 Screen + Camera Recording, PiP, Preferences (2026-07-16)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L45",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "progress_build_7_2_screen_camera_recording_pip_preferences_2026_07_16",
       "community": 14,
@@ -15185,7 +15445,7 @@
       "label": "Build 7.1 \u2014 Recording Foundation (2026-07-16)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L66",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "progress_build_7_1_recording_foundation_2026_07_16",
       "community": 14,
@@ -15195,7 +15455,7 @@
       "label": "Build 6C.4 \u2014 Creator Onboarding Wizard (2026-07-16)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L87",
+      "source_location": "L106",
       "_origin": "ast",
       "id": "progress_build_6c_4_creator_onboarding_wizard_2026_07_16",
       "community": 14,
@@ -15205,7 +15465,7 @@
       "label": "Build 6C.3 \u2014 Overlay Studio (2026-07-12)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L109",
+      "source_location": "L128",
       "_origin": "ast",
       "id": "progress_build_6c_3_overlay_studio_2026_07_12",
       "community": 14,
@@ -15215,7 +15475,7 @@
       "label": "Build 6C.2 \u2014 Creator Styles System (2026-07-12)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L130",
+      "source_location": "L149",
       "_origin": "ast",
       "id": "progress_build_6c_2_creator_styles_system_2026_07_12",
       "community": 14,
@@ -15225,7 +15485,7 @@
       "label": "Build 6C.1 \u2014 Tajawal UI + Creator Dashboard + thumbnails (2026-07-12)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L149",
+      "source_location": "L168",
       "_origin": "ast",
       "id": "progress_build_6c_1_tajawal_ui_creator_dashboard_thumbnails_2026_07_12",
       "community": 14,
@@ -15235,7 +15495,7 @@
       "label": "Build 6B.3 \u2014 Caption Studio UX (2026-07-12)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L170",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "progress_build_6b_3_caption_studio_ux_2026_07_12",
       "community": 14,
@@ -15245,7 +15505,7 @@
       "label": "Build 6B.2 \u2014 Caption Studio (2026-07-12)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L192",
+      "source_location": "L211",
       "_origin": "ast",
       "id": "progress_build_6b_2_caption_studio_2026_07_12",
       "community": 14,
@@ -15255,7 +15515,7 @@
       "label": "Build 6B.1 \u2014 Creator Identity Layer (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L213",
+      "source_location": "L232",
       "_origin": "ast",
       "id": "progress_build_6b_1_creator_identity_layer_2026_07_11",
       "community": 14,
@@ -15265,7 +15525,7 @@
       "label": "Build 5.6 \u2014 AI Brain UX polish + feedback loop (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L244",
+      "source_location": "L263",
       "_origin": "ast",
       "id": "progress_build_5_6_ai_brain_ux_polish_feedback_loop_2026_07_11",
       "community": 14,
@@ -15275,7 +15535,7 @@
       "label": "Build 5.5 \u2014 AI Editing Brain v1 (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L266",
+      "source_location": "L285",
       "_origin": "ast",
       "id": "progress_build_5_5_ai_editing_brain_v1_2026_07_11",
       "community": 14,
@@ -15285,7 +15545,7 @@
       "label": "Build 6A.1 \u2014 Visual QA fixes + production redeploy (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L289",
+      "source_location": "L308",
       "_origin": "ast",
       "id": "progress_build_6a_1_visual_qa_fixes_production_redeploy_2026_07_11",
       "community": 14,
@@ -15295,7 +15555,7 @@
       "label": "Build 6A \u2014 Creator experience layer (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L309",
+      "source_location": "L328",
       "_origin": "ast",
       "id": "progress_build_6a_creator_experience_layer_2026_07_11",
       "community": 14,
@@ -15305,7 +15565,7 @@
       "label": "Build 5 \u2014 Professional editing core: EDL v2 foundation (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L333",
+      "source_location": "L352",
       "_origin": "ast",
       "id": "progress_build_5_professional_editing_core_edl_v2_foundation_2026_07_11",
       "community": 14,
@@ -15315,7 +15575,7 @@
       "label": "Railway worker deploy + production render test (2026-07-11)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L357",
+      "source_location": "L376",
       "_origin": "ast",
       "id": "progress_railway_worker_deploy_production_render_test_2026_07_11",
       "community": 141,
@@ -15325,7 +15585,7 @@
       "label": "Production render test (9.6-min stress clip, 13 segments, on Railway)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L363",
+      "source_location": "L382",
       "_origin": "ast",
       "id": "progress_production_render_test_9_6_min_stress_clip_13_segments_on_railway",
       "community": 141,
@@ -15335,7 +15595,7 @@
       "label": "Phase A \u2014 Production hardening + first deploys (2026-07-10)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L382",
+      "source_location": "L401",
       "_origin": "ast",
       "id": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
       "community": 123,
@@ -15345,7 +15605,7 @@
       "label": "Done (78 tests: 24 core + 42 worker + 12 web)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L384",
+      "source_location": "L403",
       "_origin": "ast",
       "id": "progress_done_78_tests_24_core_42_worker_12_web",
       "community": 123,
@@ -15355,7 +15615,7 @@
       "label": "Full-flow smoke test (production build `next start` + live Supabase +",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L400",
+      "source_location": "L419",
       "_origin": "ast",
       "id": "progress_full_flow_smoke_test_production_build_next_start_live_supabase",
       "community": 123,
@@ -15365,7 +15625,7 @@
       "label": "live AssemblyAI + live Haiku + worker, driven by headless Chrome)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L401",
+      "source_location": "L420",
       "_origin": "ast",
       "id": "progress_live_assemblyai_live_haiku_worker_driven_by_headless_chrome",
       "community": 123,
@@ -15375,7 +15635,7 @@
       "label": "Blockers needing owner action",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L409",
+      "source_location": "L428",
       "_origin": "ast",
       "id": "progress_blockers_needing_owner_action",
       "community": 123,
@@ -15385,7 +15645,7 @@
       "label": "Phase 4.5 \u2014 Server-side rendering pivot (BUILT + live-verified 2026-07-10)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L425",
+      "source_location": "L444",
       "_origin": "ast",
       "id": "progress_phase_4_5_server_side_rendering_pivot_built_live_verified_2026_07_10",
       "community": 128,
@@ -15395,7 +15655,7 @@
       "label": "Done (73 tests: 24 core + 37 worker + 12 web)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L430",
+      "source_location": "L449",
       "_origin": "ast",
       "id": "progress_done_73_tests_24_core_37_worker_12_web",
       "community": 128,
@@ -15405,7 +15665,7 @@
       "label": "Live E2E (same 9.6-min stress clip, through the UI)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L445",
+      "source_location": "L464",
       "_origin": "ast",
       "id": "progress_live_e2e_same_9_6_min_stress_clip_through_the_ui",
       "community": 128,
@@ -15415,7 +15675,7 @@
       "label": "Remaining blockers for MVP",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L454",
+      "source_location": "L473",
       "_origin": "ast",
       "id": "progress_remaining_blockers_for_mvp",
       "community": 128,
@@ -15425,7 +15685,7 @@
       "label": "Phase 4 \u2014 10-minute export stress test (RESOLVED 2026-07-09, segment-wise)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L468",
+      "source_location": "L487",
       "_origin": "ast",
       "id": "progress_phase_4_10_minute_export_stress_test_resolved_2026_07_09_segment_wise",
       "community": 14,
@@ -15435,7 +15695,7 @@
       "label": "Phase 4 \u2014 Export pipeline, ffmpeg.wasm (BUILT, live-verified 2026-07-09)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L507",
+      "source_location": "L526",
       "_origin": "ast",
       "id": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "community": 115,
@@ -15445,7 +15705,7 @@
       "label": "Done (55 tests: 16 core + 20 worker + 19 web)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L509",
+      "source_location": "L528",
       "_origin": "ast",
       "id": "progress_done_55_tests_16_core_20_worker_19_web",
       "community": 115,
@@ -15455,7 +15715,7 @@
       "label": "Live verification (real browser, real storage)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L523",
+      "source_location": "L542",
       "_origin": "ast",
       "id": "progress_live_verification_real_browser_real_storage",
       "community": 115,
@@ -15465,7 +15725,7 @@
       "label": "Unknowns from the plan \u2014 outcomes",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L533",
+      "source_location": "L552",
       "_origin": "ast",
       "id": "progress_unknowns_from_the_plan_outcomes",
       "community": 115,
@@ -15475,7 +15735,7 @@
       "label": "Deferred",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L539",
+      "source_location": "L558",
       "_origin": "ast",
       "id": "progress_deferred",
       "community": 115,
@@ -15485,7 +15745,7 @@
       "label": "Original plan (kept for reference)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L545",
+      "source_location": "L564",
       "_origin": "ast",
       "id": "progress_original_plan_kept_for_reference",
       "community": 115,
@@ -15495,7 +15755,7 @@
       "label": "Phase 3 \u2014 Review & text-based editing UI (BUILT, live-verified 2026-07-09)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L592",
+      "source_location": "L611",
       "_origin": "ast",
       "id": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
       "community": 117,
@@ -15505,7 +15765,7 @@
       "label": "Done (48 tests passing: 16 core + 20 worker* + 12 web; *includes prior suites)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L594",
+      "source_location": "L613",
       "_origin": "ast",
       "id": "progress_done_48_tests_passing_16_core_20_worker_12_web_includes_prior_suites",
       "community": 117,
@@ -15515,7 +15775,7 @@
       "label": "Live verification (real retake project, real browser)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L612",
+      "source_location": "L631",
       "_origin": "ast",
       "id": "progress_live_verification_real_retake_project_real_browser",
       "community": 117,
@@ -15525,9 +15785,9 @@
       "label": "Unknowns from the plan \u2014 outcomes",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L621",
+      "source_location": "L640",
       "_origin": "ast",
-      "id": "progress_unknowns_from_the_plan_outcomes_621",
+      "id": "progress_unknowns_from_the_plan_outcomes_640",
       "community": 117,
       "norm_label": "unknowns from the plan \u2014 outcomes"
     },
@@ -15535,9 +15795,9 @@
       "label": "Deferred",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L628",
+      "source_location": "L647",
       "_origin": "ast",
-      "id": "progress_deferred_628",
+      "id": "progress_deferred_647",
       "community": 117,
       "norm_label": "deferred"
     },
@@ -15545,9 +15805,9 @@
       "label": "Original plan (kept for reference)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L635",
+      "source_location": "L654",
       "_origin": "ast",
-      "id": "progress_original_plan_kept_for_reference_635",
+      "id": "progress_original_plan_kept_for_reference_654",
       "community": 117,
       "norm_label": "original plan (kept for reference)"
     },
@@ -15555,7 +15815,7 @@
       "label": "Phase 2 \u2014 AI analysis layer (BUILT, live-verified 2026-07-08)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L678",
+      "source_location": "L697",
       "_origin": "ast",
       "id": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
       "community": 125,
@@ -15565,7 +15825,7 @@
       "label": "Done (44 tests passing: 32 worker + 12 web)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L680",
+      "source_location": "L699",
       "_origin": "ast",
       "id": "progress_done_44_tests_passing_32_worker_12_web",
       "community": 125,
@@ -15575,7 +15835,7 @@
       "label": "Haiku engine LIVE-VERIFIED (2026-07-08, key added)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L700",
+      "source_location": "L719",
       "_origin": "ast",
       "id": "progress_haiku_engine_live_verified_2026_07_08_key_added",
       "community": 125,
@@ -15585,9 +15845,9 @@
       "label": "Deferred",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L724",
+      "source_location": "L743",
       "_origin": "ast",
-      "id": "progress_deferred_724",
+      "id": "progress_deferred_743",
       "community": 125,
       "norm_label": "deferred"
     },
@@ -15595,9 +15855,9 @@
       "label": "Original plan (kept for reference)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L730",
+      "source_location": "L749",
       "_origin": "ast",
-      "id": "progress_original_plan_kept_for_reference_730",
+      "id": "progress_original_plan_kept_for_reference_749",
       "community": 125,
       "norm_label": "original plan (kept for reference)"
     },
@@ -15605,7 +15865,7 @@
       "label": "Phase 1 \u2014 LIVE end-to-end verification (2026-07-08) \u2705",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L764",
+      "source_location": "L783",
       "_origin": "ast",
       "id": "progress_phase_1_live_end_to_end_verification_2026_07_08",
       "community": 14,
@@ -15615,7 +15875,7 @@
       "label": "Phase 1 \u2014 Upload & transcription pipeline (overnight 2026-07-08, mock-verified)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L795",
+      "source_location": "L814",
       "_origin": "ast",
       "id": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
       "community": 126,
@@ -15625,7 +15885,7 @@
       "label": "Fully built and tested (31 tests passing: 19 worker + 12 web)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L797",
+      "source_location": "L816",
       "_origin": "ast",
       "id": "progress_fully_built_and_tested_31_tests_passing_19_worker_12_web",
       "community": 126,
@@ -15635,7 +15895,7 @@
       "label": "Tomorrow: mock \u2192 live (exact steps)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L833",
+      "source_location": "L852",
       "_origin": "ast",
       "id": "progress_tomorrow_mock_live_exact_steps",
       "community": 126,
@@ -15645,7 +15905,7 @@
       "label": "Needs the live account (deliberately not simulated)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L847",
+      "source_location": "L866",
       "_origin": "ast",
       "id": "progress_needs_the_live_account_deliberately_not_simulated",
       "community": 126,
@@ -15655,7 +15915,7 @@
       "label": "Judgment calls / deferred",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L855",
+      "source_location": "L874",
       "_origin": "ast",
       "id": "progress_judgment_calls_deferred",
       "community": 126,
@@ -15665,7 +15925,7 @@
       "label": "Phase 0 \u2014 Project scaffolding & architecture (2026-07-08)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L866",
+      "source_location": "L885",
       "_origin": "ast",
       "id": "progress_phase_0_project_scaffolding_architecture_2026_07_08",
       "community": 127,
@@ -15675,7 +15935,7 @@
       "label": "Done",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L868",
+      "source_location": "L887",
       "_origin": "ast",
       "id": "progress_done",
       "community": 127,
@@ -15685,7 +15945,7 @@
       "label": "Deferred / known issues",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L890",
+      "source_location": "L909",
       "_origin": "ast",
       "id": "progress_deferred_known_issues",
       "community": 127,
@@ -15695,7 +15955,7 @@
       "label": "Next (Phase 1 \u2014 awaiting schema/architecture confirmation)",
       "file_type": "document",
       "source_file": "PROGRESS.md",
-      "source_location": "L901",
+      "source_location": "L920",
       "_origin": "ast",
       "id": "progress_next_phase_1_awaiting_schema_architecture_confirmation",
       "community": 127,
@@ -15832,6 +16092,16 @@
       "norm_label": "deploy on vercel"
     },
     {
+      "label": "AUTO_SAFE_MARGIN_PCT",
+      "file_type": "code",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "packages_core_src_auto_canvas_auto_safe_margin_pct",
+      "community": 158,
+      "norm_label": "auto_safe_margin_pct"
+    },
+    {
       "label": "Graphify Knowledge Graph Workflow",
       "file_type": "concept",
       "source_file": "CLAUDE.md",
@@ -15856,7 +16126,7 @@
       "contributor": null,
       "community": 22,
       "norm_label": "graphify skill trigger",
-      "id": "claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_graphify_skill"
+      "id": "claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_claude_graphify_skill"
     },
     {
       "label": "Merai \u2014 AI Video Editing OS for Arabic Creators",
@@ -18373,7 +18643,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_app_actions_projects",
@@ -18593,7 +18863,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_app_actions_projects_requestexportrender",
@@ -20821,7 +21091,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L168",
+      "source_location": "L171",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edit_commands_applyeditcommand"
@@ -20832,7 +21102,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L175",
+      "source_location": "L178",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edit_commands_applyeditcommands"
@@ -20843,7 +21113,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L280",
+      "source_location": "L283",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edl_edloutputdurationms"
@@ -20854,7 +21124,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L132",
+      "source_location": "L135",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edl_ops_nextsegmentaftersource"
@@ -20865,7 +21135,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L131",
+      "source_location": "L134",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edl_ops_segmentatsource"
@@ -20876,7 +21146,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L281",
+      "source_location": "L284",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_edl_ops_sourcetooutputms"
@@ -20887,7 +21157,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "apps/web/src/components/editor/editor-view.tsx",
-      "source_location": "L287",
+      "source_location": "L290",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_editor_view_editorview",
       "target": "packages_core_src_export_plan_seconds"
@@ -20896,7 +21166,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_components_editor_export_panel_active_statuses",
@@ -20906,7 +21176,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_components_editor_export_panel_aspect_ratios",
@@ -20916,7 +21186,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L62",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_components_editor_export_panel_exportpanel",
@@ -20926,7 +21196,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L39",
+      "source_location": "L41",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_components_editor_export_panel_exportpanelprops",
@@ -20936,7 +21206,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_components_editor_export_panel_exportrow",
@@ -20947,7 +21217,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_i18n_navigation",
@@ -20958,7 +21228,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L17",
+      "source_location": "L19",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_lib_supabase_client",
@@ -20969,10 +21239,32 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L17",
+      "source_location": "L19",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel",
       "target": "apps_web_src_lib_supabase_client_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/editor/export-panel.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "apps_web_src_components_editor_export_panel",
+      "target": "packages_core_src_auto_canvas_applyautolayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/editor/export-panel.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "apps_web_src_components_editor_export_panel",
+      "target": "packages_core_src_auto_canvas_recommendaspectratio",
       "confidence_score": 1.0
     },
     {
@@ -21080,7 +21372,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L106",
+      "source_location": "L125",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanel",
       "target": "apps_web_src_components_editor_export_panel_active_statuses"
@@ -21091,7 +21383,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L229",
+      "source_location": "L93",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanel",
       "target": "apps_web_src_components_editor_export_panel_exportpanelprops"
@@ -21101,7 +21393,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L46",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "target": "packages_core_src_brand_brandexportconfig",
@@ -21112,7 +21404,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L48",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "target": "packages_core_src_captions_captionbrandcolors",
@@ -21123,7 +21415,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L44",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "target": "packages_core_src_captions_captionstylespec",
@@ -21134,7 +21426,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L51",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "target": "packages_core_src_edl_aspectratio",
@@ -21145,7 +21437,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanelprops",
       "target": "packages_core_src_edl_edlv1",
@@ -21157,7 +21449,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L81",
+      "source_location": "L100",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanel",
       "target": "apps_web_src_lib_supabase_client_createclient"
@@ -21168,7 +21460,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L294",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "apps_web_src_components_editor_export_panel_exportpanel",
+      "target": "packages_core_src_auto_canvas_recommendaspectratio"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/editor/export-panel.tsx",
+      "source_location": "L360",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanel",
       "target": "packages_core_src_captions_huename"
@@ -21179,7 +21482,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/web/src/components/editor/export-panel.tsx",
-      "source_location": "L237",
+      "source_location": "L296",
       "weight": 1.0,
       "source": "apps_web_src_components_editor_export_panel_exportpanel",
       "target": "packages_core_src_edl_aspectratio"
@@ -33868,7 +34171,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_ai_edit",
@@ -33960,6 +34263,219 @@
       "weight": 1.0,
       "source": "packages_core_src_creator_types_creatortype",
       "target": "packages_core_src_ai_edit_aiintent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_applyautolayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_autocaptionanchor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_autolayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_autolayoutinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_autologoposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_logo_corner_preference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_auto_canvas_recommendaspectratio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_brand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_brand_overlayposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_edl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas",
+      "target": "packages_core_src_edl_aspectratio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/index.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "packages_core_src_index",
+      "target": "packages_core_src_auto_canvas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_test_auto_canvas_test",
+      "target": "packages_core_src_auto_canvas_recommendaspectratio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas_autolayoutinput",
+      "target": "packages_core_src_brand_overlayposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas_autolayout",
+      "target": "packages_core_src_brand_overlayposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas_applyautolayout",
+      "target": "packages_core_src_auto_canvas_autocaptionanchor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_test_auto_canvas_test",
+      "target": "packages_core_src_auto_canvas_autocaptionanchor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/src/auto-canvas.ts",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "packages_core_src_auto_canvas_applyautolayout",
+      "target": "packages_core_src_auto_canvas_autologoposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_test_auto_canvas_test",
+      "target": "packages_core_src_auto_canvas_autologoposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_test_auto_canvas_test",
+      "target": "packages_core_src_auto_canvas_applyautolayout",
       "confidence_score": 1.0
     },
     {
@@ -34222,7 +34738,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L1",
+      "source_location": "L2",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_brand",
@@ -34664,7 +35180,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_captions",
@@ -35061,7 +35577,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L2",
+      "source_location": "L3",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_creator_styles",
@@ -35264,7 +35780,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_creator_types",
@@ -35513,7 +36029,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_edit_commands",
@@ -35831,7 +36347,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_edl_ops",
@@ -36367,7 +36883,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_edl_v2",
@@ -36608,7 +37124,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_edl",
@@ -36852,7 +37368,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_export_plan",
@@ -37019,7 +37535,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_fillers",
@@ -37074,7 +37590,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L10",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_jobs",
@@ -37085,7 +37601,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_limits",
@@ -37096,7 +37612,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "packages/core/src/index.ts",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "source": "packages_core_src_index",
       "target": "packages_core_src_transcript",
@@ -37110,6 +37626,17 @@
       "source_location": "L2",
       "weight": 1.0,
       "source": "packages_core_test_ai_edit_test",
+      "target": "packages_core_src_index",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/core/test/auto-canvas.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "packages_core_test_auto_canvas_test",
       "target": "packages_core_src_index",
       "confidence_score": 1.0
     },
@@ -43081,6 +43608,146 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "build_7_5_analysis",
+      "target": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "build_7_5_report",
+      "target": "build_7_5_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_1_what_auto_canvas_is_here",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_2_rules_deterministic_tested",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_3_integration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_4_files",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_5_db_worker_impact",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_ANALYSIS.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "build_7_5_analysis_build_7_5_analysis_auto_canvas",
+      "target": "build_7_5_analysis_6_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "build_7_5_report",
+      "target": "build_7_5_report_build_7_5_report_auto_canvas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "build_7_5_report_build_7_5_report_auto_canvas",
+      "target": "build_7_5_report_1_what_was_built",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "build_7_5_report_build_7_5_report_auto_canvas",
+      "target": "build_7_5_report_2_tests_206_221",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "build_7_5_report_build_7_5_report_auto_canvas",
+      "target": "build_7_5_report_3_verification_live_backend_real_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "build_7_5_report_build_7_5_report_auto_canvas",
+      "target": "build_7_5_report_4_backward_compatibility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "BUILD_7_5_REPORT.md",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "build_7_5_report_build_7_5_report_auto_canvas",
+      "target": "build_7_5_report_5_production",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -43102,7 +43769,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L113",
+      "source_location": "L116",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_10_minute_cap_enforced_in_three_layers_no_ffprobe_infra",
@@ -43112,7 +43779,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L125",
+      "source_location": "L128",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_arabic_language_handling_keep_auto_detection_no_pin",
@@ -43122,7 +43789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L104",
+      "source_location": "L107",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_auth_supabase_email_password_to_start",
@@ -43132,7 +43799,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L128",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_brand_terms_assemblyai_custom_spelling_adopted_word_boost_rejected",
@@ -43142,7 +43809,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L86",
+      "source_location": "L89",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_browser_locale_detection_disabled",
@@ -43152,7 +43819,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L119",
+      "source_location": "L122",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_db_level_tests_run_on_pglite_applying_the_real_migrations",
@@ -43162,7 +43829,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L98",
+      "source_location": "L101",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_edl_is_versioned_immutable_append_only_json_v1_single_track",
@@ -43172,7 +43839,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L77",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_enum_like_columns_are_text_check_constraints_not_postgres_enums",
@@ -43182,7 +43849,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L83",
+      "source_location": "L86",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_i18n_next_intl_arabic_default_at_root_path",
@@ -43192,7 +43859,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L74",
+      "source_location": "L77",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_job_queue_postgres_supabase_with_for_update_skip_locked",
@@ -43202,7 +43869,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L71",
+      "source_location": "L74",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_monorepo_via_npm_workspaces",
@@ -43212,7 +43879,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L107",
+      "source_location": "L110",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_next_js_16_conventions",
@@ -43222,7 +43889,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L116",
+      "source_location": "L119",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_pipeline_status_lives_on_projects_status_frontend_polls",
@@ -43232,7 +43899,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L122",
+      "source_location": "L125",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_resumable_uploads_tus_js_client_against_supabase_s_resumable_endpoint_6_mib_chunks",
@@ -43242,7 +43909,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L92",
+      "source_location": "L95",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_retention_windows_margin_decision",
@@ -43252,7 +43919,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L143",
+      "source_location": "L146",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_storage_layout_owner_uuid_prefixed_paths_in_private_buckets",
@@ -43262,7 +43929,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L80",
+      "source_location": "L83",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_timeline_direction_ltr_always_even_in_the_rtl_ui",
@@ -43272,7 +43939,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L110",
+      "source_location": "L113",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_transcription_behind_a_provider_interface_mock_is_the_keyless_default",
@@ -43282,7 +43949,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L101",
+      "source_location": "L104",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_transcripts_normalized_words_raw_provider_payload_both_stored",
@@ -43292,7 +43959,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L89",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_typography_ibm_plex_sans_arabic_single_family_arabic_latin",
@@ -43302,7 +43969,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L95",
+      "source_location": "L98",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_08_worker_runs_typescript_directly_via_tsx_no_build_step",
@@ -43312,7 +43979,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L137",
+      "source_location": "L140",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_09_export_renders_segment_wise_single_filter_graphs_are_banned_for_cuts",
@@ -43322,7 +43989,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L140",
+      "source_location": "L143",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_09_export_resolution_720_class_9_16_720_1280_1_1_720_720_16_9_1280_720",
@@ -43332,7 +43999,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L131",
+      "source_location": "L134",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_09_export_single_threaded_ffmpeg_wasm_core_self_hosted",
@@ -43342,7 +44009,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L134",
+      "source_location": "L137",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_09_exported_captions_are_rasterized_by_the_browser_never_by_ffmpeg",
@@ -43352,7 +44019,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L59",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_10_export_rendering_moved_fully_server_side_ffmpeg_wasm_removed",
@@ -43362,7 +44029,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L48",
+      "source_location": "L51",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_10_phase_a_hardening_permanent_errors_over_cap_download_fallback_alerting_first_deploys",
@@ -43372,7 +44039,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L39",
+      "source_location": "L42",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_11_ai_editing_brain_suggestion_rows_only_refuse_or_normalize_human_applies",
@@ -43382,7 +44049,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L36",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_11_brain_annotations_ride_inline_then_split_preferences_are_explicit_only",
@@ -43392,7 +44059,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L42",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_11_build_6a_trust_ui_shows_only_real_data_ux_flags_live_in_auth_metadata",
@@ -43402,7 +44069,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L33",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_11_build_6b_1_branding_is_an_export_row_snapshot_not_an_edl_field",
@@ -43412,7 +44079,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L45",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_11_edl_v2_multi_track_foundation_readers_first_refusal_over_flattening",
@@ -43422,7 +44089,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L30",
+      "source_location": "L33",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_12_build_6b_2_caption_presets_are_brand_aware_via_an_export_snapshot",
@@ -43432,7 +44099,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L27",
+      "source_location": "L30",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_12_build_6b_3_caption_studio_is_ux_one_column_the_worker_is_untouched",
@@ -43442,7 +44109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L24",
+      "source_location": "L27",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_12_build_6c_1_tajawal_is_ui_only_thumbnails_are_client_side_zero_migrations",
@@ -43452,7 +44119,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L21",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_12_build_6c_2_creator_styles_are_bundles_that_write_existing_kit_fields",
@@ -43462,7 +44129,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L18",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_12_build_6c_3_the_logo_is_one_more_full_frame_png_overlays_are_additive_zero_migrations",
@@ -43472,7 +44139,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L15",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_16_build_6c_4_a_creator_type_is_a_pointer_not_an_entity_the_wizard_is_a_guided_writer",
@@ -43482,7 +44149,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L12",
+      "source_location": "L15",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_16_build_7_1_a_recorded_take_is_just_a_file_the_recorder_never_grows_its_own_pipeline",
@@ -43492,7 +44159,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L9",
+      "source_location": "L12",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_16_build_7_2_screen_camera_is_burned_into_one_canvas_the_pip_bubble_is_the_logo_geometry",
@@ -43502,7 +44169,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L6",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_16_build_7_3_the_prompter_scrolls_on_session_time_renders_above_the_stream_and_never_trusts_the_compositor",
@@ -43512,10 +44179,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "DECISIONS.md",
-      "source_location": "L3",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "decisions_merai_architectural_decisions",
       "target": "decisions_2026_07_16_build_7_4_scenes_stitch_into_the_single_source_pipeline_not_around_it",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DECISIONS.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "decisions_merai_architectural_decisions",
+      "target": "decisions_2026_07_16_build_7_5_auto_canvas_is_a_pure_function_over_existing_snapshot_channels",
       "confidence_score": 1.0
     },
     {
@@ -43962,7 +44639,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L266",
+      "source_location": "L285",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_5_5_ai_editing_brain_v1_2026_07_11",
@@ -43972,7 +44649,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L244",
+      "source_location": "L263",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_5_6_ai_brain_ux_polish_feedback_loop_2026_07_11",
@@ -43982,7 +44659,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L333",
+      "source_location": "L352",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_5_professional_editing_core_edl_v2_foundation_2026_07_11",
@@ -43992,7 +44669,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L289",
+      "source_location": "L308",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6a_1_visual_qa_fixes_production_redeploy_2026_07_11",
@@ -44002,7 +44679,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L309",
+      "source_location": "L328",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6a_creator_experience_layer_2026_07_11",
@@ -44012,7 +44689,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L213",
+      "source_location": "L232",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6b_1_creator_identity_layer_2026_07_11",
@@ -44022,7 +44699,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L192",
+      "source_location": "L211",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6b_2_caption_studio_2026_07_12",
@@ -44032,7 +44709,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L170",
+      "source_location": "L189",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6b_3_caption_studio_ux_2026_07_12",
@@ -44042,7 +44719,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L149",
+      "source_location": "L168",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6c_1_tajawal_ui_creator_dashboard_thumbnails_2026_07_12",
@@ -44052,7 +44729,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L130",
+      "source_location": "L149",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6c_2_creator_styles_system_2026_07_12",
@@ -44062,7 +44739,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L109",
+      "source_location": "L128",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6c_3_overlay_studio_2026_07_12",
@@ -44072,7 +44749,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L87",
+      "source_location": "L106",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_6c_4_creator_onboarding_wizard_2026_07_16",
@@ -44082,7 +44759,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L66",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_7_1_recording_foundation_2026_07_16",
@@ -44092,7 +44769,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L45",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_7_2_screen_camera_recording_pip_preferences_2026_07_16",
@@ -44102,7 +44779,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L25",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_7_3_teleprompter_speaker_notes_countdown_controls_2026_07_16",
@@ -44112,7 +44789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L3",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_build_7_4_scenes_worker_stitch_2026_07_16",
@@ -44122,7 +44799,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L866",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "progress_merai_progress_log",
+      "target": "progress_build_7_5_auto_canvas_2026_07_16",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "PROGRESS.md",
+      "source_location": "L885",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_0_project_scaffolding_architecture_2026_07_08",
@@ -44132,7 +44819,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L764",
+      "source_location": "L783",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_1_live_end_to_end_verification_2026_07_08",
@@ -44142,7 +44829,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L795",
+      "source_location": "L814",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
@@ -44152,7 +44839,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L678",
+      "source_location": "L697",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
@@ -44162,7 +44849,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L592",
+      "source_location": "L611",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
@@ -44172,7 +44859,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L468",
+      "source_location": "L487",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_4_10_minute_export_stress_test_resolved_2026_07_09_segment_wise",
@@ -44182,7 +44869,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L425",
+      "source_location": "L444",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_4_5_server_side_rendering_pivot_built_live_verified_2026_07_10",
@@ -44192,7 +44879,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L507",
+      "source_location": "L526",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
@@ -44202,7 +44889,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L382",
+      "source_location": "L401",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
@@ -44212,7 +44899,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L357",
+      "source_location": "L376",
       "weight": 1.0,
       "source": "progress_merai_progress_log",
       "target": "progress_railway_worker_deploy_production_render_test_2026_07_11",
@@ -44222,7 +44909,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L363",
+      "source_location": "L382",
       "weight": 1.0,
       "source": "progress_railway_worker_deploy_production_render_test_2026_07_11",
       "target": "progress_production_render_test_9_6_min_stress_clip_13_segments_on_railway",
@@ -44232,7 +44919,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L409",
+      "source_location": "L428",
       "weight": 1.0,
       "source": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
       "target": "progress_blockers_needing_owner_action",
@@ -44242,7 +44929,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L384",
+      "source_location": "L403",
       "weight": 1.0,
       "source": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
       "target": "progress_done_78_tests_24_core_42_worker_12_web",
@@ -44252,7 +44939,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L400",
+      "source_location": "L419",
       "weight": 1.0,
       "source": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
       "target": "progress_full_flow_smoke_test_production_build_next_start_live_supabase",
@@ -44262,7 +44949,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L401",
+      "source_location": "L420",
       "weight": 1.0,
       "source": "progress_phase_a_production_hardening_first_deploys_2026_07_10",
       "target": "progress_live_assemblyai_live_haiku_worker_driven_by_headless_chrome",
@@ -44272,7 +44959,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L430",
+      "source_location": "L449",
       "weight": 1.0,
       "source": "progress_phase_4_5_server_side_rendering_pivot_built_live_verified_2026_07_10",
       "target": "progress_done_73_tests_24_core_37_worker_12_web",
@@ -44282,7 +44969,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L445",
+      "source_location": "L464",
       "weight": 1.0,
       "source": "progress_phase_4_5_server_side_rendering_pivot_built_live_verified_2026_07_10",
       "target": "progress_live_e2e_same_9_6_min_stress_clip_through_the_ui",
@@ -44292,7 +44979,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L454",
+      "source_location": "L473",
       "weight": 1.0,
       "source": "progress_phase_4_5_server_side_rendering_pivot_built_live_verified_2026_07_10",
       "target": "progress_remaining_blockers_for_mvp",
@@ -44302,7 +44989,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L539",
+      "source_location": "L558",
       "weight": 1.0,
       "source": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "target": "progress_deferred",
@@ -44312,7 +44999,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L509",
+      "source_location": "L528",
       "weight": 1.0,
       "source": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "target": "progress_done_55_tests_16_core_20_worker_19_web",
@@ -44322,7 +45009,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L523",
+      "source_location": "L542",
       "weight": 1.0,
       "source": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "target": "progress_live_verification_real_browser_real_storage",
@@ -44332,7 +45019,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L545",
+      "source_location": "L564",
       "weight": 1.0,
       "source": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "target": "progress_original_plan_kept_for_reference",
@@ -44342,7 +45029,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L533",
+      "source_location": "L552",
       "weight": 1.0,
       "source": "progress_phase_4_export_pipeline_ffmpeg_wasm_built_live_verified_2026_07_09",
       "target": "progress_unknowns_from_the_plan_outcomes",
@@ -44352,17 +45039,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L628",
+      "source_location": "L647",
       "weight": 1.0,
       "source": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
-      "target": "progress_deferred_628",
+      "target": "progress_deferred_647",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L594",
+      "source_location": "L613",
       "weight": 1.0,
       "source": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
       "target": "progress_done_48_tests_passing_16_core_20_worker_12_web_includes_prior_suites",
@@ -44372,7 +45059,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L612",
+      "source_location": "L631",
       "weight": 1.0,
       "source": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
       "target": "progress_live_verification_real_retake_project_real_browser",
@@ -44382,37 +45069,37 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L635",
+      "source_location": "L654",
       "weight": 1.0,
       "source": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
-      "target": "progress_original_plan_kept_for_reference_635",
+      "target": "progress_original_plan_kept_for_reference_654",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L621",
+      "source_location": "L640",
       "weight": 1.0,
       "source": "progress_phase_3_review_text_based_editing_ui_built_live_verified_2026_07_09",
-      "target": "progress_unknowns_from_the_plan_outcomes_621",
+      "target": "progress_unknowns_from_the_plan_outcomes_640",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L724",
+      "source_location": "L743",
       "weight": 1.0,
       "source": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
-      "target": "progress_deferred_724",
+      "target": "progress_deferred_743",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L680",
+      "source_location": "L699",
       "weight": 1.0,
       "source": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
       "target": "progress_done_44_tests_passing_32_worker_12_web",
@@ -44422,7 +45109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L700",
+      "source_location": "L719",
       "weight": 1.0,
       "source": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
       "target": "progress_haiku_engine_live_verified_2026_07_08_key_added",
@@ -44432,17 +45119,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L730",
+      "source_location": "L749",
       "weight": 1.0,
       "source": "progress_phase_2_ai_analysis_layer_built_live_verified_2026_07_08",
-      "target": "progress_original_plan_kept_for_reference_730",
+      "target": "progress_original_plan_kept_for_reference_749",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L797",
+      "source_location": "L816",
       "weight": 1.0,
       "source": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
       "target": "progress_fully_built_and_tested_31_tests_passing_19_worker_12_web",
@@ -44452,7 +45139,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L855",
+      "source_location": "L874",
       "weight": 1.0,
       "source": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
       "target": "progress_judgment_calls_deferred",
@@ -44462,7 +45149,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L847",
+      "source_location": "L866",
       "weight": 1.0,
       "source": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
       "target": "progress_needs_the_live_account_deliberately_not_simulated",
@@ -44472,7 +45159,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L833",
+      "source_location": "L852",
       "weight": 1.0,
       "source": "progress_phase_1_upload_transcription_pipeline_overnight_2026_07_08_mock_verified",
       "target": "progress_tomorrow_mock_live_exact_steps",
@@ -44482,7 +45169,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L890",
+      "source_location": "L909",
       "weight": 1.0,
       "source": "progress_phase_0_project_scaffolding_architecture_2026_07_08",
       "target": "progress_deferred_known_issues",
@@ -44492,7 +45179,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L868",
+      "source_location": "L887",
       "weight": 1.0,
       "source": "progress_phase_0_project_scaffolding_architecture_2026_07_08",
       "target": "progress_done",
@@ -44502,7 +45189,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "PROGRESS.md",
-      "source_location": "L901",
+      "source_location": "L920",
       "weight": 1.0,
       "source": "progress_phase_0_project_scaffolding_architecture_2026_07_08",
       "target": "progress_next_phase_1_awaiting_schema_architecture_confirmation",
@@ -44646,5 +45333,5 @@
       "source_file": "DECISIONS.md"
     }
   ],
-  "built_at_commit": "f526b022f548b0d7f9ba238815dcbc00c9b8cdd1"
+  "built_at_commit": "ef2e91badd280db4dfd01a64fd92630552466219"
 }
