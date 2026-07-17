@@ -1,6 +1,12 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
+import {
+  quotaExceeded,
+  type SubscriptionTier,
+  type UsageKind,
+} from "@merai/core";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -20,6 +26,36 @@ import {
  */
 
 const RAW_BUCKET = "raw-uploads";
+
+// ---- Tier enforcement (Build 9) — server-authoritative quota gate. -------
+
+function currentBillingPeriod(): string {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
+    .toISOString()
+    .slice(0, 10);
+}
+
+/** The owner's entitled tier + minutes already used this cycle. */
+async function usageGate(
+  supabase: SupabaseClient,
+  ownerId: string,
+  kind: UsageKind,
+  addedMinutes: number,
+): Promise<"quota-exceeded" | null> {
+  const [{ data: profile }, { data: ledger }] = await Promise.all([
+    supabase.from("profiles").select("subscription_tier").eq("id", ownerId).maybeSingle(),
+    supabase
+      .from("usage_ledger")
+      .select("minutes")
+      .eq("owner_id", ownerId)
+      .eq("kind", kind)
+      .eq("billing_period", currentBillingPeriod()),
+  ]);
+  const tier = (profile?.subscription_tier ?? "starter") as SubscriptionTier;
+  const used = (ledger ?? []).reduce((sum, row) => sum + Number(row.minutes), 0);
+  return quotaExceeded(tier, kind, used, addedMinutes) ? "quota-exceeded" : null;
+}
 
 export interface CreateUploadResult {
   ok: boolean;
@@ -45,6 +81,15 @@ export async function createProjectWithUpload(input: {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "not-authenticated" };
+
+  // Tier gate (Build 9): raw minutes this cycle + this upload.
+  const gate = await usageGate(
+    supabase,
+    user.id,
+    "raw_minutes",
+    (input.durationSeconds ?? 0) / 60,
+  );
+  if (gate) return { ok: false, error: gate };
 
   const { data: project, error: projectError } = await supabase
     .from("projects")
@@ -115,6 +160,12 @@ export async function createProjectWithScenes(input: {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "not-authenticated" };
+
+  // Tier gate (Build 9): raw minutes this cycle + the combined scenes.
+  const totalMinutes =
+    input.scenes.reduce((sum, s) => sum + (s.durationSeconds ?? 0), 0) / 60;
+  const gate = await usageGate(supabase, user.id, "raw_minutes", totalMinutes);
+  if (gate) return { ok: false, error: gate };
 
   const { data: project, error: projectError } = await supabase
     .from("projects")
@@ -327,6 +378,11 @@ export async function requestExportRender(input: {
     .eq("id", input.exportId)
     .single();
   if (!exportRow) return { ok: false, error: "not-found" };
+
+  // Tier gate (Build 9): export minutes this cycle must be under the limit
+  // (the render meters the actual output afterwards).
+  const gate = await usageGate(supabase, user.id, "export_minutes", 0.01);
+  if (gate) return { ok: false, error: gate };
 
   const admin = createAdminClient();
   const { error: jobError } = await admin.from("jobs").upsert(

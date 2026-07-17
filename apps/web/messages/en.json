@@ -7,6 +7,7 @@
     "appName": "Merai",
     "dashboard": "Dashboard",
     "brandKit": "Brand Kit",
+    "billing": "Billing",
     "login": "Log in",
     "signup": "Sign up",
     "signOut": "Sign out",
@@ -129,6 +130,7 @@
       "file-too-large": "The file exceeds the size limit (2 GB).",
       "video-too-long": "The video exceeds the maximum length: 10 minutes per clip.",
       "unreadable-duration": "Couldn't read the video's duration. Try a different file.",
+      "quota-exceeded": "You've reached your plan's minutes for this month — upgrade on the billing page to continue.",
       "not-authenticated": "Your session expired. Please log in again.",
       "create-failed": "Couldn't create the project. Please try again.",
       "upload-failed": "The upload couldn't finish. Check your connection and resume.",
@@ -369,6 +371,49 @@
       "premium": "Premium brands",
       "shortform": "Short-form"
     }
+  },
+  "billing": {
+    "pageTitle": "Billing & usage",
+    "pageSubtitle": "Your current plan, this month's usage, and upgrade options.",
+    "backToDashboard": "Dashboard",
+    "currentPlan": "Current plan",
+    "tiers": {
+      "starter": "Starter",
+      "creator": "Creator",
+      "pro": "Pro"
+    },
+    "statuses": {
+      "trialing": "Trial",
+      "active": "Active",
+      "past_due": "Past due",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Expired",
+      "unpaid": "Unpaid",
+      "paused": "Paused"
+    },
+    "trialUntil": "Trial until {date}.",
+    "renewsOn": "Renews on {date}.",
+    "endsOn": "Ends on {date} (renewal canceled).",
+    "usage": {
+      "raw_minutes": "Raw upload minutes",
+      "export_minutes": "Export minutes"
+    },
+    "plansTitle": "Plans",
+    "intervals": {
+      "monthly": "Monthly",
+      "annual": "Annual"
+    },
+    "trialBadge": "{days, number}-day trial",
+    "planPitch": {
+      "creator": "300 upload minutes and 90 export minutes per month — for the consistent creator.",
+      "pro": "1000 upload minutes and 300 export minutes per month — for studios and professionals."
+    },
+    "choosePlan": "Subscribe",
+    "currentBadge": "Your current plan",
+    "managePlan": "Manage subscription",
+    "starterNote": "Starter: 60 upload minutes and 15 export minutes per month. Upgrades, cancel, and resume all live under \"Manage subscription\".",
+    "actionError": "Couldn't open the checkout page. Try again."
   },
   "record": {
     "pageTitle": "Recording studio",

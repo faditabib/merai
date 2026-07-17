@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Build 9 — SaaS Foundation (2026-07-17)
+
+269 tests green (118 core + 79 worker + 72 web) · next build ✓ · ar/en parity
+545 = 545 · **one additive migration (applied live)** (BUILD_9_ANALYSIS.md +
+BUILD_9_REPORT.md). The final roadmap build.
+
+- Billing behind the house provider pattern: StripeBillingProvider (REST,
+  no SDK — checkout/portal/prices-by-lookup-key; UNVERIFIED until the first
+  live call, needs owner keys) + keyless MockBillingProvider (activates via
+  the same service-role path the webhook uses).
+- subscriptions (owner read-only RLS) + billing_events (webhook idempotency);
+  profiles.subscription_tier stays the synced fast-read model.
+- Signature-verified idempotent webhook; pure tested mapping (unknown
+  status/plan degrade safely, never a guessed tier).
+- Server-authoritative tier enforcement on uploads/scenes/exports
+  (quota-exceeded, translated); /dashboard/billing with usage meters, plan
+  grid (trials, monthly/annual), portal entry.
+- Live E2E (mock): exhausted starter quota BLOCKED a real upload → one-click
+  subscribe → creator/active + meters 60/300 → gate reads the synced tier.
+
+---
+
 ## Build 8 — Skills Foundation (2026-07-17)
 
 252 tests green (106 core + 79 worker + 67 web) · next build ✓ · ar/en parity

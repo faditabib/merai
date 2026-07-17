@@ -18,6 +18,12 @@ export async function AppHeader() {
         >
           {t("brandKit")}
         </Link>
+        <Link
+          href="/dashboard/billing"
+          className="text-sm text-muted transition hover:text-accent"
+        >
+          {t("billing")}
+        </Link>
         <LocaleSwitcher />
         <SignOutButton />
       </nav>
