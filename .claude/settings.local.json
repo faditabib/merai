@@ -38,7 +38,11 @@
       "PowerShell(cd \"D:\\\\Merai app\"; Get-Content apps/web/.env.local | ForEach-Object { \\($_ -split '='\\)[0] } | Where-Object { $_ -and $_ -notmatch '^#' }; '--- worker ---'; Get-Content apps/worker/.env | ForEach-Object { \\($_ -split '='\\)[0] } | Where-Object { $_ -and $_ -notmatch '^#' })",
       "PowerShell(cd \"D:\\\\Merai app\"; git remote -v; ls apps/web/vercel.json -ErrorAction SilentlyContinue | % Name; ls apps/web/.vercel -ErrorAction SilentlyContinue | % Name)",
       "PowerShell(Get-Process | Where-Object { $_.ProcessName -eq 'node' } | Out-Null; cd \"D:\\\\Merai app\\\\apps\\\\web\"; node \"C:\\\\Users\\\\utopi\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Merai-app\\\\2fb72cbd-5939-4c2d-98bf-6d530f20a582\\\\scratchpad\\\\check-stitch.mjs\" 72aa6ae6-21e1-42ed-bc01-1c653c7d176f)",
-      "PowerShell(cd \"D:\\\\Merai app\"; $env:TRANSCRIPTION_PROVIDER='mock'; npm run dev:worker)"
+      "PowerShell(cd \"D:\\\\Merai app\"; $env:TRANSCRIPTION_PROVIDER='mock'; npm run dev:worker)",
+      "PowerShell(Get-ChildItem \"$env:LOCALAPPDATA\\\\com.vercel.cli\" -ErrorAction SilentlyContinue | % Name; Get-ChildItem \"$env:USERPROFILE\\\\.vercel\" -ErrorAction SilentlyContinue | % Name; Get-ChildItem \"$env:APPDATA\\\\com.vercel.cli\" -ErrorAction SilentlyContinue | % Name)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://merai-web-faditabibs-projects.vercel.app\" -MaximumRedirection 0 -SkipHttpErrorCheck -ErrorAction Stop; \"primary: $\\($r.StatusCode\\) $\\($r.Headers.Location\\)\" } catch { \"primary FAILED: $\\($_.Exception.Message\\)\" }; try { $r2 = Invoke-WebRequest -Uri \"https://merai-web-pi.vercel.app\" -MaximumRedirection 0 -SkipHttpErrorCheck -ErrorAction Stop; \"alias: $\\($r2.StatusCode\\) $\\($r2.Headers.Location\\)\" } catch { \"alias FAILED: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(cd \"D:\\\\Merai app\"; git ls-remote --symref origin; \"exit=$LASTEXITCODE\")",
+      "PowerShell(cd \"D:\\\\Merai app\"; \"== working tree ==\"; git status --short --branch | Select-Object -First 3; \"== local HEAD ==\"; git rev-parse HEAD; \"== remote refs ==\"; git ls-remote origin | ForEach-Object { $_ }; \"== unpushed commits ==\"; $ahead = git rev-list origin/main..main --count; \"ahead of origin/main: $ahead\"; \"== local tag ==\"; git tag -l v1.0-beta; git rev-parse v1.0-beta^{commit})"
     ]
   }
 }
