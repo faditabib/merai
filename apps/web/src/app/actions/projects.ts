@@ -374,10 +374,22 @@ export async function requestExportRender(input: {
 
   const { data: exportRow } = await supabase
     .from("exports")
-    .select("id, project_id, owner_id, status")
+    .select("id, project_id, owner_id, status, edl_version_id")
     .eq("id", input.exportId)
     .single();
   if (!exportRow) return { ok: false, error: "not-found" };
+
+  // Hardening (2026-07-17): refuse exports of empty edits up front — an
+  // empty timeline renders nothing and used to burn 3 worker attempts.
+  const { data: edlRow } = await supabase
+    .from("edl_versions")
+    .select("edl")
+    .eq("id", exportRow.edl_version_id)
+    .single();
+  const timeline = (edlRow?.edl as { timeline?: unknown[] } | null)?.timeline;
+  if (!Array.isArray(timeline) || timeline.length === 0) {
+    return { ok: false, error: "empty-edl" };
+  }
 
   // Tier gate (Build 9): export minutes this cycle must be under the limit
   // (the render meters the actual output afterwards).
@@ -463,6 +475,38 @@ export async function retryProcessing(input: {
     .single();
   if (!project) return { ok: false, error: "not-found" };
 
+  const admin = createAdminClient();
+
+  // Hardening (2026-07-17): multi-scene projects fail at the STITCH stage —
+  // retry must requeue that job, not transcribe a source that never existed.
+  const { data: failedStitch } = await admin
+    .from("jobs")
+    .select("id")
+    .eq("project_id", project.id)
+    .eq("type", "stitch")
+    .eq("status", "failed")
+    .limit(1)
+    .maybeSingle();
+  if (failedStitch) {
+    const { error: requeueError } = await admin
+      .from("jobs")
+      .update({
+        status: "queued",
+        attempts: 0,
+        run_at: new Date().toISOString(),
+        last_error: null,
+        locked_at: null,
+        locked_by: null,
+      })
+      .eq("id", failedStitch.id);
+    if (requeueError) return { ok: false, error: "enqueue-failed" };
+    await supabase
+      .from("projects")
+      .update({ status: "uploading" })
+      .eq("id", project.id);
+    return { ok: true };
+  }
+
   const { data: upload } = await supabase
     .from("video_uploads")
     .select("id")
@@ -471,8 +515,6 @@ export async function retryProcessing(input: {
     .limit(1)
     .single();
   if (!upload) return { ok: false, error: "not-found" };
-
-  const admin = createAdminClient();
 
   // Requeue the existing job if it exhausted retries; insert if absent.
   const { data: requeued } = await admin

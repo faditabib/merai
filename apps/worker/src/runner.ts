@@ -49,8 +49,13 @@ export async function processOne(workerId: string): Promise<boolean> {
 
 /** Surface a permanent failure where the UI looks for it. */
 async function surfacePermanentFailure(job: JobRow, message: string): Promise<void> {
-  // Pipeline jobs gate the project itself…
-  if (job.project_id && (job.type === "transcribe" || job.type === "analyze")) {
+  // Pipeline jobs gate the project itself… (stitch added in the 2026-07-17
+  // hardening pass: a dead stitch used to strand the project in 'uploading'
+  // with no visible error and no retry surface.)
+  if (
+    job.project_id &&
+    (job.type === "transcribe" || job.type === "analyze" || job.type === "stitch")
+  ) {
     await getDb().query(
       "update public.projects set status = 'error' where id = $1",
       [job.project_id],

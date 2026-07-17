@@ -247,6 +247,15 @@ export async function renderExportWithEngine(
     }
   }
 
+  // Hardening (2026-07-17): an empty timeline renders nothing — the concat
+  // join fails identically on every attempt (observed live: 3 wasted
+  // re-renders per empty export). Deterministic → permanent.
+  if (edl.timeline.length === 0) {
+    throw new PermanentJobError(
+      `export ${exportRow.id}: EDL has no kept segments — nothing to render`,
+    );
+  }
+
   const plan = buildExportPlan({ edl, words, brand });
   // A lower third owns the bottom band — lift bottom captions above it so the
   // two don't overprint (live E2E finding, Build 6B.1).

@@ -129,3 +129,41 @@ describe("postgres job queue (real migration applied to PGlite)", () => {
     );
   });
 });
+
+describe("stitch failure surfacing (hardening 2026-07-17)", () => {
+  it("a permanently failed stitch marks the project error (was: stuck in uploading)", async () => {
+    const ownerId = await db.seedUser();
+    const projectId = await db.seedProject(ownerId, "uploading");
+    const sceneA = await db.seedUpload(projectId, ownerId, "uploaded");
+    const sceneB = await db.seedUpload(projectId, ownerId, "uploaded");
+    // Missing stitched upload row -> PermanentJobError from the handler.
+    await db.enqueue(
+      "stitch",
+      {
+        projectId,
+        ownerId,
+        uploadIds: [sceneA, sceneB],
+        stitchedUploadId: crypto.randomUUID(),
+      },
+      { dedupeKey: `stitch-surface-${projectId}`, projectId, ownerId },
+    );
+
+    // Drain the queue — earlier suite tests leave requeued jobs behind; keep
+    // claiming until nothing is immediately runnable.
+    while (await processOne("w-stitch-test")) {
+      /* drain */
+    }
+
+    const { rows: jobs } = await db.query<{ status: string }>(
+      "select status from public.jobs where dedupe_key = $1",
+      [`stitch-surface-${projectId}`],
+    );
+    expect(jobs[0]!.status).toBe("failed");
+
+    const { rows: projects } = await db.query<{ status: string }>(
+      "select status from public.projects where id = $1",
+      [projectId],
+    );
+    expect(projects[0]!.status).toBe("error");
+  });
+});

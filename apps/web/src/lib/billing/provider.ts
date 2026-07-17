@@ -155,14 +155,27 @@ class MockBillingProvider implements BillingProvider {
   }
 }
 
-/** Env-selected, exactly like the transcription provider. */
+/**
+ * Env-selected, exactly like the transcription provider — with one hardening
+ * rule (2026-07-17): in PRODUCTION the mock never engages implicitly. A
+ * keyless prod deployment must fail checkout loudly, not hand out free
+ * upgrades; the mock requires an explicit BILLING_PROVIDER=mock opt-in.
+ */
 export function createBillingProvider(): BillingProvider {
   const override = process.env.BILLING_PROVIDER;
   const secretKey = process.env.STRIPE_SECRET_KEY;
+  const isProduction =
+    process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+
   if (override === "mock") return new MockBillingProvider();
   if (override === "stripe" || secretKey) {
     if (!secretKey) throw new Error("BILLING_PROVIDER=stripe but STRIPE_SECRET_KEY is unset");
     return new StripeBillingProvider(secretKey);
+  }
+  if (isProduction) {
+    throw new Error(
+      "Billing is not configured: set STRIPE_SECRET_KEY (or explicitly BILLING_PROVIDER=mock)",
+    );
   }
   return new MockBillingProvider();
 }

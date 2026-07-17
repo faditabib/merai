@@ -1,5 +1,22 @@
 # Merai — Progress Log
 
+## Product Review & Production Hardening Sprint (2026-07-17)
+
+271 tests green (118 core + 81 worker + 72 web) · next build ✓ · parity
+546 = 546 · no features (PRODUCT_REVIEW_2026_07.md +
+PRODUCTION_HARDENING_2026_07.md).
+
+- Full first-time-creator review: overall 8.0/10 (UX 7.5, architecture 9.0,
+  performance 8.0, production readiness 7.0), top-20 ranked backlog, future
+  clusters evaluated without implementation, next-cycle sprint plan.
+- Hardening fixes (the only code): empty-EDL exports rejected at 3 layers
+  (panel/action/worker-PermanentJobError); stitch permanent failures now
+  mark the project error and retryProcessing requeues the stitch; mock
+  billing can never engage implicitly in production. Production log review:
+  one error family (the empty export), now closed.
+
+---
+
 ## Build 9 — SaaS Foundation (2026-07-17)
 
 269 tests green (118 core + 79 worker + 72 web) · next build ✓ · ar/en parity

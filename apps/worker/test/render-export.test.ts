@@ -463,3 +463,18 @@ describe("render_export handler (stub engine, real DB + migrations)", () => {
     expect(rows[0]!.status).toBe("rendering"); // runner marks failed on exhaustion
   });
 });
+
+describe("empty-EDL exports (hardening 2026-07-17)", () => {
+  it("classifies a 0-segment EDL as a permanent failure (no retry burn)", async () => {
+    const ids = await seedExport({
+      edlJson: (v1) => ({ ...v1, timeline: [] }),
+    });
+    const engine: RenderEngine = {
+      name: "stub",
+      render: async () => new Uint8Array([1]),
+    };
+    await expect(
+      renderExportWithEngine(jobFor(ids), engine, stubDeps()),
+    ).rejects.toBeInstanceOf(PermanentJobError);
+  });
+});

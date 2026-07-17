@@ -20,18 +20,18 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784242032.3969078,
-    "ast_hash": "d1ca364d68715a8e1d92c4475687008e",
+    "mtime": 1784256705.3374498,
+    "ast_hash": "c7f049e81fc34a183c3ebf4a7a6b0548",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784242056.1731377,
-    "ast_hash": "0f8f793e67e70983a5ffdc091ad51360",
+    "mtime": 1784256723.1495357,
+    "ast_hash": "19f5a144d7b1bfa60ce643c65b8b7074",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784241450.499943,
-    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
+    "mtime": 1784256941.471271,
+    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
     "semantic_hash": ""
   },
   "apps/web/next.config.ts": {
@@ -90,8 +90,8 @@
     "semantic_hash": "192e2138648c46c0b7f4bd8f0f4298fd"
   },
   "apps/web/src/app/actions/projects.ts": {
-    "mtime": 1784222599.5371895,
-    "ast_hash": "7cadfe03a1a5b8b7b3115401a7d320ee",
+    "mtime": 1784243470.773105,
+    "ast_hash": "ef52f0e9049903957865cf53466f7a7b",
     "semantic_hash": ""
   },
   "apps/web/src/app/auth/confirm/route.ts": {
@@ -100,8 +100,8 @@
     "semantic_hash": "1dd65dbf8213e5ff94e4ff75e4ad393d"
   },
   "apps/web/src/components/app-header.tsx": {
-    "mtime": 1783802232.6600227,
-    "ast_hash": "c73f95a09dbc3067f898f7193b68bb9b",
+    "mtime": 1784256645.3558316,
+    "ast_hash": "4c9a2798bb020e5ca26925608d8ddcdd",
     "semantic_hash": ""
   },
   "apps/web/src/components/auth-form.tsx": {
@@ -485,8 +485,8 @@
     "semantic_hash": "823c7c7f94685f1854a46edab05baa87"
   },
   "packages/core/src/index.ts": {
-    "mtime": 1784241825.4160957,
-    "ast_hash": "ee30062594881a5ddc754392b982db35",
+    "mtime": 1784243224.7090602,
+    "ast_hash": "5759e5d5393c96c1184a28d01a2615f0",
     "semantic_hash": ""
   },
   "packages/core/src/jobs.ts": {
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1784243001.1082501,
-    "ast_hash": "15227956666269ae887e3d23080aa142",
+    "mtime": 1784257275.9385045,
+    "ast_hash": "aec5dbcb21bbb839dc084e7d38a75654",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784242983.771057,
-    "ast_hash": "98735e4a2f715c010bc869a998fcf327",
+    "mtime": 1784257259.7411509,
+    "ast_hash": "627fd5ddbe01f4aaf72562574410953c",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1222,6 +1222,66 @@
   "BUILD_8_REPORT.md": {
     "mtime": 1784242972.443184,
     "ast_hash": "bd13c16ab4ba23cdf56da0732c288c23",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/[locale]/dashboard/billing/page.tsx": {
+    "mtime": 1784243494.3216493,
+    "ast_hash": "c150a1cac5f2893dc55da698f943fbdc",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/actions/billing.ts": {
+    "mtime": 1784243383.9658961,
+    "ast_hash": "3c6725896ad98bcf37aa50b6c86ec9c6",
+    "semantic_hash": ""
+  },
+  "apps/web/src/app/api/stripe/webhook/route.ts": {
+    "mtime": 1784243406.6504881,
+    "ast_hash": "7a575d07a34ff336753c311aae651491",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/billing/billing-panel.tsx": {
+    "mtime": 1784243513.2206533,
+    "ast_hash": "5bfb13ce330bb84985058be5e940a962",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/billing/provider.ts": {
+    "mtime": 1784243356.1402946,
+    "ast_hash": "b29737a049773c68040ba18b58b5b6eb",
+    "semantic_hash": ""
+  },
+  "apps/web/src/lib/billing/signature.ts": {
+    "mtime": 1784243368.427466,
+    "ast_hash": "9ce54ba76816214a7a4c51e04a76ef27",
+    "semantic_hash": ""
+  },
+  "apps/web/test/billing-signature.test.ts": {
+    "mtime": 1784256738.3523939,
+    "ast_hash": "9db76a7022adb850f05c35adb5c2bfed",
+    "semantic_hash": ""
+  },
+  "packages/core/src/billing.ts": {
+    "mtime": 1784243215.954599,
+    "ast_hash": "02cb6e7d1a041cd5f1dd079e2e858baa",
+    "semantic_hash": ""
+  },
+  "packages/core/test/billing.test.ts": {
+    "mtime": 1784243249.1671755,
+    "ast_hash": "614a4362542b54147d9631efc71fcebb",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260717120000_billing.sql": {
+    "mtime": 1784243277.7160604,
+    "ast_hash": "660266f59ab8200bb7fe2e78dcf4f006",
+    "semantic_hash": ""
+  },
+  "BUILD_9_ANALYSIS.md": {
+    "mtime": 1784243187.795777,
+    "ast_hash": "d9c7133fc2c30c258401e0d1563f48b6",
+    "semantic_hash": ""
+  },
+  "BUILD_9_REPORT.md": {
+    "mtime": 1784257242.7098005,
+    "ast_hash": "a48ec0241790088619507ea9a7882331",
     "semantic_hash": ""
   }
 }

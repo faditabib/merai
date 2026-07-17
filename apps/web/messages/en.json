@@ -634,6 +634,7 @@
   },
   "export": {
     "title": "Export",
+    "emptyEdl": "There are no segments in this edit — restore a removed cut or adjust the transcript before exporting.",
     "autoCanvas": {
       "chip": "Auto",
       "waiting": "Waiting for video dimensions…",

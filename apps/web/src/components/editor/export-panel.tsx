@@ -249,7 +249,9 @@ export function ExportPanel(props: ExportPanelProps) {
     }
   }
 
-  const busy = starting || activeId !== null;
+  // Hardening (2026-07-17): an empty edit renders nothing — disable up front.
+  const emptyEdl = props.edl.timeline.length === 0;
+  const busy = starting || activeId !== null || emptyEdl;
   const progressPct = active ? Math.round(Number(active.progress) * 100) : 0;
   const isPreset = (CAPTION_PRESET_IDS as readonly string[]).includes(
     props.captionSpec.token,
@@ -305,6 +307,12 @@ export function ExportPanel(props: ExportPanelProps) {
           {t("start")}
         </button>
       </div>
+
+      {emptyEdl && (
+        <p role="alert" className="text-sm text-amber-600">
+          {t("emptyEdl")}
+        </p>
+      )}
 
       {/* Auto Canvas transparency: say what Auto chose — no silent magic. */}
       {autoCanvas && props.sourceDims && (
