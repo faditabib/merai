@@ -53,6 +53,8 @@ export interface ExportPanelProps {
   /** Source video dimensions (Build 7.5 Auto Canvas); null until metadata. */
   sourceDims: { width: number; height: number } | null;
   onChangeAspect: (ratio: AspectRatio) => void;
+  /** Auto-sync path — applies the aspect WITHOUT an undo entry (UX sprint). */
+  onChangeAspectSilent: (ratio: AspectRatio) => void;
   /** Saves the working EDL if dirty; resolves to the edl_version id. */
   ensureSavedVersion: () => Promise<string | null>;
 }
@@ -90,7 +92,7 @@ export function ExportPanel(props: ExportPanelProps) {
   // Keep the EDL's aspect following the recommendation while auto is on.
   useEffect(() => {
     if (autoCanvas && props.sourceDims && props.edl.aspectRatio !== recommendedAspect) {
-      props.onChangeAspect(recommendedAspect);
+      props.onChangeAspectSilent(recommendedAspect);
     }
     // Intentionally not depending on props.onChangeAspect identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps

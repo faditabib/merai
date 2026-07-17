@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { createProjectWithScenes, finalizeScenes } from "@/app/actions/projects";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   createResumableUpload,
@@ -119,9 +119,19 @@ export function ScenesUploadFlow(props: ScenesUploadFlowProps) {
   if (state === "error" && errorKey) {
     const known = ["scenes-too-few", "scenes-too-long"].includes(errorKey);
     return (
-      <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-500">
-        {known ? t(`errors.${errorKey}`) : tu(`errors.${errorKey}`)}
-      </p>
+      <div className="flex flex-col gap-2 rounded-xl border border-red-500/40 bg-red-500/5 p-4">
+        <p role="alert" className="text-sm text-red-500">
+          {known ? t(`errors.${errorKey}`) : tu(`errors.${errorKey}`)}
+        </p>
+        {errorKey === "quota-exceeded" && (
+          <Link
+            href="/dashboard/billing"
+            className="w-fit rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+          >
+            {tu("goToBilling")}
+          </Link>
+        )}
+      </div>
     );
   }
 

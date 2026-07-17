@@ -102,6 +102,15 @@ export default async function DashboardPage({
                 {tc("yourStyle", { name: tc(`names.${validStyleId}`) })}
               </Link>
             )}
+            {/* UX sprint: the wizard stays reachable after completion. */}
+            {!wizardPending && (
+              <Link
+                href="/dashboard/onboarding"
+                className="text-sm text-muted underline-offset-4 transition hover:text-accent hover:underline"
+              >
+                {t("redoSetup")}
+              </Link>
+            )}
           </div>
           <QuickActions />
         </div>

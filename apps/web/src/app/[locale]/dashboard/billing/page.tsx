@@ -6,10 +6,11 @@ import {
   type SubscriptionRow,
   type SubscriptionTier,
 } from "@merai/core";
-import { Link, redirect } from "@/i18n/navigation";
+import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
 import { BillingPanel } from "@/components/billing/billing-panel";
+import { PageHeader } from "@/components/page-header";
 
 // Per-user page — always rendered at request time, never prerendered.
 export const dynamic = "force-dynamic";
@@ -70,13 +71,11 @@ export default async function BillingPage({
       <AppHeader />
       <main className="flex flex-1 flex-col gap-6 px-6 py-10">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-          <div className="flex flex-col gap-1">
-            <Link href="/dashboard" className="text-sm text-muted hover:text-accent">
-              ← {t("backToDashboard")}
-            </Link>
-            <h1 className="text-2xl font-bold">{t("pageTitle")}</h1>
-            <p className="text-muted">{t("pageSubtitle")}</p>
-          </div>
+          <PageHeader
+            crumbs={[{ label: t("backToDashboard"), href: "/dashboard" }]}
+            title={t("pageTitle")}
+            subtitle={t("pageSubtitle")}
+          />
 
           {/* Current plan */}
           <section className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-5">

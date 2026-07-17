@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { completeUpload, createProjectWithUpload } from "@/app/actions/projects";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { probeVideoDurationSeconds } from "@/lib/upload/probe";
 import {
@@ -26,6 +26,8 @@ export interface UploadFlowProps {
   /** Build 7.1: a file supplied by another surface (the recorder). When set,
    *  the flow auto-starts and the dropzone is never shown. */
   externalFile?: File | null;
+  /** UX sprint: lets the host surface offer its own recovery on failure. */
+  onError?: () => void;
 }
 
 /**
@@ -68,6 +70,7 @@ export function UploadFlow(props: UploadFlowProps = {}) {
   function fail(key: string) {
     setState("error");
     setErrorKey(key);
+    props.onError?.();
   }
 
   async function handleFile(file: File) {
@@ -154,9 +157,19 @@ export function UploadFlow(props: UploadFlowProps = {}) {
       return (
         <div className="flex flex-col gap-4">
           {state === "error" && errorKey ? (
-            <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-500">
-              {t(`errors.${errorKey}`)}
-            </p>
+            <div className="flex flex-col gap-2 rounded-xl border border-red-500/40 bg-red-500/5 p-4">
+              <p role="alert" className="text-sm text-red-500">
+                {t(`errors.${errorKey}`)}
+              </p>
+              {errorKey === "quota-exceeded" && (
+                <Link
+                  href="/dashboard/billing"
+                  className="w-fit rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+                >
+                  {t("goToBilling")}
+                </Link>
+              )}
+            </div>
           ) : (
             <p className="rounded-xl border border-border bg-card p-4 text-sm text-muted">
               {t(state === "probing" ? "probing" : "starting")}
@@ -202,9 +215,19 @@ export function UploadFlow(props: UploadFlowProps = {}) {
         </label>
 
         {state === "error" && errorKey && (
-          <p role="alert" className="rounded-xl border border-red-500/40 bg-red-500/5 p-4 text-sm text-red-500">
-            {t(`errors.${errorKey}`)}
-          </p>
+          <div className="flex flex-col gap-2 rounded-xl border border-red-500/40 bg-red-500/5 p-4">
+            <p role="alert" className="text-sm text-red-500">
+              {t(`errors.${errorKey}`)}
+            </p>
+            {errorKey === "quota-exceeded" && (
+              <Link
+                href="/dashboard/billing"
+                className="w-fit rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+              >
+                {t("goToBilling")}
+              </Link>
+            )}
+          </div>
         )}
       </div>
     );

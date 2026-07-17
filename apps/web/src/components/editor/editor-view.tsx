@@ -501,6 +501,12 @@ export function EditorView(props: EditorViewProps) {
         onChangeAspect={(ratio) =>
           runCommand({ type: "set-aspect-ratio", aspectRatio: ratio })
         }
+        // UX sprint: Auto Canvas keeping the aspect in sync is bookkeeping,
+        // not an edit — it must never pollute the undo stack.
+        onChangeAspectSilent={(ratio) => {
+          setEdl((prev) => (prev.aspectRatio === ratio ? prev : { ...prev, aspectRatio: ratio }));
+          setDirty(true);
+        }}
         ensureSavedVersion={ensureSavedVersion}
       />
     </main>

@@ -50,6 +50,7 @@ const CAP_MS = MAX_RAW_UPLOAD_SECONDS * 1000;
 const CAP_WARN_MS = CAP_MS - 60_000;
 
 type Phase =
+  | "intro"
   | "setup"
   | "countdown"
   | "recording"
@@ -57,6 +58,9 @@ type Phase =
   | "review"
   | "uploading"
   | "uploading-scenes";
+
+/** First-visit flag: after the first successful grant we skip the intro. */
+const PERMISSION_INTRO_KEY = "merai.record.permissionGranted";
 
 type SetupError =
   | "permission-denied"
@@ -83,6 +87,8 @@ export function RecordFlow() {
 
   const [phase, setPhase] = useState<Phase>("setup");
   const [setupError, setSetupError] = useState<SetupError>(null);
+  // UX sprint: a failed handoff must never strand the creator.
+  const [handoffFailed, setHandoffFailed] = useState(false);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState<string>("");
@@ -142,6 +148,11 @@ export function RecordFlow() {
         });
         streamRef.current = stream;
         if (previewRef.current) previewRef.current.srcObject = stream;
+        try {
+          localStorage.setItem(PERMISSION_INTRO_KEY, "1");
+        } catch {
+          /* private mode */
+        }
 
         // Device labels are only populated after permission is granted.
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -208,7 +219,19 @@ export function RecordFlow() {
     }
     if (saved.camera) setCameraId(saved.camera);
     if (saved.mic) setMicId(saved.mic);
-    void openStream(saved.camera, saved.mic);
+    // UX sprint: never ambush a first-time visitor with the browser's
+    // permission prompt on page load — explain first, request on a gesture.
+    let granted = false;
+    try {
+      granted = localStorage.getItem(PERMISSION_INTRO_KEY) === "1";
+    } catch {
+      /* private mode */
+    }
+    if (granted) {
+      void openStream(saved.camera, saved.mic);
+    } else {
+      setPhase("intro");
+    }
     return () => {
       sessionRef.current?.stop();
       releaseScreen();
@@ -416,12 +439,50 @@ export function RecordFlow() {
   // Mirror only the raw selfie camera — never the screen composite.
   const mirrorPreview = !(recordingLike && needs.screen);
 
+  // ---- Permission intro (UX sprint): explain, then request on a gesture. --
+  if (phase === "intro") {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-card p-8 text-center">
+        <span aria-hidden className="text-4xl">🎥</span>
+        <h2 className="text-xl font-bold">{t("intro.title")}</h2>
+        <p className="max-w-md text-sm leading-relaxed text-muted">{t("intro.body")}</p>
+        <button
+          type="button"
+          onClick={() => {
+            setPhase("setup");
+            void openStream(cameraId || undefined, micId || undefined);
+          }}
+          className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-accent-foreground transition hover:opacity-90"
+        >
+          {t("intro.cta")}
+        </button>
+        <p className="text-xs text-muted">{t("intro.privacy")}</p>
+      </div>
+    );
+  }
+
   // ---- Upload handoff: the existing flow owns everything from here. ----
   if (phase === "uploading" && uploadFile) {
     return (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{t("uploadingTitle")}</h2>
-        <UploadFlow externalFile={uploadFile} />
+        <UploadFlow externalFile={uploadFile} onError={() => setHandoffFailed(true)} />
+        {/* UX sprint: a failed handoff never strands the creator — the takes
+            are still in memory. */}
+        {handoffFailed && (
+          <button
+            type="button"
+            onClick={() => {
+              setHandoffFailed(false);
+              setUploadFile(null);
+              setPhase("setup");
+              void openStream(cameraId || undefined, micId || undefined);
+            }}
+            className="w-fit rounded-xl border border-border px-5 py-2 text-sm transition hover:border-accent hover:text-accent"
+          >
+            ← {t("backToTakes")}
+          </button>
+        )}
       </div>
     );
   }
@@ -464,8 +525,9 @@ export function RecordFlow() {
         )}
 
         {/* Prompter / notes overlay (7.3) — DOM above the video; can never
-            leak into the recorded MediaStream. */}
-        {recordingLike && (
+            leak into the recorded MediaStream. Visible during the countdown
+            too (UX sprint): speakers want the first line ready. */}
+        {(recordingLike || phase === "countdown") && (
           <TeleprompterOverlay
             mode={prompterMode}
             script={script}

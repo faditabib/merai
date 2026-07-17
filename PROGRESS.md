@@ -1,5 +1,21 @@
 # Merai — Progress Log
 
+## UX Transformation Sprint (2026-07-17)
+
+271 tests green · next build ✓ · ar/en parity 554 = 554 · no new features
+(UX_AUDIT_2026_07.md — score 7.2/10, ranked backlog).
+
+- P0: recorder permission choreography (explain-first intro, request on a
+  gesture, skip after first grant; lock-icon recovery steps on denial);
+  failed handoff → "العودة إلى اللقطات" (takes preserved); quota errors
+  deep-link to billing (single + scenes flows).
+- P1: shared PageHeader breadcrumbs (record/billing/onboarding); AppHeader
+  nav with recorder link + active states; prompter visible during
+  countdown; Auto-Canvas aspect sync no longer pollutes undo; global
+  focus-visible ring; wizard re-entry link on the dashboard.
+- Live-verified: fresh visitor sees the intro (no permission ambush),
+  breadcrumb + active nav render, CTA → guided device-error state.
+
 ## Security, Reliability & Production Audit (2026-07-17)
 
 271 tests green · typecheck ✓ · next build ✓ · migration live-applied

@@ -46,3 +46,12 @@ body {
 :root {
   --font-caption: var(--font-plex-arabic), "IBM Plex Sans Arabic", sans-serif;
 }
+
+/* UX sprint (2026-07-17): one consistent, visible keyboard focus ring across
+   every custom control — premium products never leave this to browser
+   defaults. Mouse/touch interactions are unaffected (:focus-visible only). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

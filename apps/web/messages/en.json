@@ -8,6 +8,7 @@
     "dashboard": "Dashboard",
     "brandKit": "Brand Kit",
     "billing": "Billing",
+    "record": "Record",
     "login": "Log in",
     "signup": "Sign up",
     "signOut": "Sign out",
@@ -80,6 +81,7 @@
     "emptyTitle": "Ready for your first video?",
     "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
     "newProject": "New project",
+    "redoSetup": "Redo studio setup",
     "onboarding": {
       "title": "How Merai works",
       "subtitle": "Four steps from raw footage to a publish-ready video",
@@ -125,6 +127,7 @@
     "resume": "Resume",
     "cancel": "Cancel",
     "closeWarning": "Don't close this page while uploading",
+    "goToBilling": "Upgrade on the billing page",
     "errors": {
       "unsupported-type": "Unsupported file format. Please upload MP4, MOV, WebM or MKV video.",
       "file-too-large": "The file exceeds the size limit (2 GB).",
@@ -419,6 +422,13 @@
     "pageTitle": "Recording studio",
     "pageSubtitle": "Record with your camera and mic — your AI editor takes it from there.",
     "backToDashboard": "Dashboard",
+    "intro": {
+      "title": "Ready to record?",
+      "body": "Recording needs access to your camera and microphone. Your browser will ask for permission in the next step — press \"Allow\" when the prompt appears.",
+      "cta": "Enable camera & microphone",
+      "privacy": "Your recordings are yours alone — nothing records until you press start."
+    },
+    "backToTakes": "Back to takes",
     "modeLabel": "Recording mode",
     "modes": {
       "camera": "Camera",
@@ -478,7 +488,7 @@
       }
     },
     "errors": {
-      "permission-denied": "We need camera and microphone access to record — allow it in your browser settings and try again.",
+      "permission-denied": "Camera or microphone permission was denied. To fix it: click the lock icon next to the site address, enable camera and microphone, then press \"Try again\".",
       "no-devices": "No connected camera or microphone was found.",
       "unsupported": "Your browser doesn't support recording — try the latest Chrome or Safari.",
       "screen-denied": "No screen was selected to share — press \"Start recording\" and pick a screen or window."

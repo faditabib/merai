@@ -4,6 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
+import { PageHeader } from "@/components/page-header";
 
 // Per-user page — always rendered at request time, never prerendered.
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default async function OnboardingPage({
   }
 
   const t = await getTranslations("onboardingWizard");
+  const tc = await getTranslations("common");
 
   // Existing kit (if any) so a re-run edits rather than resets.
   const { data: row } = await supabase
@@ -60,8 +62,11 @@ export default async function OnboardingPage({
       <AppHeader />
       <main className="flex flex-1 flex-col gap-6 px-6 py-10">
         <div className="mx-auto w-full max-w-3xl">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="mt-1 text-muted">{t("subtitle")}</p>
+          <PageHeader
+            crumbs={[{ label: tc("dashboard"), href: "/dashboard" }]}
+            title={t("title")}
+            subtitle={t("subtitle")}
+          />
         </div>
         <OnboardingWizard ownerId={user!.id} initialKit={kit} initialLogoUrl={logoUrl} />
       </main>

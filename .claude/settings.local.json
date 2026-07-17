@@ -43,7 +43,8 @@
       "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://merai-web-faditabibs-projects.vercel.app\" -MaximumRedirection 0 -SkipHttpErrorCheck -ErrorAction Stop; \"primary: $\\($r.StatusCode\\) $\\($r.Headers.Location\\)\" } catch { \"primary FAILED: $\\($_.Exception.Message\\)\" }; try { $r2 = Invoke-WebRequest -Uri \"https://merai-web-pi.vercel.app\" -MaximumRedirection 0 -SkipHttpErrorCheck -ErrorAction Stop; \"alias: $\\($r2.StatusCode\\) $\\($r2.Headers.Location\\)\" } catch { \"alias FAILED: $\\($_.Exception.Message\\)\" })",
       "PowerShell(cd \"D:\\\\Merai app\"; git ls-remote --symref origin; \"exit=$LASTEXITCODE\")",
       "PowerShell(cd \"D:\\\\Merai app\"; \"== working tree ==\"; git status --short --branch | Select-Object -First 3; \"== local HEAD ==\"; git rev-parse HEAD; \"== remote refs ==\"; git ls-remote origin | ForEach-Object { $_ }; \"== unpushed commits ==\"; $ahead = git rev-list origin/main..main --count; \"ahead of origin/main: $ahead\"; \"== local tag ==\"; git tag -l v1.0-beta; git rev-parse v1.0-beta^{commit})",
-      "Bash(npx tsx *)"
+      "Bash(npx tsx *)",
+      "PowerShell(cd \"D:\\\\Merai app\"; Get-ChildItem apps/web/src/app -Filter \"globals.css\" -Recurse | % FullName; Select-String -Path \"apps/web/src/app/globals.css\" -Pattern \"accent\" -SimpleMatch | Select-Object -First 3)"
     ]
   }
 }

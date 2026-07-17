@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { Link, redirect } from "@/i18n/navigation";
+import { redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/app-header";
+import { PageHeader } from "@/components/page-header";
 import { RecordFlow } from "@/components/record/record-flow";
 
 // Per-user page — always rendered at request time, never prerendered.
@@ -24,19 +25,18 @@ export default async function RecordPage({
   }
 
   const t = await getTranslations("record");
+  const tc = await getTranslations("common");
 
   return (
     <div className="flex min-h-screen flex-col">
       <AppHeader />
       <main className="flex flex-1 flex-col gap-6 px-6 py-10">
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
-          <div className="flex flex-col gap-1">
-            <Link href="/dashboard" className="text-sm text-muted hover:text-accent">
-              ← {t("backToDashboard")}
-            </Link>
-            <h1 className="text-2xl font-bold">{t("pageTitle")}</h1>
-            <p className="text-muted">{t("pageSubtitle")}</p>
-          </div>
+          <PageHeader
+            crumbs={[{ label: tc("dashboard"), href: "/dashboard" }]}
+            title={t("pageTitle")}
+            subtitle={t("pageSubtitle")}
+          />
           <RecordFlow />
         </div>
       </main>
