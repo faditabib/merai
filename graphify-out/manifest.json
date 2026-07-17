@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1784239680.281569,
-    "ast_hash": "76ffab016546c23aa95f01755d6c9420",
+    "mtime": 1784279022.3034782,
+    "ast_hash": "3a1e7ca365cf2af29c6692fb11a006a0",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -95,9 +95,9 @@
     "semantic_hash": ""
   },
   "apps/web/src/app/auth/confirm/route.ts": {
-    "mtime": 1783464487.7662182,
-    "ast_hash": "1dd65dbf8213e5ff94e4ff75e4ad393d",
-    "semantic_hash": "1dd65dbf8213e5ff94e4ff75e4ad393d"
+    "mtime": 1784279085.9937325,
+    "ast_hash": "5862760084bd0c94df620ce0014f05de",
+    "semantic_hash": ""
   },
   "apps/web/src/components/app-header.tsx": {
     "mtime": 1784256645.3558316,
@@ -610,13 +610,13 @@
     "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
   },
   "DECISIONS.md": {
-    "mtime": 1784257275.9385045,
-    "ast_hash": "aec5dbcb21bbb839dc084e7d38a75654",
+    "mtime": 1784279256.4545176,
+    "ast_hash": "aead153f047c066796a9d7155875558b",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784258246.068309,
-    "ast_hash": "5352493317715d5f874995ef95ed6102",
+    "mtime": 1784279240.8043883,
+    "ast_hash": "34b0cf2a80638c1c5f9c7fd079cef568",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1292,6 +1292,16 @@
   "PRODUCT_REVIEW_2026_07.md": {
     "mtime": 1784257820.2100801,
     "ast_hash": "dd53c8d83bf95b6e87ee7a03a3ab5fd7",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260717150000_profiles_tier_lockdown.sql": {
+    "mtime": 1784279000.5763476,
+    "ast_hash": "1b94606e209448c908d1cb34084cfe90",
+    "semantic_hash": ""
+  },
+  "SECURITY_AUDIT_2026_07.md": {
+    "mtime": 1784279225.5257018,
+    "ast_hash": "f3381509ca84fd34fa5976e95aa777aa",
     "semantic_hash": ""
   }
 }

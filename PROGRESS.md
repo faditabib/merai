@@ -1,5 +1,28 @@
 # Merai — Progress Log
 
+## Security, Reliability & Production Audit (2026-07-17)
+
+271 tests green · typecheck ✓ · next build ✓ · migration live-applied
+(SECURITY_AUDIT_2026_07.md). Score 7.5→8.5/10.
+
+- CRITICAL fixed + live-verified: any signed-in user could self-grant a paid
+  subscription_tier via a browser profiles UPDATE (RLS is row- not column-
+  level; billing bypass). Migration 20260717150000 revokes table-wide UPDATE
+  from authenticated/anon, re-grants only (display_name, locale). Re-tested:
+  escalation → permission denied; self-edit + service-role sync still work.
+- Medium fixed: open redirect in /auth/confirm (next now must be same-site
+  relative).
+- 700 MB upload root cause found: buckets have file_size_limit null →
+  inherit the free-tier 50 MB global cap; raw ingestion has no part-split
+  fallback (exports do). Owner action: Supabase Pro + bucket limit + align
+  client cap (not code-changed — product/infra decision).
+- Verified SAFE: tenant isolation (0 cross-user rows/files), injection
+  (execFile no-shell), XSS (no innerHTML/eval), secrets (service key
+  server-only), webhook (signed+idempotent). Deferred: rate limiting,
+  Sentry, header/CSP, narrower self-update policies.
+
+---
+
 ## Product Review & Production Hardening Sprint (2026-07-17)
 
 271 tests green (118 core + 81 worker + 72 web) · next build ✓ · parity

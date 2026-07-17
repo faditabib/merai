@@ -10,8 +10,8 @@
     "semantic_hash": "81fe9f508fcc0895f8937bf73173c0d7"
   },
   ".claude/settings.local.json": {
-    "mtime": 1784239680.281569,
-    "ast_hash": "76ffab016546c23aa95f01755d6c9420",
+    "mtime": 1784277123.7514472,
+    "ast_hash": "864e8002420d1708ba6520795df94a9d",
     "semantic_hash": ""
   },
   "apps/web/eslint.config.mjs": {
@@ -20,18 +20,18 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784256705.3374498,
-    "ast_hash": "c7f049e81fc34a183c3ebf4a7a6b0548",
+    "mtime": 1784257969.517058,
+    "ast_hash": "4c6c550ebb51755f9baf085af5de3328",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784256723.1495357,
-    "ast_hash": "19f5a144d7b1bfa60ce643c65b8b7074",
+    "mtime": 1784257970.8180757,
+    "ast_hash": "45f61e93a462e5944e354cbdabe102ff",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784256941.471271,
-    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
+    "mtime": 1784258180.427061,
+    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
     "semantic_hash": ""
   },
   "apps/web/next.config.ts": {
@@ -90,8 +90,8 @@
     "semantic_hash": "192e2138648c46c0b7f4bd8f0f4298fd"
   },
   "apps/web/src/app/actions/projects.ts": {
-    "mtime": 1784243470.773105,
-    "ast_hash": "ef52f0e9049903957865cf53466f7a7b",
+    "mtime": 1784257931.1299505,
+    "ast_hash": "83d958daf203d9f8dc75d692596f36f4",
     "semantic_hash": ""
   },
   "apps/web/src/app/auth/confirm/route.ts": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/export-panel.tsx": {
-    "mtime": 1784223910.9069407,
-    "ast_hash": "06e252baef500d66fb254c643bfbfc43",
+    "mtime": 1784257942.6836286,
+    "ast_hash": "cefbb31a4a613b0e4c4b36f7212b8256",
     "semantic_hash": ""
   },
   "apps/web/src/components/editor/timeline.tsx": {
@@ -300,8 +300,8 @@
     "semantic_hash": ""
   },
   "apps/worker/src/handlers/render-export.ts": {
-    "mtime": 1783868473.719098,
-    "ast_hash": "4530e475d10c5f8134cd4bc21ecc82bb",
+    "mtime": 1784257864.21563,
+    "ast_hash": "4692471e8ef7cf9145ae408856fbb74a",
     "semantic_hash": ""
   },
   "apps/worker/src/handlers/transcribe.ts": {
@@ -350,8 +350,8 @@
     "semantic_hash": "f45a2c02f56d82c16c09a33c80af3e94"
   },
   "apps/worker/src/runner.ts": {
-    "mtime": 1783704568.7906163,
-    "ast_hash": "f69dee1138a1e67e3ea71461bf6271ae",
+    "mtime": 1784257876.684937,
+    "ast_hash": "3d403ca846ee6ccda8078239906fcb52",
     "semantic_hash": ""
   },
   "apps/worker/src/storage.ts": {
@@ -425,13 +425,13 @@
     "semantic_hash": "bc3b53aae72de1f1617cb04963f43d67"
   },
   "apps/worker/test/queue.test.ts": {
-    "mtime": 1783704784.221592,
-    "ast_hash": "ba15a8f4d8f9781062f80a3f70d6bf67",
+    "mtime": 1784258095.8401184,
+    "ast_hash": "6ae433c83d62ba8c14e8b377276f2423",
     "semantic_hash": ""
   },
   "apps/worker/test/render-export.test.ts": {
-    "mtime": 1783868501.8543365,
-    "ast_hash": "b18fff4eaabf172568f32d748db14653",
+    "mtime": 1784258027.533344,
+    "ast_hash": "dbe32f4931ba943aa1220570f6b775ce",
     "semantic_hash": ""
   },
   "apps/worker/test/transcribe-pipeline.test.ts": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784257259.7411509,
-    "ast_hash": "627fd5ddbe01f4aaf72562574410953c",
+    "mtime": 1784258246.068309,
+    "ast_hash": "5352493317715d5f874995ef95ed6102",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1245,8 +1245,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/lib/billing/provider.ts": {
-    "mtime": 1784243356.1402946,
-    "ast_hash": "b29737a049773c68040ba18b58b5b6eb",
+    "mtime": 1784257956.080783,
+    "ast_hash": "5539b78f18aa314bb41ef1ac9e25cee0",
     "semantic_hash": ""
   },
   "apps/web/src/lib/billing/signature.ts": {
@@ -1282,6 +1282,16 @@
   "BUILD_9_REPORT.md": {
     "mtime": 1784257242.7098005,
     "ast_hash": "a48ec0241790088619507ea9a7882331",
+    "semantic_hash": ""
+  },
+  "PRODUCTION_HARDENING_2026_07.md": {
+    "mtime": 1784258233.2952058,
+    "ast_hash": "98e7e940d2965659656b598a69c91f67",
+    "semantic_hash": ""
+  },
+  "PRODUCT_REVIEW_2026_07.md": {
+    "mtime": 1784257820.2100801,
+    "ast_hash": "dd53c8d83bf95b6e87ee7a03a3ab5fd7",
     "semantic_hash": ""
   }
 }

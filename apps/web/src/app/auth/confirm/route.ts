@@ -12,7 +12,14 @@ export async function GET(request: NextRequest) {
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  // Open-redirect guard (2026-07-17 audit): only same-site relative paths are
+  // allowed as the post-confirm target. `//evil.com` and absolute URLs would
+  // otherwise resolve to an external origin via new URL(next, base).
+  const nextParam = searchParams.get("next");
+  const next =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : "/dashboard";
 
   const supabase = await createClient();
 
