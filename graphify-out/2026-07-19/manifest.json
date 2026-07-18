@@ -20,17 +20,17 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784388493.1881607,
-    "ast_hash": "c6bc4c0989d5e6c38e28b0662a9e6b55",
+    "mtime": 1784336483.5472481,
+    "ast_hash": "49fde4e416cdb7a8f6f060731d7312d1",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784388508.436944,
-    "ast_hash": "25853602bc484539798a3ab55436a250",
+    "mtime": 1784336485.8863368,
+    "ast_hash": "c7f0309e67b37cb3d75b9bfadefb7b8f",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784389699.4061103,
+    "mtime": 1784336595.4231298,
     "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
     "semantic_hash": ""
   },
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/app/[locale]/layout.tsx": {
-    "mtime": 1784388532.0809305,
-    "ast_hash": "106b821e11e41c03668486bb090dc90f",
+    "mtime": 1783847922.633379,
+    "ast_hash": "a07c839e0974eb5f1f30fb3e63f609db",
     "semantic_hash": ""
   },
   "apps/web/src/app/[locale]/page.tsx": {
@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/app-header.tsx": {
-    "mtime": 1784388410.0946774,
-    "ast_hash": "7f44175ad08bb41acf7092d5d7f0ec07",
+    "mtime": 1784336447.3691652,
+    "ast_hash": "58692612e8e311b5751a1487704770c7",
     "semantic_hash": ""
   },
   "apps/web/src/components/auth-form.tsx": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784411837.52161,
-    "ast_hash": "5f2e1fdda191290b16273c4649f558da",
+    "mtime": 1784366888.403202,
+    "ast_hash": "e5957315689ec8e3eb216e0d4e5fe73f",
     "semantic_hash": ""
   },
   "README.md": {
@@ -935,8 +935,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/dashboard/quick-actions.tsx": {
-    "mtime": 1784388459.3925145,
-    "ast_hash": "20c225187a1996275d1acaed5065962c",
+    "mtime": 1784336474.4207222,
+    "ast_hash": "5889486a43c7b77de2d1a4b79ead5012",
     "semantic_hash": ""
   },
   "BUILD_6C_1_ANALYSIS.md": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/nav-links.tsx": {
-    "mtime": 1784388445.7535577,
-    "ast_hash": "29874b8116db726fb32453e62d4d1400",
+    "mtime": 1784336428.4648173,
+    "ast_hash": "d0d5e68e1ac1f265db1764fdd94abbd0",
     "semantic_hash": ""
   },
   "apps/web/src/components/page-header.tsx": {
@@ -1337,26 +1337,6 @@
   "DESIGN_TRANSFORMATION_PLAN.md": {
     "mtime": 1784336395.4462566,
     "ast_hash": "a575296c51854ec950810568498f4c67",
-    "semantic_hash": ""
-  },
-  "apps/web/src/app/[locale]/dashboard/settings/page.tsx": {
-    "mtime": 1784388419.5841522,
-    "ast_hash": "8e8638723de09c3f6507989a7f1a844d",
-    "semantic_hash": ""
-  },
-  "apps/web/src/components/settings-form.tsx": {
-    "mtime": 1784388437.044901,
-    "ast_hash": "1236028deff602563e1c095a2abd15a9",
-    "semantic_hash": ""
-  },
-  "apps/web/src/components/topbar-menus.tsx": {
-    "mtime": 1784388392.263104,
-    "ast_hash": "603a1bfd2c3d987178a561ee195f9d40",
-    "semantic_hash": ""
-  },
-  "NAVIGATION_AND_UX_REFINEMENT_PLAN.md": {
-    "mtime": 1784368779.9659042,
-    "ast_hash": "218cb171b1b1a24248a559197fb2c774",
     "semantic_hash": ""
   }
 }

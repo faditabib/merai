@@ -38,7 +38,7 @@ export function NavLinks({ variant = "top" }: { variant?: "top" | "side" }) {
 
   return (
     <>
-      {LINKS.map((link) => {
+      {LINKS.filter((link) => variant !== "side" || link.key !== "billing").map((link) => {
         const active = link.exact
           ? pathname === link.href
           : pathname.startsWith(link.href);

@@ -62,6 +62,14 @@ export default async function LocaleLayout({
       className={`${tajawal.variable} ${plexArabic.variable}`}
     >
       <body className="antialiased">
+        {/* Theme boot (refinement 2026-07-18): apply the saved manual theme
+            before paint — absent key = follow system (no attribute). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{var t=localStorage.getItem("merai.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}',
+          }}
+        />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

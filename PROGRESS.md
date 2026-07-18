@@ -1,5 +1,27 @@
 # Merai — Progress Log
 
+## Navigation & UX Refinement (2026-07-18, owner walkthrough feedback)
+
+273 tests green · next build ✓ · ar/en parity 596 = 596 · no backend/route
+changes beyond the new /dashboard/settings
+(NAVIGATION_AND_UX_REFINEMENT_PLAN.md).
+
+- Topbar UserMenu (settings/subscription/language/theme/logout) +
+  notifications bell fed by REAL events (ready projects + done exports);
+  sidebar is product-only (dashboard/record/creator studio) — logout and
+  language left the nav.
+- /dashboard/settings: account (real email, real display-name save),
+  preferences (language, theme pointer), subscription link. Correct IA,
+  not overbuilt.
+- Sidebar moved to the START side: right in RTL (verified), LEFT in LTR
+  English (verified). Theme switch (system/light/dark) with data-theme
+  overrides + no-FOUC boot script.
+- Quick actions 4 → 3: Brand Kit + Caption Studio unified as "استوديو
+  المبدع" (same real route); premium outcome-focused welcome copy.
+- Live-verified: AR sidebar-right + menu items + settings save round-trip
+  ("تم الحفظ") + EN sidebar-left. Camera-permission and 50MB honesty items
+  re-confirmed as already shipped.
+
 ## Design Transformation — Phase 1 (2026-07-18)
 
 273 tests green · next build ✓ · ar/en parity 567 = 567 · zero

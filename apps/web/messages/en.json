@@ -53,11 +53,11 @@
       "brandKit": "Brand Kit",
       "captionStudio": "Caption Studio",
       "record": "Record",
+      "creatorStudio": "Creator Studio",
       "hints": {
         "newVideo": "Upload a raw recording and start editing instantly.",
         "record": "Record with your camera or screen directly.",
-        "brandKit": "Your colors, logo and style on every video.",
-        "captionStudio": "Publish-ready caption styles."
+        "creatorStudio": "Your visual identity, caption styles and look — in one place."
       }
     },
     "brandNudge": {
@@ -93,8 +93,8 @@
       "archivedBadge": "Archived",
       "archivedFilter": "Archived ({n, number})"
     },
-    "emptyTitle": "Ready for your first video?",
-    "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
+    "emptyTitle": "Professional videos, no editing skills needed",
+    "emptyBody": "Record or upload your raw footage and let AI deliver a publish-ready video in your brand — transcription, smart cuts and professional captions in minutes.",
     "newProject": "New project",
     "redoSetup": "Redo studio setup",
     "onboarding": {
@@ -432,6 +432,41 @@
     "managePlan": "Manage subscription",
     "starterNote": "Starter: 60 upload minutes and 15 export minutes per month. Upgrades, cancel, and resume all live under \"Manage subscription\".",
     "actionError": "Couldn't open the checkout page. Try again."
+  },
+  "userMenu": {
+    "open": "Account menu",
+    "settings": "Settings & account",
+    "subscription": "Subscription & plan",
+    "language": "العربية",
+    "theme": "Theme",
+    "themes": { "system": "Auto", "light": "Light", "dark": "Dark" },
+    "signOut": "Sign out"
+  },
+  "notifications": {
+    "open": "Notifications",
+    "title": "Recent updates",
+    "empty": "No new notifications.",
+    "kinds": {
+      "projectReady": "Video ready for review",
+      "exportDone": "Export completed"
+    }
+  },
+  "settings": {
+    "pageTitle": "Settings",
+    "pageSubtitle": "Your account, preferences and subscription.",
+    "accountTitle": "Account",
+    "emailLabel": "Email",
+    "displayNameLabel": "Display name",
+    "save": "Save",
+    "saving": "Saving…",
+    "savedNote": "Saved.",
+    "saveError": "Couldn't save. Try again.",
+    "preferencesTitle": "Preferences",
+    "languageLabel": "Language",
+    "themeHint": "Theme (light/dark) lives in the account menu in the top bar.",
+    "subscriptionTitle": "Subscription",
+    "subscriptionHint": "Your plan, usage and upgrade options.",
+    "subscriptionCta": "Manage subscription"
   },
   "record": {
     "pageTitle": "Recording studio",

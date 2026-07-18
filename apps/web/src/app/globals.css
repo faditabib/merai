@@ -46,10 +46,30 @@ body {
 
 /* App shell: the fixed sidebar (rendered by AppHeader on lg+) pads every
    authenticated page's <main> via this sibling rule — zero page edits. */
+/* Refinement 2026-07-18: sidebar sits on the START side — right in RTL
+   (Arabic), left in LTR (English) — the conventional side in each. */
 @media (min-width: 1024px) {
   .app-shell-anchor ~ main {
-    margin-inline-end: 15rem;
+    margin-inline-start: 15rem;
   }
+}
+
+/* Manual theme override (user menu). Absent attribute = follow system. */
+:root[data-theme="dark"] {
+  --background: #0b0b10;
+  --foreground: #ededf2;
+  --accent: #8b6cd9;
+  --muted: #9ca3af;
+  --card: #15151d;
+  --border: #26262f;
+}
+:root[data-theme="light"] {
+  --background: #f7f8fa;
+  --foreground: #111827;
+  --accent: #6b46c1;
+  --muted: #6b7280;
+  --card: #ffffff;
+  --border: #e5e7eb;
 }
 
 /* Caption family, pinned to the same font the worker rasterizes (vendored IBM

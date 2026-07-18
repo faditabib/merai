@@ -1,6 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
+// Refinement 2026-07-18: creative-identity tools (Brand Kit + Caption
+// styles + visual identity) are ONE home — "Creator Studio" — not three
+// separate products. Same real route they always shared.
 const ACTIONS = [
   {
     key: "newVideo",
@@ -15,16 +18,10 @@ const ACTIONS = [
     icon: "M15 10l5-3v10l-5-3M3 7a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z",
   },
   {
-    key: "brandKit",
+    key: "creatorStudio",
     href: "/dashboard/brand-kit",
     primary: false,
     icon: "M12 3l2.5 6.5H21l-5 4 2 6.5-6-4-6 4 2-6.5-5-4h6.5L12 3z",
-  },
-  {
-    key: "captionStudio",
-    href: "/dashboard/brand-kit",
-    primary: false,
-    icon: "M4 6h16M4 12h16M4 18h10",
   },
 ] as const;
 
@@ -37,7 +34,7 @@ export async function QuickActions() {
   const t = await getTranslations("dashboard.quickActions");
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {ACTIONS.map((action) => (
         <Link
           key={action.key}
