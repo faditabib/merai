@@ -20,17 +20,17 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "apps/web/messages/ar.json": {
-    "mtime": 1784335240.2023137,
-    "ast_hash": "7e600f30175c2a6809dbafe93dbd9f6f",
+    "mtime": 1784336483.5472481,
+    "ast_hash": "49fde4e416cdb7a8f6f060731d7312d1",
     "semantic_hash": ""
   },
   "apps/web/messages/en.json": {
-    "mtime": 1784335242.7181058,
-    "ast_hash": "d629b9c291fc2d8e9a6449cf9150e2fe",
+    "mtime": 1784336485.8863368,
+    "ast_hash": "c7f0309e67b37cb3d75b9bfadefb7b8f",
     "semantic_hash": ""
   },
   "apps/web/next-env.d.ts": {
-    "mtime": 1784335350.8941789,
+    "mtime": 1784336595.4231298,
     "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
     "semantic_hash": ""
   },
@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/app-header.tsx": {
-    "mtime": 1784297515.3235166,
-    "ast_hash": "d242b542b6551b406c762576e9d0064c",
+    "mtime": 1784336447.3691652,
+    "ast_hash": "58692612e8e311b5751a1487704770c7",
     "semantic_hash": ""
   },
   "apps/web/src/components/auth-form.tsx": {
@@ -615,8 +615,8 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1784298460.0973325,
-    "ast_hash": "1bf1a399ca3f0ebc74c697b5b66b186c",
+    "mtime": 1784366888.403202,
+    "ast_hash": "e5957315689ec8e3eb216e0d4e5fe73f",
     "semantic_hash": ""
   },
   "README.md": {
@@ -935,8 +935,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/dashboard/quick-actions.tsx": {
-    "mtime": 1784208961.741917,
-    "ast_hash": "f137151649cec8401c23fc0ed49467ce",
+    "mtime": 1784336474.4207222,
+    "ast_hash": "5889486a43c7b77de2d1a4b79ead5012",
     "semantic_hash": ""
   },
   "BUILD_6C_1_ANALYSIS.md": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/nav-links.tsx": {
-    "mtime": 1784297504.92053,
-    "ast_hash": "8e92afe67f63122837b064d22163c844",
+    "mtime": 1784336428.4648173,
+    "ast_hash": "d0d5e68e1ac1f265db1764fdd94abbd0",
     "semantic_hash": ""
   },
   "apps/web/src/components/page-header.tsx": {
@@ -1332,6 +1332,11 @@
   "PRODUCT_INTEGRITY_AUDIT_2026_07.md": {
     "mtime": 1784318852.3288102,
     "ast_hash": "d5d5defb7b005e73e2f9b3eb0b1971ae",
+    "semantic_hash": ""
+  },
+  "DESIGN_TRANSFORMATION_PLAN.md": {
+    "mtime": 1784336395.4462566,
+    "ast_hash": "a575296c51854ec950810568498f4c67",
     "semantic_hash": ""
   }
 }

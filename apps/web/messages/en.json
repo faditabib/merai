@@ -9,6 +9,7 @@
     "brandKit": "Brand Kit",
     "billing": "Billing",
     "record": "Record",
+    "greeting": "Hi, {name}",
     "login": "Log in",
     "signup": "Sign up",
     "signOut": "Sign out",
@@ -51,7 +52,13 @@
       "newVideo": "New video",
       "brandKit": "Brand Kit",
       "captionStudio": "Caption Studio",
-      "record": "Record"
+      "record": "Record",
+      "hints": {
+        "newVideo": "Upload a raw recording and start editing instantly.",
+        "record": "Record with your camera or screen directly.",
+        "brandKit": "Your colors, logo and style on every video.",
+        "captionStudio": "Publish-ready caption styles."
+      }
     },
     "brandNudge": {
       "title": "Finish your Brand Kit",

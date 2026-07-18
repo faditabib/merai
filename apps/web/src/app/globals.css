@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+/* Design transformation 2026-07-18 — reference tokens: calm surface,
+   Stripe/Linear-class violet, hairline borders. */
 :root {
-  --background: #fafafa;
-  --foreground: #16161d;
-  --accent: #7c3aed;
+  --background: #f7f8fa;
+  --foreground: #111827;
+  --accent: #6b46c1;
   --accent-foreground: #ffffff;
   --muted: #6b7280;
   --card: #ffffff;
@@ -14,7 +16,7 @@
   :root {
     --background: #0b0b10;
     --foreground: #ededf2;
-    --accent: #8b5cf6;
+    --accent: #8b6cd9;
     --accent-foreground: #ffffff;
     --muted: #9ca3af;
     --card: #15151d;
@@ -30,14 +32,24 @@
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-border: var(--border);
-  /* UI font (6C.1): Tajawal. Captions use --font-caption (Plex) to match export. */
-  --font-sans: var(--font-tajawal);
+  /* Design direction 2026-07-18: IBM Plex Sans Arabic for the UI — one
+     family across UI and captions (reversing the 6C.1 Tajawal choice per
+     the reference design). Tajawal stays loaded for rollback. */
+  --font-sans: var(--font-plex-arabic);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-plex-arabic), "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* App shell: the fixed sidebar (rendered by AppHeader on lg+) pads every
+   authenticated page's <main> via this sibling rule — zero page edits. */
+@media (min-width: 1024px) {
+  .app-shell-anchor ~ main {
+    margin-inline-end: 15rem;
+  }
 }
 
 /* Caption family, pinned to the same font the worker rasterizes (vendored IBM

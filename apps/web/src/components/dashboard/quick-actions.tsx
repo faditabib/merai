@@ -1,32 +1,75 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
+const ACTIONS = [
+  {
+    key: "newVideo",
+    href: "/dashboard/new",
+    primary: true,
+    icon: "M12 5v14M5 12h14",
+  },
+  {
+    key: "record",
+    href: "/dashboard/record",
+    primary: false,
+    icon: "M15 10l5-3v10l-5-3M3 7a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z",
+  },
+  {
+    key: "brandKit",
+    href: "/dashboard/brand-kit",
+    primary: false,
+    icon: "M12 3l2.5 6.5H21l-5 4 2 6.5-6-4-6 4 2-6.5-5-4h6.5L12 3z",
+  },
+  {
+    key: "captionStudio",
+    href: "/dashboard/brand-kit",
+    primary: false,
+    icon: "M4 6h16M4 12h16M4 18h10",
+  },
+] as const;
+
 /**
- * Primary creator actions (Build 6C.1; Record went live in Build 7.1).
- * Mobile-first: wraps on small screens, row on larger.
+ * Primary creator actions (6C.1; Record live since 7.1). Design
+ * transformation 2026-07-18: reference-style icon cards — icon + title +
+ * one-line description. Same four REAL routes, zero flow changes.
  */
 export async function QuickActions() {
   const t = await getTranslations("dashboard.quickActions");
-  const actions = [
-    { key: "newVideo", href: "/dashboard/new", primary: true },
-    { key: "record", href: "/dashboard/record", primary: false },
-    { key: "brandKit", href: "/dashboard/brand-kit", primary: false },
-    { key: "captionStudio", href: "/dashboard/brand-kit", primary: false },
-  ] as const;
 
   return (
-    <div className="flex flex-wrap gap-3">
-      {actions.map((a) => (
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {ACTIONS.map((action) => (
         <Link
-          key={a.key}
-          href={a.href}
-          className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-            a.primary
-              ? "bg-accent text-accent-foreground hover:opacity-90"
-              : "border border-border hover:border-accent hover:text-accent"
+          key={action.key}
+          href={action.href}
+          className={`group flex flex-col items-start gap-2 rounded-xl border p-4 transition hover:shadow-sm ${
+            action.primary
+              ? "border-accent/30 bg-accent/5 hover:border-accent"
+              : "border-border bg-card hover:border-accent/50"
           }`}
         >
-          {t(a.key)}
+          <span
+            aria-hidden
+            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+              action.primary ? "bg-accent text-accent-foreground" : "bg-accent/10 text-accent"
+            }`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4.5 w-4.5"
+            >
+              <path d={action.icon} />
+            </svg>
+          </span>
+          <span className="text-sm font-semibold">{t(action.key)}</span>
+          <span className="text-xs leading-relaxed text-muted">
+            {t(`hints.${action.key}`)}
+          </span>
         </Link>
       ))}
     </div>

@@ -1,5 +1,23 @@
 # Merai — Progress Log
 
+## Design Transformation — Phase 1 (2026-07-18)
+
+273 tests green · next build ✓ · ar/en parity 567 = 567 · zero
+functional/route/API/DB changes (DESIGN_TRANSFORMATION_PLAN.md).
+
+- Reference tokens live: surface #F7F8FA, accent #6B46C1 (dark #8B6CD9),
+  hairline borders; UI font reunified on IBM Plex Sans Arabic (reversing the
+  6C.1 Tajawal choice per the design direction — one family for UI+captions).
+- App shell: fixed inline-end sidebar on lg+ (logo, icon nav with active
+  states, REAL plan widget from profiles.subscription_tier + upgrade link)
+  + topbar (real-user greeting with avatar, locale, sign-out; inline nav on
+  mobile). Zero page edits — a CSS sibling rule pads every <main>.
+- Quick actions → reference-style icon cards (same four real routes).
+- Live-verified: sidebar + widget + greeting + 240px content offset +
+  4 icon cards + Plex + #6b46c1 on dashboard; active state follows on
+  billing; all functionality intact. P2 (studio/editor chrome) and P3
+  (billing/settings layout) inherit tokens now, dedicated passes next cycle.
+
 ## UX Transformation Sprint (2026-07-17)
 
 271 tests green · next build ✓ · ar/en parity 554 = 554 · no new features
