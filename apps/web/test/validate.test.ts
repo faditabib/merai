@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MAX_RAW_UPLOAD_BYTES, MAX_RAW_UPLOAD_SECONDS } from "@merai/core";
 import {
+  classifyUploadFailure,
   safeExtension,
   validateSceneSet,
   validateVideoFile,
@@ -108,3 +109,17 @@ describe("validateSceneSet (Build 7.4 — multi-scene projects)", () => {
     ).toBe("unsupported-type");
   });
 });
+
+describe("classifyUploadFailure (Functional Readiness sprint)", () => {
+  it("recognizes storage size rejections", () => {
+    expect(classifyUploadFailure("tus: unexpected response while creating upload (413) The object exceeded the maximum allowed size")).toBe("file-too-large");
+    expect(classifyUploadFailure("Payload Too Large")).toBe("file-too-large");
+    expect(classifyUploadFailure("request entity too large")).toBe("file-too-large");
+  });
+  it("everything else stays a network-class failure", () => {
+    expect(classifyUploadFailure("network error")).toBe("upload-failed");
+    expect(classifyUploadFailure(null)).toBe("upload-failed");
+    expect(classifyUploadFailure(undefined)).toBe("upload-failed");
+  });
+});
+

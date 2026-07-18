@@ -76,7 +76,15 @@
       "tagsLabel": "Tag",
       "addTagPlaceholder": "New tag…",
       "removeTag": "Remove tag {tag}",
-      "noMatches": "No matches — try a different search or filter."
+      "noMatches": "No matches — try a different search or filter.",
+      "menu": "Project options",
+      "rename": "Rename",
+      "archive": "Archive",
+      "restore": "Restore from archive",
+      "delete": "Delete project",
+      "confirmDelete": "Confirm permanent delete",
+      "archivedBadge": "Archived",
+      "archivedFilter": "Archived ({n, number})"
     },
     "emptyTitle": "Ready for your first video?",
     "emptyBody": "Upload your raw recording and your AI editor gets to work — from transcript to a publish-ready video.",
@@ -117,7 +125,7 @@
   "upload": {
     "title": "New project",
     "dropTitle": "Drag your video here or click to choose",
-    "dropHint": "Up to 10 minutes per clip — MP4, MOV, WebM or MKV",
+    "dropHint": "Up to 10 minutes and 50MB per clip — MP4, MOV, WebM or MKV",
     "probing": "Reading video info…",
     "starting": "Preparing the upload…",
     "uploading": "Uploading your video…",
@@ -130,7 +138,7 @@
     "goToBilling": "Upgrade on the billing page",
     "errors": {
       "unsupported-type": "Unsupported file format. Please upload MP4, MOV, WebM or MKV video.",
-      "file-too-large": "The file exceeds the size limit (2 GB).",
+      "file-too-large": "The file exceeds the current plan's limit (50MB per file). Try a shorter or lower-quality clip — this is a temporary storage-provider limit and will be raised soon.",
       "video-too-long": "The video exceeds the maximum length: 10 minutes per clip.",
       "unreadable-duration": "Couldn't read the video's duration. Try a different file.",
       "quota-exceeded": "You've reached your plan's minutes for this month — upgrade on the billing page to continue.",

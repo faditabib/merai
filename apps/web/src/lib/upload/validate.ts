@@ -41,6 +41,25 @@ export function validateVideoFile(input: {
   return null;
 }
 
+/**
+ * Classify a mid-transfer tus/storage failure (Functional Readiness sprint):
+ * the storage layer rejects over-limit files with a 413 "exceeded the
+ * maximum allowed size" — previously surfaced as a misleading "check your
+ * connection". Anything unrecognized stays a network-class failure.
+ */
+export function classifyUploadFailure(message: string | null | undefined): "file-too-large" | "upload-failed" {
+  const text = (message ?? "").toLowerCase();
+  if (
+    text.includes("413") ||
+    text.includes("exceeded the maximum allowed size") ||
+    text.includes("payload too large") ||
+    text.includes("entity too large")
+  ) {
+    return "file-too-large";
+  }
+  return "upload-failed";
+}
+
 /** Sanitized file extension for the storage object name. */
 export function safeExtension(filename: string): string {
   const match = /\.([a-z0-9]{2,5})$/i.exec(filename);

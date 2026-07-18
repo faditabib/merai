@@ -8,6 +8,7 @@ import {
   filterProjects,
   removeTag,
 } from "@/lib/projects/organize";
+import { deleteProject } from "@/app/actions/projects";
 import { createClient } from "@/lib/supabase/client";
 import { ProjectCard } from "./project-card";
 
@@ -18,6 +19,7 @@ export interface ExplorerProject {
   created_at: string;
   tags: string[];
   storagePath: string | null;
+  archived_at: string | null;
 }
 
 export interface ProjectsExplorerProps {
@@ -40,12 +42,62 @@ export function ProjectsExplorer(props: ProjectsExplorerProps) {
   const [bulkMode, setBulkMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDraft, setBulkDraft] = useState("");
+  // Lifecycle (Functional Readiness): archived projects live behind a toggle.
+  const [showArchived, setShowArchived] = useState(false);
 
+  const archivedCount = useMemo(
+    () => projects.filter((p) => p.archived_at != null).length,
+    [projects],
+  );
   const tags = useMemo(() => allTags(projects), [projects]);
   const visible = useMemo(
-    () => filterProjects(projects, { query, tags: activeTags }),
-    [projects, query, activeTags],
+    () =>
+      filterProjects(projects, { query, tags: activeTags }).filter((p) =>
+        showArchived ? p.archived_at != null : p.archived_at == null,
+      ),
+    [projects, query, activeTags, showArchived],
   );
+
+  // Lifecycle handlers (Functional Readiness): rename/archive are RLS-scoped
+  // owner-column updates (the tags precedent); delete goes through the server
+  // action (storage sweep needs the service role).
+  const renameProject = (projectId: string, title: string) => {
+    setProjects((prev) => prev.map((p) => (p.id === projectId ? { ...p, title } : p)));
+    void supabase
+      .from("projects")
+      .update({ title })
+      .eq("id", projectId)
+      .then(({ error }) => {
+        if (error) console.error("rename failed", error);
+      });
+  };
+
+  const toggleArchive = (projectId: string) => {
+    const project = projects.find((p) => p.id === projectId);
+    const next = project?.archived_at ? null : new Date().toISOString();
+    setProjects((prev) =>
+      prev.map((p) => (p.id === projectId ? { ...p, archived_at: next } : p)),
+    );
+    void supabase
+      .from("projects")
+      .update({ archived_at: next })
+      .eq("id", projectId)
+      .then(({ error }) => {
+        if (error) console.error("archive toggle failed", error);
+      });
+  };
+
+  const removeProject = (projectId: string) => {
+    // Optimistic removal; restore on failure so nothing silently vanishes.
+    const snapshot = projects;
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    void deleteProject({ projectId }).then((result) => {
+      if (!result.ok) {
+        console.error("delete failed", result.error);
+        setProjects(snapshot);
+      }
+    });
+  };
 
   const persistTags = (projectId: string, nextTags: readonly string[]) => {
     setProjects((prev) =>
@@ -104,6 +156,19 @@ export function ProjectsExplorer(props: ProjectsExplorerProps) {
           placeholder={t("searchPlaceholder")}
           className="w-full max-w-xs rounded-xl border border-border bg-transparent px-3 py-1.5 text-sm"
         />
+        {archivedCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowArchived((v) => !v)}
+            className={`rounded-lg border px-3 py-1.5 text-sm ${
+              showArchived
+                ? "border-accent bg-accent/15 text-accent"
+                : "border-border text-muted hover:border-accent"
+            }`}
+          >
+            {t("archivedFilter", { n: archivedCount })}
+          </button>
+        )}
         <button
           type="button"
           onClick={() => (bulkMode ? exitBulk() : setBulkMode(true))}
@@ -192,6 +257,10 @@ export function ProjectsExplorer(props: ProjectsExplorerProps) {
                 storagePath={project.storagePath}
                 tags={project.tags}
                 onTagsChange={(next) => persistTags(project.id, next)}
+                archived={project.archived_at != null}
+                onRename={(title) => renameProject(project.id, title)}
+                onArchiveToggle={() => toggleArchive(project.id)}
+                onDelete={() => removeProject(project.id)}
                 selectable={bulkMode}
                 selected={selected.has(project.id)}
                 onToggleSelect={() => toggleSelect(project.id)}

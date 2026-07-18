@@ -9,6 +9,7 @@ import {
   createResumableUpload,
   supabaseTusEndpoint,
 } from "@/lib/upload/tus-uploader";
+import { classifyUploadFailure } from "@/lib/upload/validate";
 
 export interface SceneFile {
   file: File;
@@ -88,7 +89,7 @@ export function ScenesUploadFlow(props: ScenesUploadFlowProps) {
       setProgress(0);
       const scene = props.scenes[i]!;
       const target = created.scenes[i]!;
-      const ok = await new Promise<boolean>((resolve) => {
+      const ok = await new Promise<true | "file-too-large" | "upload-failed">((resolve) => {
         const handle = createResumableUpload({
           endpoint: supabaseTusEndpoint(supabaseUrl),
           accessToken: session.access_token,
@@ -98,12 +99,12 @@ export function ScenesUploadFlow(props: ScenesUploadFlowProps) {
           file: scene.file,
           onProgress: (sent, total) =>
             setProgress(total ? Math.round((sent / total) * 100) : 0),
-          onError: () => resolve(false),
+          onError: (error) => resolve(classifyUploadFailure(error?.message)),
           onSuccess: () => resolve(true),
         });
         handle.start();
       });
-      if (!ok) return fail("upload-failed");
+      if (ok !== true) return fail(ok);
     }
 
     setState("finalizing");

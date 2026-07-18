@@ -458,6 +458,68 @@ export async function requestAiEdit(input: {
   return { ok: true };
 }
 
+/**
+ * Delete a project the user owns (Functional Readiness sprint). DB children
+ * cascade via FKs; storage objects do NOT — sweep them first via the service
+ * role. Ownership is proven by the RLS-scoped select, and the final row
+ * delete runs on the RLS-scoped client, so a non-owner can never reach the
+ * storage sweep with foreign paths.
+ */
+export async function deleteProject(input: {
+  projectId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "not-authenticated" };
+
+  // RLS: returns the row only for the owner.
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", input.projectId)
+    .maybeSingle();
+  if (!project) return { ok: false, error: "not-found" };
+
+  const [{ data: uploads }, { data: exports }] = await Promise.all([
+    supabase.from("video_uploads").select("storage_path").eq("project_id", project.id),
+    supabase.from("exports").select("storage_path, parts").eq("project_id", project.id),
+  ]);
+
+  const admin = createAdminClient();
+  const byBucket = new Map<string, string[]>();
+  const addPath = (storagePath: string | null) => {
+    if (!storagePath) return;
+    const slash = storagePath.indexOf("/");
+    const bucket = storagePath.slice(0, slash);
+    const list = byBucket.get(bucket) ?? [];
+    list.push(storagePath.slice(slash + 1));
+    byBucket.set(bucket, list);
+  };
+  for (const u of uploads ?? []) addPath(u.storage_path);
+  for (const e of exports ?? []) {
+    addPath(e.storage_path);
+    // Over-cap exports live as .partN objects next to the base path.
+    if (e.storage_path && (e.parts ?? 1) > 1) {
+      for (let i = 0; i < e.parts; i++) addPath(`${e.storage_path}.part${i}`);
+    }
+  }
+  for (const [bucket, objects] of byBucket) {
+    // Best-effort: a missing object must never block the delete.
+    await admin.storage.from(bucket).remove(objects);
+  }
+
+  // RLS-scoped delete — children cascade in the DB.
+  const { error: deleteError } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", project.id);
+  if (deleteError) return { ok: false, error: "delete-failed" };
+
+  return { ok: true };
+}
+
 /** Re-run a permanently failed pipeline (error state → transcribing). */
 export async function retryProcessing(input: {
   projectId: string;

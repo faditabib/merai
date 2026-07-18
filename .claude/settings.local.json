@@ -44,7 +44,14 @@
       "PowerShell(cd \"D:\\\\Merai app\"; git ls-remote --symref origin; \"exit=$LASTEXITCODE\")",
       "PowerShell(cd \"D:\\\\Merai app\"; \"== working tree ==\"; git status --short --branch | Select-Object -First 3; \"== local HEAD ==\"; git rev-parse HEAD; \"== remote refs ==\"; git ls-remote origin | ForEach-Object { $_ }; \"== unpushed commits ==\"; $ahead = git rev-list origin/main..main --count; \"ahead of origin/main: $ahead\"; \"== local tag ==\"; git tag -l v1.0-beta; git rev-parse v1.0-beta^{commit})",
       "Bash(npx tsx *)",
-      "PowerShell(cd \"D:\\\\Merai app\"; Get-ChildItem apps/web/src/app -Filter \"globals.css\" -Recurse | % FullName; Select-String -Path \"apps/web/src/app/globals.css\" -Pattern \"accent\" -SimpleMatch | Select-Object -First 3)"
+      "PowerShell(cd \"D:\\\\Merai app\"; Get-ChildItem apps/web/src/app -Filter \"globals.css\" -Recurse | % FullName; Select-String -Path \"apps/web/src/app/globals.css\" -Pattern \"accent\" -SimpleMatch | Select-Object -First 3)",
+      "PowerShell(Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.GetInstalledVoices\\(\\) | ForEach-Object { $_.VoiceInfo.Name + ' \\(' + $_.VoiceInfo.Culture + '\\)' })",
+      "PowerShell($scratch = \"C:\\\\Users\\\\utopi\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Merai-app\\\\2fb72cbd-5939-4c2d-98bf-6d530f20a582\\\\scratchpad\"; Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.SetOutputToWaveFile\\(\"$scratch\\\\speech.wav\"\\); $s.Rate = -1; $s.Speak\\(\"Hello and welcome. Um, so today, uh, I want to show you this product. Um, it is really, uh, quite good. So let us, um, get started right now.\"\\); $s.Dispose\\(\\); \\(Get-Item \"$scratch\\\\speech.wav\"\\).Length)",
+      "PowerShell($scratch = \"C:\\\\Users\\\\utopi\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Merai-app\\\\2fb72cbd-5939-4c2d-98bf-6d530f20a582\\\\scratchpad\"; ffmpeg -y -f lavfi -i color=c=navy:s=1280x720:r=25 -i \"$scratch\\\\speech.wav\" -c:v libx264 -preset veryfast -tune stillimage -c:a aac -b:a 128k -shortest -movflags +faststart \"$scratch\\\\integrity-test.mp4\" 2>&1 | Select-Object -Last 2; $f = Get-Item \"$scratch\\\\integrity-test.mp4\"; \"size=$\\($f.Length\\) bytes\"; ffprobe -v error -show_entries format=duration -of csv=p=0 \"$scratch\\\\integrity-test.mp4\")",
+      "Bash(seq 1 40)",
+      "Bash(railway logs *)",
+      "Bash(node \"C:\\\\Users\\\\utopi\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Merai-app\\\\2fb72cbd-5939-4c2d-98bf-6d530f20a582\\\\scratchpad\\\\reedit-e2e.mjs\" inspect)",
+      "Bash(node \"C:\\\\Users\\\\utopi\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Merai-app\\\\2fb72cbd-5939-4c2d-98bf-6d530f20a582\\\\scratchpad\\\\e2e-user.mjs\" cleanup e2e-integrity@merai.test)"
     ]
   }
 }

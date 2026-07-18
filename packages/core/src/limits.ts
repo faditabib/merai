@@ -7,7 +7,14 @@
 /** Hard cap on a single raw upload, regardless of tier (PRD §5/§7). */
 export const MAX_RAW_UPLOAD_SECONDS = 600;
 
-export const MAX_RAW_UPLOAD_BYTES = 2 * 1024 * 1024 * 1024; // 2 GiB safety cap
+/**
+ * Hard per-file byte cap. MUST match the Supabase project's global storage
+ * file-size limit (integrity audit 2026-07-17: the free tier rejects >50MB
+ * at the storage layer — a 2GiB frontend cap silently lied). When the
+ * project upgrades to Supabase Pro, raise this in ONE place.
+ */
+export const MAX_RAW_UPLOAD_BYTES = 50 * 1024 * 1024;
+export const MAX_RAW_UPLOAD_MB = 50;
 
 /** Raw footage retention (margin decision; see DECISIONS.md). */
 export const RAW_RETENTION_DAYS = 30;

@@ -18,9 +18,8 @@ export const env = {
   ffmpegPath: process.env.FFMPEG_PATH ?? "ffmpeg",
   /** Ops webhook (Slack/Discord-compatible) for permanent-failure alerts. */
   alertWebhookUrl: process.env.ALERT_WEBHOOK_URL ?? null,
-  dolbyAppKey: process.env.DOLBY_APP_KEY ?? null,
-  dolbyAppSecret: process.env.DOLBY_APP_SECRET ?? null,
-  pixabayApiKey: process.env.PIXABAY_API_KEY ?? null,
+  // Dolby/Pixabay declarations removed 2026-07-18 (integrity audit: zero
+  // code paths referenced them — dead config from abandoned ideas).
 };
 
 export function requireEnv<K extends keyof typeof env>(key: K): string {

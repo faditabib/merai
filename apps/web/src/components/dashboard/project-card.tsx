@@ -22,6 +22,11 @@ export interface ProjectCardProps {
   /** Organization (Build 7.7). */
   tags: readonly string[];
   onTagsChange: (tags: readonly string[]) => void;
+  /** Lifecycle (Functional Readiness sprint). */
+  archived: boolean;
+  onRename: (title: string) => void;
+  onArchiveToggle: () => void;
+  onDelete: () => void;
   /** Bulk mode: when selectable, the card toggles selection, not navigation. */
   selectable: boolean;
   selected: boolean;
@@ -38,7 +43,17 @@ export function ProjectCard(props: ProjectCardProps) {
   const format = useFormatter();
   const [editingTags, setEditingTags] = useState(false);
   const [draft, setDraft] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(props.title);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const ready = props.status === "ready";
+
+  const commitRename = () => {
+    const next = titleDraft.trim();
+    if (next && next !== props.title) props.onRename(next);
+    setRenaming(false);
+  };
 
   const commitDraft = () => {
     const next = addTag(props.tags, draft);
@@ -56,6 +71,11 @@ export function ProjectCard(props: ProjectCardProps) {
       <div className="flex items-center gap-2 p-4 pb-2">
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-semibold">{props.title}</h2>
+          {props.archived && (
+            <span className="mt-0.5 inline-block rounded-full bg-border/50 px-2 py-0.5 text-[11px] text-muted">
+              {t("organize.archivedBadge")}
+            </span>
+          )}
           <p className="mt-0.5 text-xs text-muted">
             {format.dateTime(new Date(props.createdAt), { dateStyle: "medium" })}
           </p>
@@ -149,6 +169,92 @@ export function ProjectCard(props: ProjectCardProps) {
           >
             + {t("organize.tagsLabel")}
           </button>
+        )}
+
+        {/* Lifecycle menu (Functional Readiness sprint) */}
+        {!props.selectable && (
+          <div className="relative ms-auto">
+            <button
+              type="button"
+              aria-label={t("organize.menu")}
+              aria-expanded={menuOpen}
+              onClick={() => {
+                setMenuOpen((open) => !open);
+                setConfirmingDelete(false);
+                setRenaming(false);
+              }}
+              className="rounded-full px-2 py-0.5 text-sm text-muted transition hover:text-accent"
+            >
+              ⋯
+            </button>
+            {menuOpen && (
+              <div className="absolute end-0 bottom-full z-20 mb-1 flex w-48 flex-col gap-1 rounded-xl border border-border bg-card p-2 shadow-lg">
+                {renaming ? (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={titleDraft}
+                    maxLength={120}
+                    onChange={(e) => setTitleDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        commitRename();
+                        setMenuOpen(false);
+                      }
+                      if (e.key === "Escape") setRenaming(false);
+                    }}
+                    onBlur={() => {
+                      commitRename();
+                      setMenuOpen(false);
+                    }}
+                    className="rounded-lg border border-border bg-transparent px-2 py-1 text-sm"
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTitleDraft(props.title);
+                      setRenaming(true);
+                    }}
+                    className="rounded-lg px-2 py-1.5 text-start text-sm transition hover:bg-border/30"
+                  >
+                    {t("organize.rename")}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    props.onArchiveToggle();
+                    setMenuOpen(false);
+                  }}
+                  className="rounded-lg px-2 py-1.5 text-start text-sm transition hover:bg-border/30"
+                >
+                  {props.archived ? t("organize.restore") : t("organize.archive")}
+                </button>
+                {confirmingDelete ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      props.onDelete();
+                      setMenuOpen(false);
+                    }}
+                    className="rounded-lg bg-red-500 px-2 py-1.5 text-start text-sm font-semibold text-white"
+                  >
+                    {t("organize.confirmDelete")}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingDelete(true)}
+                    className="rounded-lg px-2 py-1.5 text-start text-sm text-red-500 transition hover:bg-red-500/10"
+                  >
+                    {t("organize.delete")}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

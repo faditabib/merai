@@ -11,7 +11,7 @@ import {
   supabaseTusEndpoint,
   type ResumableUploadHandle,
 } from "@/lib/upload/tus-uploader";
-import { validateVideoFile } from "@/lib/upload/validate";
+import { classifyUploadFailure, validateVideoFile } from "@/lib/upload/validate";
 
 type UploadState =
   | "idle"
@@ -115,7 +115,7 @@ export function UploadFlow(props: UploadFlowProps = {}) {
       file,
       onProgress: (sent, total) =>
         setProgress(total ? Math.round((sent / total) * 100) : 0),
-      onError: () => fail("upload-failed"),
+      onError: (error) => fail(classifyUploadFailure(error?.message)),
       onSuccess: async () => {
         setState("finalizing");
         const done = await completeUpload({ uploadId: created.uploadId! });

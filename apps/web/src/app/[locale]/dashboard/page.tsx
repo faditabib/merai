@@ -17,6 +17,7 @@ interface ProjectRow {
   status: string;
   created_at: string;
   tags: string[] | null;
+  archived_at: string | null;
 }
 
 export default async function DashboardPage({
@@ -53,7 +54,7 @@ export default async function DashboardPage({
   const [{ data: projects }, { data: kit }, { data: uploads }] = await Promise.all([
     supabase
       .from("projects")
-      .select("id, title, status, created_at, tags")
+      .select("id, title, status, created_at, tags, archived_at")
       .order("created_at", { ascending: false }),
     supabase
       .from("brand_kits")
@@ -142,6 +143,7 @@ export default async function DashboardPage({
               created_at: project.created_at,
               tags: project.tags ?? [],
               storagePath: latestUpload.get(project.id) ?? null,
+              archived_at: project.archived_at,
             }))}
           />
         ) : (
